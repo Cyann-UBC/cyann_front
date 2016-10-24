@@ -9,12 +9,10 @@ import Team from './Components/Team';
 
 const routes = (
   <Router history={browserHistory}>
-    <Route component={App}>
       <Route path="/" component={Home}></Route>
       <Route path='about' component={About}></Route>
       <Route path='team' component={Team}></Route>
       <Route path='courses' component={Courses}></Route>
-    </Route>
   </Router>
 );
 
