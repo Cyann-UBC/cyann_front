@@ -14,15 +14,17 @@ class Courses extends Component {
     }
   }
 
-  componenWillMount(){
-    fetch("https://api.darksky.net/forecast/95e1651de91be5f6fdb246f1412a104f/37.8267,-122.4233")
-    .then((response) => response.json())
-    .then((responseData) => {
-    this.setState({data:responseData.latitude})
-    })
+  componentWillMount(){
+
   }
 
 componentDidMount(){
+  fetch("https://api.github.com")
+  .then((response) => response.json())
+  .then((responseData) => {
+    console.log(JSON.stringify(responseData))
+  this.setState({message:responseData.current_user_url})
+  })
 }
   setUserName(event){
     this.setState({userName:"event.target.value"})
