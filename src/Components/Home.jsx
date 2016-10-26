@@ -15,6 +15,7 @@ class Home extends Component {
 
   setUserName(event){
     this.setState({userName:"event.target.value"})
+    console.log("asdf")
   }
   setPassword(event){
     this.setState({password:event.target.value})
@@ -22,10 +23,10 @@ class Home extends Component {
   render() {
     return (
       <div style={{display:'flex',flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
-        <div style={{display:'flex',flexDirection:'row',marginLeft:window.innerWidth/1.5}}>
-          <li style={{marginRight:50}}><Link to="/courses">courses</Link></li>
-          <li style={{marginRight:50}}><Link to="/team">team</Link></li>
-          <li ><Link to="/about">about</Link></li>
+        <div style={{display:'flex',flexDirection:'row',marginLeft:window.innerWidth/1.5,marginTop:20}}>
+          <Link style={{marginRight:50}} to="/courses">courses</Link>
+          <Link style={{marginRight:50}} to="/team">team</Link>
+          <Link to="/about">about</Link>
         </div>
         <div style={{display:'flex',flexDirection:'column', alignItems:'center', justifyContent:'center',marginTop:80}}>
           <img src={logo} className="App-logo" alt="logo" />
