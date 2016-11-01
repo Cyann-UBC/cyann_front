@@ -38,18 +38,21 @@ componentDidMount(){
   render() {
     return (
       <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>{this.state.message}</h2>
+        <div style={{display:'flex',flexDirection:'row',backgroundColor:'blue'}}>
+          <div style={{height:window.innerHeight,width:window.innerWidth/6,backgroundColor:'red'}}>
+
+          </div>
+
+          <div style={{height:window.innerHeight,width:window.innerWidth/3,backgroundColor:'yellow'}}>
+
+          </div>
+
+          <div style={{height:window.innerHeight,width:window.innerWidth/2,backgroundColor:'green'}}>
+
+          </div>
+          
         </div>
-        <p className="App-intro">
-          Course Page
-        </p>
-        <div>
-          <input type="text" value={this.state.userName} onChange={this.setUserName.bind(this)}/>
-          <input type="text" value={this.state.password} onChange={this.setPassword.bind(this)}/>
-        </div>
-        <button onClick={()=>this.setState({message:this.state.data})}>click</button>
+
       </div>
     );
   }
