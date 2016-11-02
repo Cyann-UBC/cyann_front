@@ -1,37 +1,36 @@
-#portfolio_bar{
-    background-color:#57BCFZ;
-    position: absolute; 
-    z-index: 1;
-    left: 0;
-    top: 30;
-    width: 1500px; 
-    height: 200px; 
-    box-shadow: 0px 10px 20px 0px #60848C;
+#searchbar{
+    position: absolute;
+    width: 130px;
+    top:50px;
+    left: 250px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    padding: 12px 20px 12px 40px;
 }
-
- 
-#face{
-  z-index: 1;
-  position:absolute;
-  top:20px;
-  left:40px;
+#searchbar .focus{
+   width: 300px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
 }
 
 #course_list{
-    position: absolute; 
+    position: relative; 
     z-index: 1; /* Sit on top */
     left: 0;
-    top: 250px;
+    top: 200px;
     color:white;
 }
 #course {
     z-index: 1;
     display: absolute;
     color: white;
-    position:absolute;
-    top:300px;
+    position:relative;
+    top:50px;
     text-align: left;
-    padding: 10px;
+    padding: 20px;
     text-decoration: none;
 }
 #course:hover {
@@ -41,7 +40,6 @@
 
 
 #menu_bar{
-    
     background-color:#60848C;
     position: absolute; 
     z-index: 1; 
@@ -72,15 +70,11 @@
     top: 10;
     left:355;
 }
-#logo{
-    position: absolute; 
-    top: 0;
-    left:40;
-}
+
 #name{
   color:white;
   position: absolute; 
-  top:140px;
+  top:170px;
   left:40px;
   font-size: 15px;
     
@@ -102,7 +96,7 @@
   padding: 5px;
   width: 150px;
   position:relative;
-  top:300px;
+  top:30px;
   transition: all 0.5s;
   cursor: pointer;
   margin: 5px;

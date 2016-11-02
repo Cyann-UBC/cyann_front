@@ -85,8 +85,8 @@ componentDidMount(){
             
         
           <div style={{height:window.innerHeight,width:window.innerWidth/6,backgroundColor:'#17B3C1'}}>
-              
-              <ul id="course" button type="button"  data-toggle="collapse" data-target="#content">CPEN321</ul>
+           <ul id="course_list">   
+            <ul id="course" button type="button"  data-toggle="collapse" data-target="#content">CPEN321</ul>
               <div id="content" className="collapse">
                 <ul> 
                   <button className="post" onclick="display_post(1)"><span onClick={this.setFontWeight1} style={{fontWeight:this.state.fontWeight1}}>Student Post </span></button>
@@ -96,13 +96,26 @@ componentDidMount(){
                     
                 </ul>
               </div>
+                  
+                  
+             <ul id="course" button type="button"  data-toggle="collapse" data-target="#content2">ELEC331</ul>
+               <div id="content2" className="collapse">
+                <ul> 
+                  <button className="post" onclick="display_post(1)"><span onClick={this.setFontWeight1} style={{fontWeight:this.state.fontWeight1}}>Student Post </span></button>
+                  <button className="post" onclick="display_post(2)"><span onClick={this.setFontWeight2} style={{fontWeight:this.state.fontWeight2}}>Professor Post </span></button>
+                  <button className="post" onclick="display_post(3)"><span onClick={this.setFontWeight3} style={{fontWeight:this.state.fontWeight3}}>Homework </span></button>          
+                    <button className="post" onclick="display_post(4)"><span onClick={this.setFontWeight4} style={{fontWeight:this.state.fontWeight4}}>Lecture notes </span></button>
+                    
+                </ul>
+              </div>
+               
+               
+              </ul>
             </div>
             
     <div id="post_list" style={{height:window.innerHeight,width:window.innerWidth/3,backgroundColor:'#60848C'}}>
             
-        <input style={{position:'absolute',width:130,top:0,left:350,boxSizing:'border-box',fontSize:16,backgroundColor:'white',padding:12}}
-             name="search" placeholder="Search.."></input>
-        
+    <input id="searchbar" placeholder="Search.."></input>
               
                 <p>{this.state.selection}</p>
                 <ul></ul>
