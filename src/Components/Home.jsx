@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import logo from '../logo.svg';
 import { Link } from 'react-router';
 import '../css/App.css';
+ 
+import iphone from '../../picture/iphone.png';
 
 class Home extends Component {
   constructor(props) {
@@ -20,27 +22,42 @@ class Home extends Component {
   setPassword(event){
     this.setState({password:event.target.value})
   }
+    
+ 
+    
   render() {
     return (
-      <div style={{display:'flex',flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
+      <div style={{display:'absolute'}}>
         <div style={{display:'flex',flexDirection:'row',marginLeft:window.innerWidth/1.5,marginTop:20}}>
           <Link style={{marginRight:50}} to="/courses">courses</Link>
           <Link style={{marginRight:50}} to="/team">team</Link>
           <Link to="/about">about</Link>
         </div>
-        <div style={{display:'flex',flexDirection:'column', alignItems:'center', justifyContent:'center',marginTop:80}}>
+        <div style={{display:'absolute',position:'absolute',top:180,left:60}}>
           <img src={logo} className="App-logo" alt="logo" />
-          <h2>Cyann</h2>
         </div>
-        <p className="App-intro">
-          Home Page
-        </p>
-        <div style={{display:'flex', flexDirection:'column', alignItems:'center',justifyContent:"center"}}>
-          <input style={{margin:20,width:300,height:45}} type="text" value={this.state.userName} onChange={this.setUserName.bind(this)}/>
-          <input style={{margin:20,width:300,height:45}} type="text" value={this.state.password} onChange={this.setPassword.bind(this)}/>
+        <p id="welcome"> Cyann </p>
+        <p id="m1">Welcom to Cyann webpage!</p>
+        <p id="m2">Cyann is a free online forum where students can..</p>
+        
+        <div>
+            <img src={iphone} id="iphone1" width={197} height={390}/>
+            <img src={iphone} id="iphone2" width={197} height={390}/>
         </div>
-        <button>click</button>
+            
+        <button id="student_login" onclick="document.getElementById('id01').style.display='block'">Student Login here</button>
+            
+        <button id="prof_login" onclick="document.getElementById('id01').style.display='block'">Professor Login here</button>
+            
+            
+            
+            
+
+            
+            
       </div>
+            
+            
     );
   }
 }

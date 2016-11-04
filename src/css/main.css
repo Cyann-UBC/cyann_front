@@ -1,19 +1,22 @@
 #searchbar{
     position: absolute;
     width: 130px;
-    top:50px;
-    left: 250px;
+    left: 140px;
+    top:20px;
     box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    background-color: white;
-    padding: 12px 20px 12px 40px;
+    border: 1px solid #ccc;
+    border-radius: 1px;
+    font-size: 15px;
+    background-color: transparent;
+    padding: 5px 10px 5px 30px;
 }
-#searchbar .focus{
-   width: 300px;
-    -webkit-transition: width 0.4s ease-in-out;
-    transition: width 0.4s ease-in-out;
+#new_post{
+    position: absolute;
+    left: 290px;
+    top:20px;
+    width: 100px;
+    font-size:13px;
+    
 }
 
 #course_list{
@@ -24,13 +27,13 @@
     color:white;
 }
 #course {
-    z-index: 1;
     display: absolute;
     color: white;
     position:relative;
+    background:none;
     top:50px;
+    padding: 10px;
     text-align: left;
-    padding: 20px;
     text-decoration: none;
 }
 #course:hover {
@@ -55,7 +58,7 @@
     z-index: 1;
     left: 0;
     top: 90;
-    width: 250px; 
+    width: 200px; 
     height: 220px; 
     box-shadow: 0px 10px 20px 0px #60848C;
 }
@@ -96,7 +99,7 @@
   padding: 5px;
   width: 150px;
   position:relative;
-  top:30px;
+  top:40px;
   transition: all 0.5s;
   cursor: pointer;
   margin: 5px;
@@ -130,43 +133,80 @@
 
 
 
-.sidenav {
-    height: 100%;
-    width: 0;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    background-color: darkcyan;
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 60px;
+#student_post_list{
+    position:absolute;
+    color:white;
+}
+#prof_post_list{
+    position:absolute;
+    color:white;
+}
+#new_post:hover {
+    font-weight: bold;
 }
 
-.sidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #FFF;
-    display: block;
-    transition: 0.3s
-}
 
-.sidenav a:hover, .offcanvas a:focus{
-    color: #f1f1f1;
-}
-
-.sidenav .closebtn {
+#post_h2 {
     position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
+    width:100px;
+    top:100px;
+    font-size: 25px;
+    left:10px;
+    
 }
 
-@media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
+#aaa {
+    position: absolute;
+    top:150px;
+    left:10px;
+    width:400px;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
+#b {
+    left:10px;
+  width:400px;
+    
+  font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
+  border-bottom: 1px solid #ccc;
+}
 
+#b:last-child {
+  border: none;
+}
+
+#b a {
+  text-decoration: none;
+  color: #000;
+    
+  width:400px;
+
+  -webkit-transition: font-size 0.3s ease, background-color 0.3s ease;
+  -moz-transition: font-size 0.3s ease, background-color 0.3s ease;
+  -o-transition: font-size 0.3s ease, background-color 0.3s ease;
+  -ms-transition: font-size 0.3s ease, background-color 0.3s ease;
+  transition: font-size 0.3s ease, background-color 0.3s ease;
+  display: block;
+  width: 200px;
+}
+
+#b a:hover {
+  font-size: 30px;
+    
+  width:400px;
+  background: #f6f6f6;
+}
+#b a:focus {
+  font-size: 30px;
+    
+  width:400px;
+  background: #f6f6f6;
+}
+#post_body{
+  font-size: 20px;
+  position: relative;
+  left:0px;
+    width:400px;
+}
