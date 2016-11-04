@@ -22,6 +22,7 @@ class Courses extends Component {
       selection:'',
       background1:'none',
         ifshowtext: false,
+      ifShowQuestion:true,
       background2:'none'
     }
   }
@@ -69,9 +70,9 @@ componentDidMount(){
                          <div>
                            <p id="post_h2">Post List</p>
                              <ul id="aaa">
-                               <li id="b"><a href="#"><dt>question1</dt>
+                               <li id="b" onClick={this.showQuestion.bind(this)}><span><a href="#"><dt>question1</dt>
                                    
-                                 <dd id="post_body">this question is about...</dd></a>
+                                 <dd id="post_body">this question is about...</dd></a></span>
                                  </li>
                                <li id="b"><a href="#"><dt>question2</dt>
                                    
@@ -98,8 +99,6 @@ componentDidMount(){
                          <input id="searchbar" placeholder="Search.."></input>
                          <button id="new_post">new post</button>
                          
-                       
-                         
                      </div>})
       this.setState({fontWeight1:'300'})
       this.setState({fontWeight2:'900'})
@@ -123,19 +122,34 @@ componentDidMount(){
 
     updateList=()=>{
   this.setState({ifshowtext:true})
+  this.setState({ifShowQuestion:false})
 }
+   showQuestion=()=>{
+        this.setState({ifshowtext:false})
+        this.setState({ifShowQuestion:true})
+    }
+    
     renderList=()=>{
   if(this.state.ifshowtext){
     return(
         <div>
-      <input style={{position:'relative',width:250,top:10}}type="text" name="firstname"/>
-
-  <input style={{position:'relative',width:250,height:600,top:40}}placeholder="question" type="text" name="lastname"/>
+        
+      <input style={{position:'relative',width:500,top:30}}type="text" name="firstname"/>
+        
+      <textarea position="absolute" name="comments" id="comments" cols="70" rows="20" top="430"></textarea>
+       
+  
         </div>
     )
   }
+ if(this.state.ifShowQuestion){
+            return(
+            <div>
+              <p>Post</p>  
+            </div>
+            )
+        }
 }
-     
 
 
   render() {
