@@ -21,6 +21,7 @@ class Courses extends Component {
       data:"",
       selection:'',
       background1:'none',
+        ifshowtext: false,
       background2:'none'
     }
   }
@@ -63,7 +64,8 @@ componentDidMount(){
       this.setState({selection:
                      <div id="student_post_list">
                          <input id="searchbar" placeholder="Search.."></input>
-                         <button id="new_post"><span onlick={this.creat_new_post}>new post</span></button>
+                    <button style={{position:'absolute',top:20,left:290,right:-190}} type="button" onClick={this.updateList.bind(this)}>+</button>
+
                          <div>
                            <p id="post_h2">Post List</p>
                              <ul id="aaa">
@@ -119,7 +121,21 @@ componentDidMount(){
       this.setState({fontWeight4:'900'})
   }
 
-        
+    updateList=()=>{
+  this.setState({ifshowtext:true})
+}
+    renderList=()=>{
+  if(this.state.ifshowtext){
+    return(
+        <div>
+      <input style={{position:'relative',width:250,top:10}}type="text" name="firstname"/>
+
+  <input style={{position:'relative',width:250,height:600,top:40}}placeholder="question" type="text" name="lastname"/>
+        </div>
+    )
+  }
+}
+     
 
 
   render() {
@@ -166,7 +182,7 @@ componentDidMount(){
             </div>
             
             <div id="post_list" style={{height:window.innerHeight,width:window.innerWidth/3,backgroundColor:'#60848C'}}>
-            
+        
             
               
              <div> {this.state.selection}
@@ -178,6 +194,7 @@ componentDidMount(){
               
             <div style={{height:window.innerHeight,width:window.innerWidth/2,backgroundColor:'white'}}>
             
+                 {this.renderList()}
 
             </div>
           </div>
