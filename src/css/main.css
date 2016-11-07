@@ -210,3 +210,31 @@
   left:0px;
     width:400px;
 }
+
+#homework_list{
+    position: absolute;
+    left:250px;
+    top:100px;
+    border: 1px solid #ccc;
+}
+#homework{
+    font-size:15px;
+}
+
+table, th {
+    
+    color:blue;
+    border: 1px solid grey;
+    background: white;
+    border-collapse: collapse;
+    width:350px;
+    text-align:center;
+}
+td {
+    border: 1px solid grey;
+    padding:10px;
+    text-align:left;
+    font-Weight:bold;
+    font-size:17px;
+    
+}

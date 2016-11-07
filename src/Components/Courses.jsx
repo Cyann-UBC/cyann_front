@@ -91,7 +91,23 @@ class Courses extends Component {
         this.setState({fontWeight4:'300'})
     }
     setFontWeight3=()=>{
-        this.setState({selection:'Homework'})
+        this.setState({selection:
+                      <div>
+                       <table id="homework_list">
+                           <caption style={{fontSize:20,color:"white"}}>Homework List</caption>
+                           <tr>
+                               <td>Homework</td>
+                               <td>due date</td>
+                           </tr>
+                         <tr>
+                             <th><a href="../../downloadfile/1intro.pdf" download target="_blank"><p id="homework">1intro</p></a></th>
+                             <th>Oct 30, 2016</th>
+                         </tr>
+                         <th><a href="../../downloadfile/2lifecycle.pdf" download target="_blank"><p id="homework">2lifecycle</p></a></th>
+                           <th>Nov 1, 2016</th>
+                        </table>
+                       
+                       </div>})
         this.setState({fontWeight1:'300'})
         this.setState({fontWeight2:'300'})
         this.setState({fontWeight3:'900'})
