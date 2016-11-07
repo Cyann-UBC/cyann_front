@@ -5,6 +5,8 @@ import '../css/main.css';
 
 
 import face from '../../picture/face.jpg';
+import searchicon from '../../picture/searchicon.png';
+import plus from '../../picture/plus.png';
 
 class Courses extends Component {
     constructor(props) {
@@ -57,7 +59,9 @@ class Courses extends Component {
         this.setState({selection:
                        <div id="student_post_list">
                            <input id="searchbar" placeholder="Search.."></input>
-                           <button style={{position:'absolute',top:20,left:290,right:-190}} type="button" onClick={this.updateList.bind(this)}>+</button>
+                           <img src={searchicon} id="picture" style={{width:25,height:25,top:23,left:145}}/>
+                           <button id="new_post"  type="button" onClick={this.updateList.bind(this)}>New Post</button>
+                           <img src={plus} id="picture" style={{width:23,height:23,top:23,left:295}}/>
                            
                            <div>
                                <p id="post_h2">Post List</p>
@@ -83,7 +87,9 @@ class Courses extends Component {
         this.setState({selection:
                        <div id="prof_post_list">
                            <input id="searchbar" placeholder="Search.."></input>
-                           <button id="new_post">new post</button>
+                           <img src={searchicon} id="picture" style={{width:25,height:25,top:23,left:145}}/>
+                           <button id="new_post">New Post</button>
+                           <img src={plus} id="picture" style={{width:23,height:23,top:23,left:295}}/>
                        </div>})
         this.setState({fontWeight1:'300'})
         this.setState({fontWeight2:'900'})
@@ -140,7 +146,6 @@ class Courses extends Component {
         if(this.state.ifShowQuestion){
             return(
                 <div>
-                    <p>Post</p>
                     <PostWithDisplay 
                         title="What is the meaning of life, the universe and everything?" 
                         content= "The number 42 is, in The Hitchhiker's Guide to the Galaxy by Douglas Adams, the 'Answer to the Ultimate Question of Life, the Universe, and Everything', calculated by an enormous supercomputer named Deep Thought over a period of 7.5 million years. Unfortunately, no one knows what the question is."/>
@@ -158,7 +163,7 @@ class Courses extends Component {
                         <p id="name">FirstName LastName</p>
                     </div>
                     
-                    <img src={face} id="face" style={{width:120,height:120}}/>
+                    <img src={face} id="picture" style={{top:70,left:40,width:120,height:120}}/>
                     
                     <div style={{height:window.innerHeight,width:window.innerWidth/6,backgroundColor:'#17B3C1'}}>
                         <ul id="course_list">
@@ -288,12 +293,12 @@ class PostWithDisplay extends Component {
     }
     render() {
         return (
-            <div className="PostWithDisplay">
-                <h1 style={{fontSize: 20, fontFamily: 'Arial Serif', textAlign:'left'}}>{this.props.title}</h1>
-                <p style={{fontSize: 15, margin: 50, padding: 10, textAlign:'left'}}>{this.props.content}</p>
+            <div id="PostWithDisplay">
+                <h1 id="PostWithDisplay_title">{this.props.title}</h1>
+                <p id="PostWithDisplay_content" >{this.props.content}</p>
                 <input className="fileInput" type="file" onChange={(e)=>this._handleImageChange(e)} />
                 
-                <textarea ref="newText" defaultValue="new text" className="form-control"></textarea>
+                <textarea ref="newText" defaultValue="new text" id="form-control"></textarea>
             </div>
         );
     }
