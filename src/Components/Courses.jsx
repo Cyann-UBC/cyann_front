@@ -25,7 +25,11 @@ class Courses extends Component {
             background1:'none',
             ifshowtext: false,
             ifShowQuestion:true,
-            background2:'none'
+            background2:'none',
+            postSource:[],
+            questionTitle:'',
+            questionContent:'',
+            
         }
     }
     
@@ -33,20 +37,27 @@ class Courses extends Component {
         
     }
     componentDidMount(){
-        fetch("https://api.github.com")
+        fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts")
         .then((response) => response.json())
         .then((responseData) => {
-            console.log(JSON.stringify(responseData))
-            this.setState({message:responseData.current_user_url})
+            console.log(responseData.data)
+            this.setState({postSource:responseData.data})
         })
     }
     setUserName(event){
         this.setState({userName:"event.target.value"})
-        console.log("asdf")
+//        console.log("asdf")
     }
     setPassword(event){
         this.setState({password:event.target.value})
     }
+    updateQuestionTitle(event){
+        this.setState({questionTitle:event.target.value})
+    }
+    updateQuestionContent(event){
+        this.setState({questionContent:event.target.value})
+    }
+    
     setBackground1=()=>{
         this.setState({background1:'#60848C'})
         this.setState({background2:'none'})
@@ -66,15 +77,15 @@ class Courses extends Component {
                            <div>
                                <p id="post_h2">Post List</p>
                                <ul id="aaa">
-                                   <li id="b" onClick={this.showQuestion.bind(this)}><span><a href="#"><dt>question1</dt>
-                                       <dd id="post_body">this question is about...</dd></a></span>
-                                   </li>
-                                   <li id="b"><a href="#"><dt>question2</dt>
-                                       <dd id="post_body">this question is about...</dd></a>
-                                   </li>
-                                   <li id="b"><a href="#"><dt>question3</dt>
-                                       <dd id="post_body">this question is about...</dd></a>
-                                   </li>
+                                   {this.state.postSource.map(function(post,i){
+                                       return(
+                                        <li id="b" onClick={this.showQuestion.bind(this)}><span><a href="#">            
+                                        <dt> {post.title}</dt>
+                                           <dd id="post_body">{post.content}</dd></a></span>
+                                        </li>
+                                       )
+                                   },this)}
+                                   
                                </ul>
                            </div>
                        </div>})
@@ -134,12 +145,45 @@ class Courses extends Component {
         this.setState({ifshowtext:false})
         this.setState({ifShowQuestion:true})
     }
+
+    
+    postQuestion=()=>{
+        var post = {
+            'title': this.state.questionTitle,
+            'content': this.state.questionContent,
+            'userId': '5823aad92853c404061b8673'
+            }
+        
+    var formBody = []
+    for (var property in post) {
+      var encodedKey = encodeURIComponent(property);
+      var encodedValue = encodeURIComponent(post[property]);
+      formBody.push(encodedKey + "=" + encodedValue);
+    }
+    formBody = formBody.join("&");
+    fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts",{method:"POST",
+    headers: {
+     'Content-Type': 'application/x-www-form-urlencoded'
+     },
+    body:formBody})
+    .then((response) => response.json())
+    .then((responseData) => {
+        fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts")
+        .then((response) => response.json())
+        .then((responseData) => {
+            console.log(responseData.data)
+            this.setState({postSource:responseData.data})
+        })
+    })
+}
+    
     renderList=()=>{
         if(this.state.ifshowtext){
             return(
                 <div>
-                    <input style={{position:'relative',width:500,top:30}}type="text" name="firstname"/>
-                    <textarea position="absolute" name="comments" id="comments" cols="70" rows="20" top="430"></textarea>
+                    <input onChange={this.updateQuestionTitle.bind(this)} style={{position:'relative',width:500,top:30}}type="text" name="firstname"/>
+                    <textarea onChange={this.updateQuestionContent.bind(this)} position="absolute" name="comments" id="comments" cols="70" rows="20" top="430"></textarea>
+                    <button onClick={()=>this.postQuestion()}>submit</button>
                 </div>
             )
         }
@@ -157,13 +201,13 @@ class Courses extends Component {
         return (
             <div className="App">
                 
-                <div style={{display:'flex',flexDirection:'row',backgroundColor:'white'}}>
+                <div style={{display:'flex',flexDirection:'row'}}>
                     
                     <div id="portfolio_bar">
-                        <p id="name">FirstName LastName</p>
+                        <p id="name">{this.state.userName}</p>
                     </div>
                     
-                    <img src={face} id="picture" style={{top:70,left:40,width:120,height:120}}/>
+                    <img src={face} id="picture" style={{top:30,left:40,width:120,height:120}}/>
                     
                     <div style={{height:window.innerHeight,width:window.innerWidth/6,backgroundColor:'#17B3C1'}}>
                         <ul id="course_list">

@@ -167,11 +167,15 @@
 }
 
 #b {
-    left:10px;
+  left:10px;
   width:400px;
     
   font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
   border-bottom: 1px solid #ccc;
+    
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #b:last-child {
@@ -209,6 +213,7 @@
   font-size: 20px;
   position: relative;
   left:0px;
+    width:400px;
     width:400px;
 }
 
