@@ -25,10 +25,13 @@ class Courses extends Component {
             background1:'none',
             ifshowtext: false,
             ifShowQuestion:true,
+            ifShowContent:false,
             background2:'none',
             postSource:[],
             questionTitle:'',
             questionContent:'',
+            contentTitle:'',
+            contentContent:'',
             
         }
     }
@@ -58,6 +61,8 @@ class Courses extends Component {
         this.setState({questionContent:event.target.value})
     }
     
+    
+    
     setBackground1=()=>{
         this.setState({background1:'#60848C'})
         this.setState({background2:'none'})
@@ -70,8 +75,11 @@ class Courses extends Component {
         this.setState({selection:
                        <div id="student_post_list">
                            <input id="searchbar" placeholder="Search.."></input>
+                           
                            <img src={searchicon} id="picture" style={{width:25,height:25,top:23,left:145}}/>
+                           
                            <button id="new_post"  type="button" onClick={this.updateList.bind(this)}>New Post</button>
+                           
                            <img src={plus} id="picture" style={{width:23,height:23,top:23,left:295}}/>
                            
                            <div>
@@ -79,9 +87,9 @@ class Courses extends Component {
                                <ul id="aaa">
                                    {this.state.postSource.map(function(post,i){
                                        return(
-                                        <li id="b" onClick={this.showQuestion.bind(this)}><span><a href="#">            
-                                        <dt> {post.title}</dt>
-                                           <dd id="post_body">{post.content}</dd></a></span>
+                                        <li id="b" onClick={this.showQuestion.bind(this)} onClick={this.showContent.bind(this,post._id)}><span><a href="#">            
+                                        <dt id="post_title"> {post.title}</dt>
+                                        <dd id="post_body">{post.content}</dd></a></span>
                                         </li>
                                        )
                                    },this)}
@@ -140,10 +148,20 @@ class Courses extends Component {
     updateList=()=>{
         this.setState({ifshowtext:true})
         this.setState({ifShowQuestion:false})
+        this.setState({ifShowContent:false})
     }
-    showQuestion=()=>{
+    showContent=()=>{
+        this.setState({contentTitle:event.target.value})
+        this.setState({questionContent:event.target.value})
+        this.setState({ifShowContent:true})
+        this.setState({ifshowtext:false})
+        this.setState({ifShowQuestion:false})
+        
+    }
+    showQuestion=(event)=>{
         this.setState({ifshowtext:false})
         this.setState({ifShowQuestion:true})
+        this.setState({ifShowContent:false})
     }
 
     
@@ -154,36 +172,45 @@ class Courses extends Component {
             'userId': '5823aad92853c404061b8673'
             }
         
-    var formBody = []
-    for (var property in post) {
-      var encodedKey = encodeURIComponent(property);
-      var encodedValue = encodeURIComponent(post[property]);
-      formBody.push(encodedKey + "=" + encodedValue);
-    }
-    formBody = formBody.join("&");
-    fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts",{method:"POST",
-    headers: {
-     'Content-Type': 'application/x-www-form-urlencoded'
-     },
-    body:formBody})
-    .then((response) => response.json())
-    .then((responseData) => {
-        fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts")
+        var formBody = []
+        for (var property in post) {
+            var encodedKey = encodeURIComponent(property);
+            var encodedValue = encodeURIComponent(post[property]);
+            formBody.push(encodedKey + "=" + encodedValue);
+        }
+        formBody = formBody.join("&");
+        fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts",{method:"POST",
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body:formBody})
+        .then((response) => response.json())
+        .then((responseData) => {
+         fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts")
         .then((response) => response.json())
         .then((responseData) => {
             console.log(responseData.data)
             this.setState({postSource:responseData.data})
+            })
         })
-    })
-}
+    }
     
     renderList=()=>{
+        if(this.state.ifShowContent){
+            return(
+              <div>
+                <p id="lalala">aaaaa</p>
+                    
+                </div>
+            )
+        }
         if(this.state.ifshowtext){
             return(
                 <div>
-                    <input onChange={this.updateQuestionTitle.bind(this)} style={{position:'relative',width:500,top:30}}type="text" name="firstname"/>
-                    <textarea onChange={this.updateQuestionContent.bind(this)} position="absolute" name="comments" id="comments" cols="70" rows="20" top="430"></textarea>
-                    <button onClick={()=>this.postQuestion()}>submit</button>
+                    <input onChange={this.updateQuestionTitle.bind(this)} type="text"  id="newPost_title"/>
+                    <textarea onChange={this.updateQuestionContent.bind(this)}  id="newPost_content" cols="70" rows="20" ></textarea>
+                    <button id="newPost_submit" onClick={()=>this.postQuestion()}>submit</button>
+                    <button id="newPost_cancel" onClick={()=>this.postQuestion()}>cancel</button>
                 </div>
             )
         }
@@ -288,6 +315,7 @@ class Courses extends Component {
                                     </button>
                                 </ul>
                             </div>
+                            
                         </ul>
                     </div>
                     
