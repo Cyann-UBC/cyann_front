@@ -16,6 +16,8 @@ Todos:
     5.2 get all comments in order of most up-voted to least
     5.3 implementing from for answering a question
 
+issues:
+
 
 
 
