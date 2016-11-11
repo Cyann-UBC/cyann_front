@@ -30,22 +30,29 @@ class Courses extends Component {
             postSource:[],
             questionTitle:'',
             questionContent:'',
-            contentTitle:'',
-            contentContent:'',
-            
+            postTitle:'',
+            postContent:'',
+            postViewing:'',
+            commentsViewing:[],
+            commentContent:''
+
         }
     }
-    
+
     componentWillMount(){
-        
+
     }
     componentDidMount(){
-        fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts")
-        .then((response) => response.json())
-        .then((responseData) => {
-            console.log(responseData.data)
-            this.setState({postSource:responseData.data})
-        })
+      this.getPosts()
+    }
+
+    getPosts(){
+      fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts")
+      .then((response) => response.json())
+      .then((responseData) => {
+          //console.log(responseData.data)
+          this.setState({postSource:responseData.data})
+      })
     }
     setUserName(event){
         this.setState({userName:"event.target.value"})
@@ -60,9 +67,10 @@ class Courses extends Component {
     updateQuestionContent(event){
         this.setState({questionContent:event.target.value})
     }
-    
-    
-    
+    updateComment(event){
+        this.setState({commentContent:event.target.value})
+    }
+
     setBackground1=()=>{
         this.setState({background1:'#60848C'})
         this.setState({background2:'none'})
@@ -71,29 +79,31 @@ class Courses extends Component {
         this.setState({background2:'#60848C'})
         this.setState({background1:'none'})
     }
+
+
     setFontWeight1=()=>{
         this.setState({selection:
                        <div id="student_post_list">
                            <input id="searchbar" placeholder="Search.."></input>
-                           
+
                            <img src={searchicon} id="picture" style={{width:25,height:25,top:23,left:145}}/>
-                           
+
                            <button id="new_post"  type="button" onClick={this.updateList.bind(this)}>New Post</button>
-                           
+
                            <img src={plus} id="picture" style={{width:23,height:23,top:23,left:295}}/>
-                           
+
                            <div>
                                <p id="post_h2">Post List</p>
                                <ul id="aaa">
                                    {this.state.postSource.map(function(post,i){
                                        return(
-                                        <li id="b" onClick={this.showQuestion.bind(this)} onClick={this.showContent.bind(this,post._id)}><span><a href="#">            
+                                        <li id="b"  onClick={this.showContent.bind(this)}><span><a href="#" onClick={()=>this.getContent(post._id)}>
                                         <dt id="post_title"> {post.title}</dt>
                                         <dd id="post_body">{post.content}</dd></a></span>
                                         </li>
                                        )
                                    },this)}
-                                   
+
                                </ul>
                            </div>
                        </div>})
@@ -131,7 +141,7 @@ class Courses extends Component {
                          <th><a href="../../downloadfile/2lifecycle.pdf" download target="_blank"><p id="homework">2lifecycle</p></a></th>
                            <th>Nov 1, 2016</th>
                         </table>
-                       
+
                        </div>})
         this.setState({fontWeight1:'300'})
         this.setState({fontWeight2:'300'})
@@ -151,12 +161,10 @@ class Courses extends Component {
         this.setState({ifShowContent:false})
     }
     showContent=()=>{
-        this.setState({contentTitle:event.target.value})
-        this.setState({questionContent:event.target.value})
         this.setState({ifShowContent:true})
         this.setState({ifshowtext:false})
         this.setState({ifShowQuestion:false})
-        
+
     }
     showQuestion=(event)=>{
         this.setState({ifshowtext:false})
@@ -164,14 +172,48 @@ class Courses extends Component {
         this.setState({ifShowContent:false})
     }
 
-    
+postComment=()=>{
+        var comment = {
+            'content': this.state.commentContent,
+            'userId': '5823aad92853c404061b8673',
+            }
+
+        var formBody = []
+        for (var property in comment) {
+            var encodedKey = encodeURIComponent(property);
+            var encodedValue = encodeURIComponent(comment[property]);
+            formBody.push(encodedKey + "=" + encodedValue);
+        }
+        formBody = formBody.join("&");
+        fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts/"+this.state.postViewing+"/comments",{method:"POST",
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body:formBody})
+        .then((response) => response.json())
+        .then((responseData) => {
+//            this.setState({commentSource:responseData.data})
+            this.getComment()
+
+        })
+    }
+
+    getComment=()=>{
+        fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts/"+this.state.postViewing+"/comments",{method:"get"})
+        .then((response) => response.json())
+        .then((responseData) => {
+           console.log(responseData)
+         this.setState({commentsViewing:responseData.data})
+        })
+    }
+
     postQuestion=()=>{
         var post = {
             'title': this.state.questionTitle,
             'content': this.state.questionContent,
             'userId': '5823aad92853c404061b8673'
             }
-        
+
         var formBody = []
         for (var property in post) {
             var encodedKey = encodeURIComponent(property);
@@ -186,21 +228,50 @@ class Courses extends Component {
         body:formBody})
         .then((response) => response.json())
         .then((responseData) => {
-         fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts")
+        fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts")
         .then((response) => response.json())
         .then((responseData) => {
-            console.log(responseData.data)
+            console.log(responseData)
             this.setState({postSource:responseData.data})
-            })
+            this.getContent(responseData.data[responseData.data.length-1]._id)
+            this.setState({ifShowContent:!this.state.ifShowContent})
+        })
+
         })
     }
-    
+
+    getContent(id){
+       fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts/"+id,{method:"get"})
+        .then((response) => response.json())
+        .then((responseData) => {
+           console.log(responseData.data)
+         this.setState({postViewing:responseData.data._id})
+         this.setState({postTitle:responseData.data.title})
+         this.setState({postContent:responseData.data.content})
+         this.setState({commentsViewing:responseData.data.comments})
+        })
+    }
+
     renderList=()=>{
         if(this.state.ifShowContent){
             return(
               <div>
-                <p id="lalala">aaaaa</p>
-                    
+                    <p id="contentTitle">
+                       {this.state.postTitle}
+                    </p>
+
+                    <p id="contentContent">
+                        {this.state.postContent}
+                    </p>
+                    {this.state.commentsViewing.map(function(comment,i){
+                        return(
+                            <h1>{comment.content}</h1>
+                        )
+                    },this)}
+                    <textarea onChange={this.updateComment.bind(this)}  id="newComment" cols="70" rows="7" ></textarea>
+                    <button id="newComment_submit" onClick={()=>this.postComment()}>submit</button>
+                    <button id="newComment_cancel" >cancel</button>
+
                 </div>
             )
         }
@@ -210,15 +281,15 @@ class Courses extends Component {
                     <input onChange={this.updateQuestionTitle.bind(this)} type="text"  id="newPost_title"/>
                     <textarea onChange={this.updateQuestionContent.bind(this)}  id="newPost_content" cols="70" rows="20" ></textarea>
                     <button id="newPost_submit" onClick={()=>this.postQuestion()}>submit</button>
-                    <button id="newPost_cancel" onClick={()=>this.postQuestion()}>cancel</button>
+                    <button id="newPost_cancel" >cancel</button>
                 </div>
             )
         }
         if(this.state.ifShowQuestion){
             return(
                 <div>
-                    <PostWithDisplay 
-                        title="What is the meaning of life, the universe and everything?" 
+                    <PostWithDisplay
+                        title="What is the meaning of life, the universe and everything?"
                         content= "The number 42 is, in The Hitchhiker's Guide to the Galaxy by Douglas Adams, the 'Answer to the Ultimate Question of Life, the Universe, and Everything', calculated by an enormous supercomputer named Deep Thought over a period of 7.5 million years. Unfortunately, no one knows what the question is."/>
                 </div>
             )
@@ -227,59 +298,60 @@ class Courses extends Component {
     render() {
         return (
             <div className="App">
-                
+
                 <div style={{display:'flex',flexDirection:'row'}}>
-                    
+
                     <div id="portfolio_bar">
                         <p id="name">{this.state.userName}</p>
+
                     </div>
-                    
+
                     <img src={face} id="picture" style={{top:30,left:40,width:120,height:120}}/>
-                    
+
                     <div style={{height:window.innerHeight,width:window.innerWidth/6,backgroundColor:'#17B3C1'}}>
                         <ul id="course_list">
-                            <ul id="course" type="button" data-toggle="collapse" data-target="#content"  
-                                onClick={this.setBackground1} 
+                            <ul id="course" type="button" data-toggle="collapse" data-target="#content"
+                                onClick={this.setBackground1}
                                 style={{background:this.state.background1}}>
                                 CPEN321
                             </ul>
                             <div id="content" className="collapse">
                                 <ul>
                                     <button className="post" >
-                                        <span 
-                                            onClick={this.setFontWeight1} 
+                                        <span
+                                            onClick={this.setFontWeight1}
                                             style={{fontWeight:this.state.fontWeight1}}>
                                             Student Post
                                         </span>
                                     </button>
-                                    
+
                                     <button className="post" >
-                                        <span 
-                                            onClick={this.setFontWeight2} 
+                                        <span
+                                            onClick={this.setFontWeight2}
                                             style={{fontWeight:this.state.fontWeight2}}>
-                                            Professor Post 
+                                            Professor Post
                                         </span>
                                     </button>
-                                    
+
                                     <button className="post" >
-                                        <span 
-                                            onClick={this.setFontWeight3} 
+                                        <span
+                                            onClick={this.setFontWeight3}
                                             style={{fontWeight:this.state.fontWeight3}}>
-                                            Homework 
+                                            Homework
                                         </span>
                                     </button>
-                                    
+
                                     <button className="post" >
-                                        <span 
-                                            onClick={this.setFontWeight4} 
+                                        <span
+                                            onClick={this.setFontWeight4}
                                             style={{fontWeight:this.state.fontWeight4}}>
-                                            Lecture notes 
+                                            Lecture notes
                                         </span>
                                     </button>
                                 </ul>
                             </div>
-                            <ul id="course" button type="button"  data-toggle="collapse" data-target="#content2" 
-                                onClick={this.setBackground2} 
+                            <ul id="course" button type="button"  data-toggle="collapse" data-target="#content2"
+                                onClick={this.setBackground2}
                                 style={{background:this.state.background2}}>
                                 ELEC331
                             </ul>
@@ -287,47 +359,49 @@ class Courses extends Component {
                                 <ul>
                                     <button className="post">
                                         <span
-                                            onClick={this.setFontWeight1} 
+                                            onClick={this.setFontWeight1}
                                             style={{fontWeight:this.state.fontWeight1}}>
                                             Student Post
                                         </span>
                                     </button>
                                     <button className="post">
-                                        <span 
-                                            onClick={this.setFontWeight2} 
+                                        <span
+                                            onClick={this.setFontWeight2}
                                             style={{fontWeight:this.state.fontWeight2}}>
-                                            Professor Post 
+                                            Professor Post
                                         </span>
                                     </button>
                                     <button className="post">
-                                        <span 
-                                            onClick={this.setFontWeight3} 
+                                        <span
+                                            onClick={this.setFontWeight3}
                                             style={{fontWeight:this.state.fontWeight3}}>
-                                            Homework 
+                                            Homework
                                         </span>
                                     </button>
                                     <button className="post">
-                                        <span 
-                                            onClick={this.setFontWeight4} 
+                                        <span
+                                            onClick={this.setFontWeight4}
                                             style={{fontWeight:this.state.fontWeight4}}>
-                                            Lecture notes 
+                                            Lecture notes
                                         </span>
                                     </button>
                                 </ul>
                             </div>
-                            
+
                         </ul>
                     </div>
-                    
+
                     <div id="post_list" style={{height:window.innerHeight,width:window.innerWidth/3,backgroundColor:'#60848C'}}>
-                        
-                        <div> 
+
+                        <div>
                             {this.state.selection}
                         </div>
                     </div>
-                    
+
                     <div style={{height:window.innerHeight,width:window.innerWidth/2,backgroundColor:'white'}}>
-                        {this.renderList()}
+                        <div>
+                            {this.renderList()}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -343,10 +417,10 @@ class PostWithDisplay extends Component {
         }
     }
     componentWillMount() {
-        
+
     }
     componentDidMount() {
-        
+
     }
     _handleImageChange(e) {
         e.preventDefault();
@@ -369,7 +443,6 @@ class PostWithDisplay extends Component {
                 <h1 id="PostWithDisplay_title">{this.props.title}</h1>
                 <p id="PostWithDisplay_content" >{this.props.content}</p>
                 <input className="fileInput" type="file" onChange={(e)=>this._handleImageChange(e)} />
-                
                 <textarea ref="newText" defaultValue="new text" id="form-control"></textarea>
             </div>
         );
