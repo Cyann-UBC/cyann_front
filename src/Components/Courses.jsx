@@ -1,3 +1,4 @@
+//
 import React, { Component } from 'react';
 //import logo from '../logo.svg';
 //import '../css/App.css';
@@ -117,9 +118,8 @@ class Courses extends Component {
                        <div id="prof_post_list">
                            <input id="searchbar" placeholder="Search.."></input>
                            <img src={searchicon} id="picture" style={{width:25,height:25,top:23,left:145}}/>
-                           <button id="new_post">New Post</button>
-                           <img src={plus} id="picture" style={{width:23,height:23,top:23,left:295}}/>
-                       </div>})
+                           <p id="post_h2">Post List</p>
+                        </div>})
         this.setState({fontWeight1:'300'})
         this.setState({fontWeight2:'900'})
         this.setState({fontWeight3:'300'})
@@ -263,14 +263,16 @@ postComment=()=>{
                     <p id="contentContent">
                         {this.state.postContent}
                     </p>
+                      <ul id="commentList">
                     {this.state.commentsViewing.map(function(comment,i){
                         return(
-                            <h1>{comment.content}</h1>
+                            <li id="commentContent">{comment.content}</li>
                         )
                     },this)}
-                    <textarea onChange={this.updateComment.bind(this)}  id="newComment" cols="70" rows="7" ></textarea>
-                    <button id="newComment_submit" onClick={()=>this.postComment()}>submit</button>
-                    <button id="newComment_cancel" >cancel</button>
+                      <textarea onChange={this.updateComment.bind(this)}  id="newComment" cols="70" rows="7" ></textarea>
+                      <button id="newComment_submit" onClick={()=>this.postComment()}>submit</button>
+                      <button id="newComment_cancel" >cancel</button>
+                  </ul>
 
                 </div>
             )
@@ -391,7 +393,7 @@ postComment=()=>{
                         </ul>
                     </div>
 
-                    <div id="post_list" style={{height:window.innerHeight,width:window.innerWidth/3,backgroundColor:'#60848C'}}>
+                    <div style={{height:window.innerHeight,width:window.innerWidth/3,backgroundColor:'#60848C'}}>
 
                         <div>
                             {this.state.selection}

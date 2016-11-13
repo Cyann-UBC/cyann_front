@@ -1,3 +1,4 @@
+//
 #searchbar{
     position: absolute;
     width: 130px;
@@ -17,11 +18,11 @@
     width: 105px;
     font-size:14px;
     padding: 5px 10px 5px 30px;
-    
+
 }
 
 #course_list{
-    position: relative; 
+    position: relative;
     left: 20px;
     top: 200px;
     color:white;
@@ -46,43 +47,43 @@
 
 #menu_bar{
     background-color:#60848C;
-    position: absolute; 
-    z-index: 1; 
+    position: absolute;
+    z-index: 1;
     left: 250px;
     top: 90;
-    width: 400px; 
-    height: 100%; 
+    width: 400px;
+    height: 100%;
 }
 
 #portfolio_bar{
     background-color:#57BCFZ;
-    position: absolute; 
+    position: absolute;
     z-index: 1;
     left: 0;
     top: 90;
-    width: 200px; 
-    height: 220px; 
+    width: 200px;
+    height: 220px;
     box-shadow: 0px 10px 20px 0px #60848C;
 }
 
 #Nav{
-    position: absolute; 
+    position: absolute;
     top: 0;
     left:320;
 }
 #searchicon{
-    position: absolute; 
+    position: absolute;
     top: 10;
     left:355;
 }
 
 #name{
   color:white;
-  position: absolute; 
+  position: absolute;
   top:170px;
   left:40px;
   font-size: 15px;
-    
+
 }
 #picture{
   z-index: 1;
@@ -137,14 +138,16 @@
     position:absolute;
     color:white;
 }
+
 #prof_post_list{
     position:absolute;
     color:white;
 }
+
 #new_post:hover {
     font-weight: bold;
     box-shadow:  0px 1px 1px 0px white;
-    
+
 }
 
 
@@ -154,7 +157,7 @@
     top:20px;
     font-size: 25px;
     left:10px;
-    
+
 }
 
 #aaa {
@@ -162,10 +165,10 @@
     top:100px;
     left:10px;
     width:400px;
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-    
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
     height:550px;
     overflow: auto;
 }
@@ -173,14 +176,14 @@
 #b {
   left:10px;
   width:400px;
-    
+
   font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
   border-bottom: 1px solid #ccc;
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-    height:70px;
+  height:70px;
 }
 
 #b:last-child {
@@ -190,7 +193,7 @@
 #b a {
   text-decoration: none;
   color: #000;
-    
+  //box-shadow:0px 1px 1px 0px grey;
   width:400px;
 
   -webkit-transition: font-size 0.3s ease, background-color 0.3s ease;
@@ -203,13 +206,13 @@
 
 #b a:hover {
   font-size: 25px;
-    
+
   width:400px;
   background: #f6f6f6;
 }
 #b a:focus {
   font-size: 25px;
-    
+
   width:400px;
   background: #f6f6f6;
 }
@@ -227,7 +230,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-    
+
 }
 
 #homework_list{
@@ -241,7 +244,7 @@
 }
 
 table, th {
-    
+
     color:blue;
     border: 1px solid grey;
     background: white;
@@ -255,7 +258,7 @@ td {
     text-align:left;
     font-Weight:bold;
     font-size:17px;
-    
+
 }
 
 
@@ -279,7 +282,7 @@ td {
     width: 500px;
 }
 #form-control{
-   width:300px; 
+   width:300px;
 }
 
 #newPost_title{
@@ -298,40 +301,87 @@ td {
     top:530px;
     left:750px;
 }
+#newPost_submit:hover {
+    font-weight: bold;
+    box-shadow:  0px 1px 1px 0px grey;
+
+}
 #newPost_cancel{
     position:absolute;
     top:530px;
     left:850px;
 }
+#newPost_cancel:hover {
+    font-weight: bold;
+    box-shadow:  0px 1px 1px 0px grey;
+
+}
 
 #contentTitle{
     position: absolute;
-    top:50px;
-    left:700px;
+    top:20px;
+    left:670px;
     font-size: 30px;
     color:black;
-    
+    width:570px;
+    border-bottom-style: inset;;
+
 }
 #contentContent{
     position: absolute;
-    top:100px;
-    left:700px;
-    font-size: 20px;
+    top:70px;
+    left:670px;
+    font-size: 15px;
     color:black;
+    width:570px;
+    text-align: left;
+    height:250px;
+    overflow: scroll;
+    border-bottom-style: double;
 }
 #newComment{
-    position: absolute;
-    top:300px;
-    left:700px;
-    
+    position: relative;
+    top:20px;
+
 }
 #newComment_submit{
-    position: absolute;
-    top:500px;
-    left:700px;
+    position: relative;
+    top:20px;
+    left:0px;
+}
+#newComment_submit:hover {
+    font-weight: bold;
+    box-shadow:  0px 1px 1px 0px grey;
+
 }
 #newComment_cancel{
+    position: relative;
+    top:20px;
+    left:50px;
+}
+#newComment_cancel:hover {
+    font-weight: bold;
+    box-shadow:  0px 1px 1px 0px grey;
+
+}
+#commentList{
     position: absolute;
-    top:500px;
-    left:800px;
+    top:330px;
+    left:670px;
+    width:570px;
+    list-style-type: none;
+    height:320px;
+    overflow: scroll;
+
+}
+#commentContent{
+  width:570px;
+  font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
+  border-bottom: 1px solid #ccc;
+  text-align: left;
+  white-space: nowrap;
+}
+
+#commentContent:last-child {
+  border: none;
 }
