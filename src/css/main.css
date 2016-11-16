@@ -74,7 +74,7 @@
   color: white;
 }
 #signout:hover{
-  color:black;
+  color:#002859;
 }
 #setting{
   font-size: 20px;
@@ -84,18 +84,21 @@
   color: white;
 }
 #setting:hover{
-  color:black;
+  color:#002859;
 }
 #user{
+  position: absolute;
+  padding: 0px;
   font-size: 20px;
   position: absolute;
-  top:180px;
+  top:175px;
+  background: none;
+  border: none;
   left:40px;
   color: white;
-
 }
 #user:hover{
-  color:black;
+  color:#002859;
 }
 
 #name{
@@ -142,7 +145,7 @@
   font-weight: bold;
 }
 
-.post:hover span:after {
+.post:hover span:after{
   opacity: 1;
   right: 0;
 }
@@ -189,15 +192,13 @@
   left:5px;
   width:420px;
 
-  font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
+  font: 200 16px/1.5 Helvetica, Verdana, sans-serif;
   border-bottom: 1px solid #ccc;
   text-align: left;
   white-space: pre-wrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  height:65px;
-
-  //margin-top: 10px;
+  height:55px;
   margin-bottom: 5px;
 }
 
@@ -209,6 +210,7 @@
   text-decoration: none;
   color: white;
   width:420px;
+  padding-top: 10px;
 
   -webkit-transition: font-size 0.3s ease, background-color 0.3s ease;
   -moz-transition: font-size 0.3s ease, background-color 0.3s ease;
@@ -219,27 +221,29 @@
 }
 
 #b a:hover {
-  font-size: 21px;
+  font-size: 18px;
   color:#f6f6f6;
   box-shadow: 5px 5px 5px grey;
 
   width:410px;
-  height:60px;
+  height:50px;
   background: #56767E;
 }
 #b a:focus {
 color:#f6f6f6;
-  font-size: 21px;
+  font-size: 18px;
   box-shadow: 5px 5px 5px grey;
-  height:60px;
+  height:50px;
   width:410px;
   background: #56767E;
 }
 #post_body{
+  position: relative;
   padding-left: 10px;
   padding-right: 10px;
-  font-size: 17px;
+  font-size: 15px;
   position: relative;
+  top:-35px;
   left:0px;
   width:400px;
   white-space: nowrap;
@@ -247,6 +251,8 @@ color:#f6f6f6;
   text-overflow: ellipsis;
 }
 #post_title{
+  position: relative;
+  top:-35px;
   padding-left: 10px;
   padding-right: 10px;
   width:400px;
@@ -423,15 +429,78 @@ h2 { width:100%; border-bottom: 1px solid #000; line-height:0.1em; margin:10px 0
 #thumb{
   position: relative;
   left:85px;
-  top:-28px;
+  top:-33px;
+  font-size: 20px;
+  color:#002859;
+  padding:0px;
+  border: none;
+  background-color: transparent;
+  z-index: 1;
 }
 #thumb:hover{
+  color:red;
+}
+#thumb:focus{
   color:red;
 }
 #commentUser{
   text-align: right;
   position: relative;
-  top:-45px;
+  top:-55px;
   font-size: 10px;
-  margin-bottom: -40px;
+  margin-bottom: -50px;
+}
+#delete_post{
+  position: relative;
+  top:-15px;
+  left:390px;
+  z-index: 1;
+  border: none;
+  padding: 0px;
+  color:white;
+  background-color: transparent;
+}
+#delete_post:hover{
+  color:#002859;
+}
+#delete_post:focus{
+  color:#002859;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
 }

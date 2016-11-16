@@ -8,6 +8,7 @@ import FaCog from 'react-icons/lib/fa/cog';
 import FaUser from 'react-icons/lib/fa/user';
 import FaSearchPlus from 'react-icons/lib/fa/search-plus';
 import FaPlusCircle from 'react-icons/lib/fa/plus-circle';
+import GoX from 'react-icons/lib/go/x';
 
 import face from '../../picture/face.jpg';
 
@@ -21,9 +22,9 @@ class Courses extends Component {
             password:"",
             message:'asd',
             fontWeight1:'300',
-            fontWeight1:'300',
-            fontWeight1:'300',
-            fontWeight1:'300',
+            fontWeight2:'300',
+            fontWeight3:'300',
+            fontWeight4:'300',
             data:"",
             selection:'',
             background1:'none',
@@ -114,9 +115,14 @@ class Courses extends Component {
                                <ul id="aaa">
                                    {this.state.postSource.map(function(post,i){
                                        return(
-                                        <li id="b" onClick={this.showContent.bind(this)}><span><a href="#" onClick={()=>this.getContent(post._id)}>
-                                        <dt id="post_title"> {post.title}</dt>
-                                        <dd id="post_body">{post.content}</dd></a></span>
+                                        <li id="b" onClick={this.showContent.bind(this)}>
+                                          <span>
+                                            <a href="#" onClick={()=>this.getContent(post._id)}>
+                                              <button id="delete_post" onClick={()=>this.deletePost(post._id)}><GoX /></button>
+                                              <dt id="post_title"> {post.title}</dt>
+                                              <dd id="post_body">{post.content}</dd>
+                                            </a>
+                                        </span>
                                         </li>
                                        )
                                    },this)}
@@ -210,7 +216,6 @@ postComment=()=>{
         body:formBody})
         .then((response) => response.json())
         .then((responseData) => {
-//            this.setState({commentSource:responseData.data})
             this.getComment()
 
         })
@@ -249,9 +254,8 @@ postComment=()=>{
         fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts")
         .then((response) => response.json())
         .then((responseData) => {
-            console.log(responseData)
             this.setState({postSource:responseData.data})
-            this.getContent(responseData.data[responseData.data.length-1]._id)
+            this.getContent(responseData.data[0]._id)
             this.setState({ifShowContent:!this.state.ifShowContent})
         })
 
@@ -272,9 +276,62 @@ postComment=()=>{
         })
     }
 
-userPortfilio(){
+    userPortfilio(){
 
-}
+
+
+    }
+
+    deletePost=(id)=>{
+      //alert("Are you sure you want to quit?");
+      var body = {
+          'userId': "5823aad92853c404061b8673"
+          }
+
+      var formBody = []
+      for (var property in body) {
+          var encodedKey = encodeURIComponent(property);
+          var encodedValue = encodeURIComponent(body[property]);
+          formBody.push(encodedKey + "=" + encodedValue);
+      }
+      formBody = formBody.join("&");
+    var r = confirm("Are you sure you want to delete this post?");
+    if (r == true) {
+        fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts/"+id,{method:"DELETE",
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body:formBody})
+        .then((response) => response.json())
+        .then((responseData) => {
+        })
+
+    }
+  }
+
+  upvote=(commentId)=>{
+    var body = {
+        'userId': '5823aad92853c404061b8673',
+        }
+
+    var formBody = []
+    for (var property in body) {
+        var encodedKey = encodeURIComponent(property);
+        var encodedValue = encodeURIComponent(body[property]);
+        formBody.push(encodedKey + "=" + encodedValue);
+    }
+    formBody = formBody.join("&");
+    fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts/"+this.state.postViewing+"/comments/"+commentId+"/upvote",{method:"put",
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body:formBody})
+    .then((response) => response.json())
+    .then((responseData) => {
+        console.log(responseData)
+    })
+  }
+
     renderList=()=>{
         if(this.state.ifShowContent){
             return(
@@ -288,19 +345,19 @@ userPortfilio(){
                         {this.state.postContent}
                     </p>
 
-                    <p> Posted by {this.state.author} Created at {this.state.createdAt}</p>
+                    <p style={{fontSize:"12px",color:"#002859"}}> Posted by {this.state.author} Created at {this.state.createdAt}</p>
                   </div>
                   <ul id="commentList">
                     {this.state.commentsViewing.map(function(comment,i){
                         return(
                             <li id="commentContent">
-                                <p style={{fontSize:"10px"}}>followup discussions</p>
+                                <p style={{fontSize:"10px",color:"#002859"}}>followup discussions</p>
                                <h2></h2>
                                <p>{comment.content}</p>
 
                               <h2></h2>
-                              <p style={{fontSize:"10px"}}>good question  0</p>
-                              <FaThumbsOUp id ="thumb" style={{fontSize:"20px"}} onClick="upvote()"/>
+                              <p style={{fontSize:"10px", color:"#002859"}}>good question    0</p>
+                              <button id ="thumb" onClick={()=>this.upvote(comment._id)}><FaThumbsOUp /></button>
                               <p id="commentUser">Updated by {comment.author.name} at {comment.createdAt}</p>
                             </li>
                         )
@@ -346,8 +403,7 @@ userPortfilio(){
                         <img src={face} id="picture" style={{position:"absolute",top:20,left:40,width:120,height:120}}/>
                         <FaCog id="setting" />
                         <FaSignOut id="signout"/>
-                        <FaUser id="user" onclick="userPortfilio()"/>
-
+                        <button id="user" onClick={()=>this.userPortfilio()}><FaUser/></button>
                     </div>
 
 
