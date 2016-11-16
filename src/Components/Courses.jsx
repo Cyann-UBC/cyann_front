@@ -219,6 +219,9 @@ postComment=()=>{
             this.getComment()
 
         })
+
+
+        document.getElementById("newComment").value = "";
     }
 
     getComment=()=>{
