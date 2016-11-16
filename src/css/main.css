@@ -1,3 +1,4 @@
+
 #searchbar{
     position: absolute;
     width: 130px;
@@ -60,35 +61,50 @@
     z-index: 1;
     left: 0;
     top: 90;
-    width: 200px;
+    width: 210px;
     height: 220px;
     box-shadow: 0px 10px 20px 0px #60848C;
 }
 
-#Nav{
-    position: absolute;
-    top: 0;
-    left:320;
+#signout{
+  font-size: 20px;
+  position: absolute;
+  top:180px;
+  left:140px;
+  color: white;
 }
-#searchicon{
-    position: absolute;
-    top: 10;
-    left:355;
+#signout:hover{
+  color:black;
+}
+#setting{
+  font-size: 20px;
+  position: absolute;
+  top:180px;
+  left:90px;
+  color: white;
+}
+#setting:hover{
+  color:black;
+}
+#user{
+  font-size: 20px;
+  position: absolute;
+  top:180px;
+  left:40px;
+  color: white;
+
+}
+#user:hover{
+  color:black;
 }
 
 #name{
   color:white;
   position: absolute;
-  top:170px;
-  left:40px;
+  top:145px;
+  left:50px;
   font-size: 15px;
-
 }
-#picture{
-  z-index: 1;
-  position:absolute;
-}
-
 .post {
   border-radius: 4px;
   background-color: transparent;
@@ -162,26 +178,27 @@
 #aaa {
     position: absolute;
     top:100px;
-    left:10px;
-    width:400px;
+    left:7px;
+    width:420px;
     list-style-type: none;
-    margin: 0;
-
-    height:550px;
+    height:580px;
     overflow: auto;
 }
 
 #b {
-  left:10px;
-  width:400px;
+  left:5px;
+  width:420px;
 
   font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
   border-bottom: 1px solid #ccc;
   text-align: left;
-  white-space: nowrap;
+  white-space: pre-wrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  height:60px;
+  height:65px;
+
+  //margin-top: 10px;
+  margin-bottom: 5px;
 }
 
 #b:last-child {
@@ -189,12 +206,9 @@
 }
 
 #b a {
-  padding-left: 10px;
-  padding-right: 10px;
   text-decoration: none;
-  color: #000;
-  //box-shadow:0px 1px 1px 0px grey;
-  width:400px;
+  color: white;
+  width:420px;
 
   -webkit-transition: font-size 0.3s ease, background-color 0.3s ease;
   -moz-transition: font-size 0.3s ease, background-color 0.3s ease;
@@ -205,19 +219,26 @@
 }
 
 #b a:hover {
-  font-size: 22px;
+  font-size: 21px;
+  color:#f6f6f6;
+  box-shadow: 5px 5px 5px grey;
 
-  width:400px;
-  background: #f6f6f6;
+  width:410px;
+  height:60px;
+  background: #56767E;
 }
 #b a:focus {
-  font-size: 22px;
-
-  width:400px;
-  background: #f6f6f6;
+color:#f6f6f6;
+  font-size: 21px;
+  box-shadow: 5px 5px 5px grey;
+  height:60px;
+  width:410px;
+  background: #56767E;
 }
 #post_body{
-  font-size: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 17px;
   position: relative;
   left:0px;
   width:400px;
@@ -226,6 +247,8 @@
   text-overflow: ellipsis;
 }
 #post_title{
+  padding-left: 10px;
+  padding-right: 10px;
   width:400px;
   white-space: nowrap;
   overflow: hidden;
@@ -261,30 +284,6 @@ td {
 
 }
 
-
-#PostWithDisplay{
-    position:relative;
-    left:30px;
-    top:40px;
-    text-align: left;
-    padding:10px;
-    font-family: 'Arial Serif';
-}
-#PostWithDisplay_title{
-    text-align: left;
-    font-size: 20px;
-}
-
-#PostWithDisplay_content{
-    text-align: left;
-    font-size: 15px;
-    margin:20px;
-    width: 500px;
-}
-#form-control{
-   width:300px;
-}
-
 #newPost_title{
     position:absolute;
     top:50px;
@@ -316,42 +315,93 @@ td {
     box-shadow:  0px 1px 1px 0px grey;
 
 }
+#postPage{
+    position: absolute;
+    top:10px;
+    left:670px;
+    overflow: scroll;
+    height:650px;
+    width: 600px;
+}
+#postTop{
+  width:560px;
+  height: auto;
+  margin-left: 5px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 2px 2px 2px 2px #60848C;
+}
 
 #contentTitle{
-    position: absolute;
+    //position: absolute;
     top:20px;
     left:670px;
     font-size: 20px;
     color:black;
-    width:570px;
+    width:560px;
     border-bottom-style: inset;;
 
 }
 #contentContent{
-    position: absolute;
+  white-space: pre-wrap;
+    //position: absolute;
     top:70px;
     left:670px;
-    font-size: 15px;
+    //font-size: 15px;
+    font: 200 15px/1.5 Helvetica, Verdana, sans-serif;
     color:black;
-    width:570px;
+    width:560px;
     text-align: left;
     //height:250px;
-    overflow: scroll;
+    //overflow: scroll;
     border-bottom-style: double;
-    margin-bottom: 30px;
+    //margin-bottom: 30px;
     min-height: 100px;
-    max-height: 250px;
+    //max-height: 250px;
     padding-bottom: 20px;
+    padding: 10px;
+    word-wrap: normal;
+
+}
+
+#commentList{
+    position: relative;
+    margin-top:30px;
+    //left:670px;
+    width:570px;
+    list-style-type: none;
+    height:320px;
+    //overflow: scroll;
+}
+#commentContent{
+  white-space: pre-wrap;
+  width:560px;
+  font: 200 15px/1.5 Helvetica, Verdana, sans-serif;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 2px 2px 2px 2px #60848C;
+  margin-bottom: 30px;
+  margin-left: 5px;
+  text-align: left;
+  min-height: 30px;
+  word-wrap: normal;
+  padding: 10px;
 }
 #newComment{
     position: relative;
-    top:20px;
+    top:10px;
+    height:30px;
+    width:540px;
+}
+#newComment:focus{
+height:150px;
 
 }
 #newComment_submit{
     position: relative;
     top:20px;
     left:0px;
+    margin-bottom: 20px;
 }
 #newComment_submit:hover {
     font-weight: bold;
@@ -366,28 +416,22 @@ td {
 #newComment_cancel:hover {
     font-weight: bold;
     box-shadow:  0px 1px 1px 0px grey;
+}
 
-}
-#commentList{
-    position: absolute;
-    margin-top:350px;
-    left:670px;
-    width:570px;
-    list-style-type: none;
-    height:320px;
-    overflow: scroll;
-}
-#commentContent{
-  width:560px;
-  font: 200 15px/1.5 Helvetica, Verdana, sans-serif;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 2px 2px 2px 2px #60848C;
-  margin-bottom: 30px;
-  margin-left: 5px;
-  text-align: left;
-  min-height: 30px;
-  word-wrap: break-word;
-  padding: 10px;
-}
 h2 { width:100%; border-bottom: 1px solid #000; line-height:0.1em; margin:10px 0 5px; }
+
+#thumb{
+  position: relative;
+  left:85px;
+  top:-28px;
+}
+#thumb:hover{
+  color:red;
+}
+#commentUser{
+  text-align: right;
+  position: relative;
+  top:-45px;
+  font-size: 10px;
+  margin-bottom: -40px;
+}
