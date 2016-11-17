@@ -1,0 +1,43 @@
+.Home {
+  text-align: center;
+}
+
+.App-logo {
+  position:absolute;
+  animation: App-logo-spin infinite 20s linear;
+  top:200px;
+  left:80px;
+  height: 80px;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.fb-login-button {
+  position: absolute;
+}
+#overall{
+  display: absolute;
+}
+
+#message_div{
+  position:absolute;
+  top:180px;
+  left:20px;
+  width: 500px;
+}
+#form_div{
+  position:relative;
+  top:180px;
+  left:500px;
+  width: 800px;
+}
+#m{
+  position:relative;
+  top: 5px;
+  font-size:20px;
+  color:white;
+  font-family:"Adobe Garamond Pro Bold", Georgia, "Times New Roman", Times, serif;
+}
