@@ -24,7 +24,7 @@
 #course_list{
     position: relative;
     left: 20px;
-    top: 200px;
+    top: 230px;
     color:white;
     height: 470px;
     overflow: scroll;
@@ -43,7 +43,20 @@
     font-weight: bold;
 }
 
+#addCourse{
+  position: absolute;
+  top:240px;
+  z-index: 1;
+  left:0px;
+  color:white;
+  width:212px;
+  font-size: 15px;
+  border-bottom: 2px inset #ccc;
+}
+#addCourse:hover{
+    font-weight: bold;
 
+}
 
 #menu_bar{
     background-color:#60848C;
@@ -116,9 +129,10 @@
   text-align: left;
   font-size: 15px;
   padding: 5px;
-  width: 150px;
+  width: 170px;
   position:relative;
-  top:40px;
+  top:50px;
+  left:-10px;
   transition: all 0.5s;
   cursor: pointer;
   margin: 5px;
@@ -165,7 +179,6 @@
 #new_post:hover {
     font-weight: bold;
     box-shadow:  0px 1px 1px 0px white;
-
 }
 
 
@@ -243,7 +256,7 @@ color:#f6f6f6;
   padding-right: 10px;
   font-size: 15px;
   position: relative;
-  top:-35px;
+  top:-8px;
   left:0px;
   width:400px;
   white-space: nowrap;
@@ -252,7 +265,7 @@ color:#f6f6f6;
 }
 #post_title{
   position: relative;
-  top:-35px;
+  top:-8px;
   padding-left: 10px;
   padding-right: 10px;
   width:400px;
@@ -455,8 +468,6 @@ h2 { width:100%; border-bottom: 1px solid #000; line-height:0.1em; margin:10px 0
   top:-15px;
   left:390px;
   z-index: 1;
-  border: none;
-  padding: 0px;
   color:white;
   background-color: transparent;
 }
@@ -467,40 +478,25 @@ h2 { width:100%; border-bottom: 1px solid #000; line-height:0.1em; margin:10px 0
   color:#002859;
 }
 
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-
-/* Modal Content */
-.modal-content {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-}
-
-/* The Close Button */
-.close {
-    color: #aaaaaa;
-    float: right;
-    font-size: 28px;
+#bu:hover{
     font-weight: bold;
+    box-shadow:  0px 2px 2px 0px white;
 }
 
-.close:hover,
-.close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
+#updatePostTitle{
+  position: relative;
+  top:5px;
+  width:550px;
+  height:30px;
+}
+
+#updatePostContent{
+  position: relative;
+  width:540px;
+  height:300px;
+}
+#updateCom{
+  position: relative;
+  width:540px;
+  min-height: 100px;
 }
