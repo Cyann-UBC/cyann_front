@@ -441,6 +441,14 @@ updatePost=()=>{
   .then((responseData) => {
     this.setState({postTitle:responseData.data.title})
     this.setState({postContent:responseData.data.content})
+    fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts/")
+    .then((response) => response.json())
+    .then((responseData) => {
+      this.setState({postSource:responseData.data})
+      this.setState({ifShowContent:this.state.ifShowContent})
+
+      this.setFontWeight1()
+      })
   })
 
   this.setState({ifShowContent:true})
