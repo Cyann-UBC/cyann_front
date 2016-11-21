@@ -308,6 +308,8 @@ postComment=()=>{
             this.setState({postSource:responseData.data})
             this.getContent(responseData.data[0]._id)
             this.setState({ifShowContent:!this.state.ifShowContent})
+
+            this.setFontWeight1()
         })
 
         })
@@ -366,6 +368,15 @@ postComment=()=>{
         body:formBody})
         .then((response) => response.json())
         .then((responseData) => {
+        fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts/")
+        .then((response) => response.json())
+        .then((responseData) => {
+          this.setState({postSource:responseData.data})
+          this.getContent(responseData.data[0]._id)
+          this.setState({ifShowContent:this.state.ifShowContent})
+
+          this.setFontWeight1()
+          })
         })
 
     }
@@ -431,7 +442,6 @@ updatePost=()=>{
     this.setState({postTitle:responseData.data.title})
     this.setState({postContent:responseData.data.content})
   })
-
 
   this.setState({ifShowContent:true})
   this.setState({ifShowEditPost:false})
