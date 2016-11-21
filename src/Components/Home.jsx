@@ -158,7 +158,7 @@ class Home extends Component {
         <Modal
           show={this.state.showModal}
           onHide={this.close}
-          backdrop={false}
+          backdrop='static'
           bsSize="large">
           <Modal.Header closeButton>
             <Modal.Title>Hello, {this.state.user_name} !</Modal.Title>
@@ -166,11 +166,11 @@ class Home extends Component {
 
           <Modal.Body>
             <OverlayTrigger placement="bottom" overlay={tooltip_coursePage}>
-              <Button bsStyle="primary" bsSize="large"><Link to="/courses">Go to Courses</Link></Button>
+              <Button bsSize="large"><Link to="/courses">Go to Courses</Link></Button>
             </OverlayTrigger>
 
             <OverlayTrigger placement="bottom" overlay={tooltip_profilePage}>
-              <Button bsStyle="primary" bsSize="large">Go to Profile</Button>
+              <Button bsSize="large">Go to Profile</Button>
             </OverlayTrigger>
           </Modal.Body>
 
