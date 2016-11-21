@@ -1,3 +1,4 @@
+
 #searchbar{
     position: absolute;
     width: 130px;
@@ -17,15 +18,16 @@
     width: 105px;
     font-size:14px;
     padding: 5px 10px 5px 30px;
-    
+
 }
 
 #course_list{
-    position: relative; 
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 200px;
+    position: relative;
+    left: 20px;
+    top: 230px;
     color:white;
+    height: 470px;
+    overflow: scroll;
 }
 #course {
     display: absolute;
@@ -41,53 +43,84 @@
     font-weight: bold;
 }
 
+#addCourse{
+  position: absolute;
+  top:240px;
+  z-index: 1;
+  left:0px;
+  color:white;
+  width:212px;
+  font-size: 15px;
+  border-bottom: 2px inset #ccc;
+}
+#addCourse:hover{
+    font-weight: bold;
 
+}
 
 #menu_bar{
     background-color:#60848C;
-    position: absolute; 
-    z-index: 1; 
+    position: absolute;
+    z-index: 1;
     left: 250px;
     top: 90;
-    width: 400px; 
-    height: 100%; 
+    width: 400px;
+    height: 100%;
 }
 
 #portfolio_bar{
     background-color:#57BCFZ;
-    position: absolute; 
+    position: absolute;
     z-index: 1;
     left: 0;
     top: 90;
-    width: 200px; 
-    height: 220px; 
+    width: 210px;
+    height: 220px;
     box-shadow: 0px 10px 20px 0px #60848C;
 }
 
-#Nav{
-    position: absolute; 
-    top: 0;
-    left:320;
+#signout{
+  font-size: 20px;
+  position: absolute;
+  top:180px;
+  left:140px;
+  color: white;
 }
-#searchicon{
-    position: absolute; 
-    top: 10;
-    left:355;
+#signout:hover{
+  color:#002859;
+}
+#setting{
+  font-size: 20px;
+  position: absolute;
+  top:180px;
+  left:90px;
+  color: white;
+}
+#setting:hover{
+  color:#002859;
+}
+#user{
+  position: absolute;
+  padding: 0px;
+  font-size: 20px;
+  position: absolute;
+  top:175px;
+  background: none;
+  border: none;
+  left:40px;
+  color: white;
+}
+#user:hover{
+  color:#002859;
 }
 
 #name{
   color:white;
-  position: absolute; 
-  top:170px;
-  left:40px;
+  position: absolute;
+  top:145px;
+  left:50px;
   font-size: 15px;
-    
 }
-#picture{
-  z-index: 1;
-  position:absolute;
-}
-
 .post {
   border-radius: 4px;
   background-color: transparent;
@@ -96,9 +129,10 @@
   text-align: left;
   font-size: 15px;
   padding: 5px;
-  width: 150px;
+  width: 170px;
   position:relative;
-  top:40px;
+  top:50px;
+  left:-10px;
   transition: all 0.5s;
   cursor: pointer;
   margin: 5px;
@@ -125,7 +159,7 @@
   font-weight: bold;
 }
 
-.post:hover span:after {
+.post:hover span:after{
   opacity: 1;
   right: 0;
 }
@@ -136,14 +170,15 @@
     position:absolute;
     color:white;
 }
+
 #prof_post_list{
     position:absolute;
     color:white;
 }
+
 #new_post:hover {
     font-weight: bold;
     box-shadow:  0px 1px 1px 0px white;
-    
 }
 
 
@@ -151,27 +186,33 @@
     position: absolute;
     width:100px;
     top:20px;
-    font-size: 25px;
+    font-size: 20px;
     left:10px;
-    
+
 }
 
 #aaa {
     position: absolute;
     top:100px;
-    left:10px;
-    width:400px;
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
+    left:7px;
+    width:420px;
+    list-style-type: none;
+    height:580px;
+    overflow: auto;
 }
 
 #b {
-    left:10px;
-  width:400px;
-    
-  font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
+  left:5px;
+  width:420px;
+
+  font: 200 16px/1.5 Helvetica, Verdana, sans-serif;
   border-bottom: 1px solid #ccc;
+  text-align: left;
+  white-space: pre-wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height:55px;
+  margin-bottom: 5px;
 }
 
 #b:last-child {
@@ -180,9 +221,9 @@
 
 #b a {
   text-decoration: none;
-  color: #000;
-    
-  width:400px;
+  color: white;
+  width:420px;
+  padding-top: 10px;
 
   -webkit-transition: font-size 0.3s ease, background-color 0.3s ease;
   -moz-transition: font-size 0.3s ease, background-color 0.3s ease;
@@ -190,26 +231,48 @@
   -ms-transition: font-size 0.3s ease, background-color 0.3s ease;
   transition: font-size 0.3s ease, background-color 0.3s ease;
   display: block;
-  width: 200px;
 }
 
 #b a:hover {
-  font-size: 30px;
-    
-  width:400px;
-  background: #f6f6f6;
+  font-size: 18px;
+  color:#f6f6f6;
+  box-shadow: 5px 5px 5px grey;
+
+  width:410px;
+  height:50px;
+  background: #56767E;
 }
 #b a:focus {
-  font-size: 30px;
-    
-  width:400px;
-  background: #f6f6f6;
+color:#f6f6f6;
+  font-size: 18px;
+  box-shadow: 5px 5px 5px grey;
+  height:50px;
+  width:410px;
+  background: #56767E;
 }
 #post_body{
-  font-size: 20px;
   position: relative;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 15px;
+  position: relative;
+  top:-8px;
   left:0px;
-    width:400px;
+  width:400px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#post_title{
+  position: relative;
+  top:-8px;
+  padding-left: 10px;
+  padding-right: 10px;
+  width:400px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
 }
 
 #homework_list{
@@ -223,7 +286,7 @@
 }
 
 table, th {
-    
+
     color:blue;
     border: 1px solid grey;
     background: white;
@@ -237,29 +300,203 @@ td {
     text-align:left;
     font-Weight:bold;
     font-size:17px;
-    
+
 }
 
-
-#PostWithDisplay{
-    position:relative;
-    left:30px;
-    top:40px;
-    text-align: left;
-    padding:10px;
-    font-family: 'Arial Serif';
+#newPost_title{
+    position:absolute;
+    top:50px;
+    width:510px;
+    left:700px;
 }
-#PostWithDisplay_title{
-    text-align: left;
+#newPost_content{
+    position:absolute;
+    top:100px;
+    left:700px;
+}
+#newPost_submit{
+    position:absolute;
+    top:530px;
+    left:750px;
+}
+#newPost_submit:hover {
+    font-weight: bold;
+    box-shadow:  0px 1px 1px 0px grey;
+
+}
+#newPost_cancel{
+    position:absolute;
+    top:530px;
+    left:850px;
+}
+#newPost_cancel:hover {
+    font-weight: bold;
+    box-shadow:  0px 1px 1px 0px grey;
+
+}
+#postPage{
+    position: absolute;
+    top:10px;
+    left:670px;
+    overflow: scroll;
+    height:650px;
+    width: 600px;
+}
+#postTop{
+  width:560px;
+  height: auto;
+  margin-left: 5px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 2px 2px 2px 2px #60848C;
+}
+
+#contentTitle{
+    //position: absolute;
+    top:20px;
+    left:670px;
     font-size: 20px;
+    color:black;
+    width:560px;
+    border-bottom-style: inset;;
+
+}
+#contentContent{
+  white-space: pre-wrap;
+    //position: absolute;
+    top:70px;
+    left:670px;
+    //font-size: 15px;
+    font: 200 15px/1.5 Helvetica, Verdana, sans-serif;
+    color:black;
+    width:560px;
+    text-align: left;
+    //height:250px;
+    //overflow: scroll;
+    border-bottom-style: double;
+    //margin-bottom: 30px;
+    min-height: 100px;
+    //max-height: 250px;
+    padding-bottom: 20px;
+    padding: 10px;
+    word-wrap: normal;
+
 }
 
-#PostWithDisplay_content{
-    text-align: left;
-    font-size: 15px;
-    margin:20px;
-    width: 500px;
+#commentList{
+    position: relative;
+    margin-top:30px;
+    //left:670px;
+    width:570px;
+    list-style-type: none;
+    height:320px;
+    //overflow: scroll;
 }
-#form-control{
-   width:300px; 
+#commentContent{
+  white-space: pre-wrap;
+  width:560px;
+  font: 200 15px/1.5 Helvetica, Verdana, sans-serif;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 2px 2px 2px 2px #60848C;
+  margin-bottom: 30px;
+  margin-left: 5px;
+  text-align: left;
+  min-height: 30px;
+  word-wrap: normal;
+  padding: 10px;
+}
+#newComment{
+    position: relative;
+    top:10px;
+    height:30px;
+    width:540px;
+}
+#newComment:focus{
+height:150px;
+
+}
+#newComment_submit{
+    position: relative;
+    top:20px;
+    left:0px;
+    margin-bottom: 20px;
+}
+#newComment_submit:hover {
+    font-weight: bold;
+    box-shadow:  0px 1px 1px 0px grey;
+
+}
+#newComment_cancel{
+    position: relative;
+    top:20px;
+    left:50px;
+}
+#newComment_cancel:hover {
+    font-weight: bold;
+    box-shadow:  0px 1px 1px 0px grey;
+}
+
+h2 { width:100%; border-bottom: 1px solid #000; line-height:0.1em; margin:10px 0 5px; }
+
+#thumb{
+  position: relative;
+  left:85px;
+  top:-33px;
+  font-size: 20px;
+  color:#002859;
+  padding:0px;
+  border: none;
+  background-color: transparent;
+  z-index: 1;
+}
+#thumb:hover{
+  color:red;
+}
+#thumb:focus{
+  color:red;
+}
+#commentUser{
+  text-align: right;
+  position: relative;
+  top:-55px;
+  font-size: 10px;
+  margin-bottom: -50px;
+}
+#delete_post{
+  position: relative;
+  top:-15px;
+  left:390px;
+  z-index: 1;
+  color:white;
+  background-color: transparent;
+}
+#delete_post:hover{
+  color:#002859;
+}
+#delete_post:focus{
+  color:#002859;
+}
+
+#bu:hover{
+    font-weight: bold;
+    box-shadow:  0px 2px 2px 0px white;
+}
+
+#updatePostTitle{
+  position: relative;
+  top:5px;
+  width:550px;
+  height:30px;
+}
+
+#updatePostContent{
+  position: relative;
+  width:540px;
+  height:300px;
+}
+#updateCom{
+  position: relative;
+  width:540px;
+  min-height: 100px;
 }

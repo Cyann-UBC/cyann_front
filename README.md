@@ -17,5 +17,5 @@ Todos:
     5.3 implementing from for answering a question
 
 
-
-
+for the login, we are using a component called react-facebook-login:
+https://www.npmjs.com/package/react-facebook-login

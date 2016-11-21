@@ -1,0 +1,59 @@
+.Home {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.fb-login-button {
+  position: absolute;
+}
+#overall{
+  display: relative;
+}
+#logo_div{
+  position: absolute;
+  top: 200px;
+  left: 100px;
+}
+#intro_message{
+  position: absolute;
+  top: 210px;
+  left: 200px;
+}
+#m{
+  font-size:20px;
+  max-width: 550px;
+  color:white;
+  font-family:"Adobe Garamond Pro Bold", Georgia, "Times New Roman", Times, serif;
+}
+#au_link{
+  position:absolute;
+  top:380px;
+  left:200px;
+  width:300px;
+}
+#course_link{
+  position:relative;
+  width:300px;
+  font-size:20px;
+}
+#ac_div{
+  float:right;
+}
+#iphone1{
+  position:absolute;
+  top:150px;
+  left:810px;
+}
+#iphone2{
+  position:absolute;
+  top:180px;
+  left:980px;
+}
