@@ -47,6 +47,15 @@
 #ac_div{
   float:right;
 }
+
+.modal-container {
+  position: relative;
+}
+.modal-container .modal, .modal-container .modal-backdrop {
+  position: absolute;
+  top: 200px;
+}
+
 #iphone1{
   position:absolute;
   top:150px;
