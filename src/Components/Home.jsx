@@ -12,8 +12,7 @@ class Home extends Component {
     super(props);
     this.state = {
       authenticated:false,
-      is_student:false,
-      is_instructor:false,
+      user_type:"Student",
       user_name:"",
       user_id:"",
       user_email:"",
@@ -21,17 +20,10 @@ class Home extends Component {
       user_tokenExpire:"",
       user_picture:"",
       showModal:false,
-      jwt:"9",
+      jwt:"0",
     }
   }
   componentWillMount(){
-    // (function(d, s, id) {
-    //   var js, fjs = d.getElementsByTagName(s)[0];
-    //   if (d.getElementById(id)) return;
-    //   js = d.createElement(s); js.id = id;
-    //   js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=959862910786642";
-    //   fjs.parentNode.insertBefore(js, fjs);
-    // }(document, 'script', 'facebook-jssdk'));
   }
   responseFacebook = (response) => {
     // console.log(response);
@@ -55,17 +47,15 @@ class Home extends Component {
       // console.log(this.state.user_accessToken);
       // console.log(this.state.user_expiresin);
       // console.log(this.state.user_picture);
-      console.log('is_student = ' + this.state.is_student);
-      console.log('is_instructor = ' + this.state.is_instructor);
       this.retreiveJWT(result);
     }
   }
   FbResponseStudent = (response) => {
-    this.setState({is_student:true,is_instructor:false});
+    this.setState({user_type:"Student"});
     this.responseFacebook(response);
   }
   FbResponseInstructor = (response) => {
-    this.setState({is_student:false,is_instructor:true});
+    this.setState({user_type:"Instructor"});
     this.responseFacebook(response);
   }
   close=()=> {
@@ -78,18 +68,11 @@ class Home extends Component {
   retreiveJWT(result){
     // console.warn(this.state.access_token)
     var body = {
-    'userType': '',
+    'userType': this.state.user_type,
     'socialToken': result.accessToken,
     'email':result.email,
     'profileImg':result.picture.data.url
     }
-
-    if (this.state.is_student && !this.state.is_instructor)
-      body.userType = 'Student';
-    else if (!this.state.is_student && this.state.is_instructor)
-      body.userType = 'Instructor';
-    else
-      body.userType = 'Unknown';
 
     var formBody = []
     // console.warn(JSON.stringify(body))
@@ -100,15 +83,14 @@ class Home extends Component {
     }
     formBody = formBody.join("&");
 
-    var a = [];
-
     fetch('http://localhost:8080/api/users/register',{method:'POST',headers: {'Content-Type': 'application/x-www-form-urlencoded'},body:formBody})
     .then((response) => response.json())
     .then((responseData) => {
-      this.setState({jwt:responseData.data.token});
+      this.setState({jwt:responseData.jwt});
+      this.setState({user_type:responseData.userType});
       console.log(this.state.jwt);
-      // console.log(responseData);
-      // Actions.courseList({jwt:responseData})
+      console.log(this.state.user_type);
+      console.log(responseData);
     })
   }
   render(){
@@ -161,7 +143,8 @@ class Home extends Component {
           backdrop='static'
           bsSize="large">
           <Modal.Header closeButton>
-            <Modal.Title>Hello, {this.state.user_name} !</Modal.Title>
+            <img src={this.state.user_picture} style={{float:'left', padding:5, width:30, height:30}}/>
+            <Modal.Title style={{float:'left'}}>Hello, {this.state.user_name} !</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
@@ -179,12 +162,8 @@ class Home extends Component {
           </Modal.Footer>
         </Modal>
 
-        {/* <button id="course_link" style={{top:520,left:200}}>
-          <Link to="/CreateUser" style={{color:"white"}}>New User >></Link>
-        </button> */}
-
-          <img src={iphone} id="iphone1" width={197} height={390}/>
-          <img src={iphone} id="iphone2" width={197} height={390}/>
+        <img src={iphone} id="iphone1" width={197} height={390}/>
+        <img src={iphone} id="iphone2" width={197} height={390}/>
       </div>
     );
   }
