@@ -222,6 +222,8 @@ class Courses extends Component {
         this.setState({ifShowQuestion:false})
         this.setState({ifShowContent:false})
         this.setState({ifShowEditPost:false})
+        this.setState({postTitle:''})
+        this.setState({postContent:''})
     }
     showContent=()=>{
         this.setState({ifShowContent:true})
@@ -310,6 +312,9 @@ postComment=()=>{
             this.setState({ifShowContent:!this.state.ifShowContent})
 
             this.setFontWeight1()
+            document.getElementById("updatePostTitle").value = "";
+            document.getElementById("updatePostContent").value = "";
+
         })
 
         })
@@ -322,6 +327,8 @@ postComment=()=>{
         this.getContent(this.state.firstId)
         this.setState({ifShowQuestion:false})
         this.setState({ifShowContent:true})
+        document.getElementById("updatePostTitle").value = "";
+        document.getElementById("updatePostContent").value = "";
       }
     }
 
@@ -441,6 +448,14 @@ updatePost=()=>{
   .then((responseData) => {
     this.setState({postTitle:responseData.data.title})
     this.setState({postContent:responseData.data.content})
+    fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts/")
+    .then((response) => response.json())
+    .then((responseData) => {
+      this.setState({postSource:responseData.data})
+      this.setState({ifShowContent:this.state.ifShowContent})
+
+      this.setFontWeight1()
+      })
   })
 
   this.setState({ifShowContent:true})
@@ -554,7 +569,7 @@ renderList=()=>{
             return(
               <div id="postPage">
                 <div id="postTop">
-                    <p id="contentTitle">
+                    <p id="contentTitle" >
                        {this.state.postTitle}
                     </p>
 
