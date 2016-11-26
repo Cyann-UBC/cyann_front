@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Modal, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
 //import logo from '../logo.svg';
 import '../css/App.css';
 import '../css/main.css';
@@ -12,6 +13,8 @@ import GoX from 'react-icons/lib/go/x';
 
 
 import face from '../../picture/face.jpg';
+
+import FacebookLogin from 'react-facebook-login';
 
 
 class Courses extends Component {
@@ -48,17 +51,83 @@ class Courses extends Component {
             commentEditing:'',
             ifEditComment:'',
             firstId:'',
+            showLoginModal: true,
+            user_authenticated: false,
+            user_name:'',
+            user_id:'',
+            user_email:'',
+            user_tokenExpire:'',
+            user_accessToken:'',
+            user_picture:'',
+            user_type:'Student'
         }
     }
-
     componentWillMount(){
-
     }
     componentDidMount(){
       this.getPosts()
       this.getUsername()
     }
+    loginCallback= (response)=>{
 
+      if (response.status === "unknown")
+        this.setState({
+          user_authenticated:false,
+          showLoginModal:true
+        });
+      else {
+        this.setState({
+          user_authenticated:true,
+          user_name:response.name,
+          user_id:response.id,
+          user_email:response.email,
+          user_tokenExpire:response.expiresIn,
+          user_accessToken:response.accessToken,
+          user_picture:response.picture.data.url,
+          showLoginModal:false,
+        });
+        console.log(this.state.user_name);
+        console.log(this.state.user_id);
+        console.log(this.state.user_email);
+        console.log(this.state.user_accessToken);
+        console.log(this.state.user_expiresin);
+        console.log(this.state.user_picture);
+        var result = response;
+        this.retreiveJWT(result);
+
+      }
+    }
+    retreiveJWT(result){
+      var body = {
+      'userType': this.state.user_type,
+      'socialToken': result.accessToken,
+      'email':result.email,
+      'profileImg':result.picture.data.url
+      }
+
+      var formBody = []
+      for (var property in body) {
+        var encodedKey = encodeURIComponent(property);
+        var encodedValue = encodeURIComponent(body[property]);
+        formBody.push(encodedKey + "=" + encodedValue);
+      }
+      formBody = formBody.join("&");
+
+      fetch('http://localhost:8080/api/users/register',{method:'POST',headers: {'Content-Type': 'application/x-www-form-urlencoded'},body:formBody})
+      .then((response) => response.json())
+      .then((responseData) => {
+        this.setState({jwt:responseData.jwt});
+        this.setState({user_type:responseData.userType});
+        console.log(this.state.jwt);
+        console.log(responseData);
+      })
+    }
+    loginModalClose=()=>{
+        this.setState({showLoginModal:false});
+    }
+    loginModalOpen=()=>{
+        this.setState({showLoginModal:true});
+    }
     getUsername(){
       fetch("http://localhost:8080/api/users/5823aad92853c404061b8673")
       .then((response) => response.json())
@@ -80,7 +149,7 @@ class Courses extends Component {
     }
     setUserName(event){
         this.setState({userName:"event.target.value"})
-//        console.log("asdf")
+        // console.log("asdf")
     }
     setPassword(event){
         this.setState({password:event.target.value})
@@ -718,7 +787,7 @@ renderList=()=>{
 
                     <div id="portfolio_bar">
                         <p id="name">{this.state.userName}</p>
-                        <img src={face} id="picture" style={{position:"absolute",top:20,left:40,width:120,height:120}}/>
+                        <img src={this.state.user_picture} style={{position:"absolute",top:20,left:40,width:120,height:120}}/>
                         <FaCog id="setting" />
                         <FaSignOut id="signout" onClick={()=>this.logout()}/>
                         <button id="user" onClick={()=>this.userPortfilio()}><FaUser/></button>
@@ -788,6 +857,39 @@ renderList=()=>{
                             {this.renderList()}
                         </div>
                     </div>
+
+                    {/* code for login */}
+                    <div style={{display:'none'}}><FacebookLogin
+                      appId="959862910786642"
+                      autoLoad={true}
+                      fields="name,email,picture"
+                      callback={this.loginCallback}
+                      size="small"
+                      icon="fa-facebook"
+                      textButton="Facebook Login"
+                    /></div>
+
+                    <Modal
+                      show={this.state.showLoginModal}
+                      onHide={this.loginModalClose}
+                      backdrop='static'
+                      bsSize="large">
+                      <Modal.Header>
+                        <Modal.Title style={{float:'left'}}>Please Login first.</Modal.Title>
+                      </Modal.Header>
+
+                      <Modal.Body>
+                        <div style={{padding:5}}><FacebookLogin
+                          appId="959862910786642"
+                          autoLoad={true}
+                          fields="name,email,picture"
+                          callback={this.loginCallback}
+                          size="metro"
+                          icon="fa-facebook"
+                          textButton="Login via Facebook"
+                        /></div>
+                      </Modal.Body>
+                    </Modal>
                 </div>
             </div>
         );
