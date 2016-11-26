@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import logo from '../logo.svg';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import { Modal, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import '../css/Home.css';
 
@@ -24,6 +24,15 @@ class Home extends Component {
     }
   }
   componentWillMount(){
+  }
+  componentDidMount(){
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=959862910786642";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
   }
   responseFacebook = (response) => {
     // console.log(response);
@@ -61,12 +70,13 @@ class Home extends Component {
   close=()=> {
     this.setState({showModal:false});
   }
-
   open() {
     this.setState({showModal:true});
   }
+  linkToCourses() {
+    browserHistory.push('/courses');
+  }
   retreiveJWT(result){
-    // console.warn(this.state.access_token)
     var body = {
     'userType': this.state.user_type,
     'socialToken': result.accessToken,
@@ -75,7 +85,6 @@ class Home extends Component {
     }
 
     var formBody = []
-    // console.warn(JSON.stringify(body))
     for (var property in body) {
       var encodedKey = encodeURIComponent(property);
       var encodedValue = encodeURIComponent(body[property]);
@@ -149,11 +158,11 @@ class Home extends Component {
 
           <Modal.Body>
             <OverlayTrigger placement="bottom" overlay={tooltip_coursePage}>
-              <Button bsSize="large"><Link to="/courses">Go to Courses</Link></Button>
+              <Button bsStyle="primary" bsSize="large" onClick={this.linkToCourses}>Go to Courses</Button>
             </OverlayTrigger>
 
             <OverlayTrigger placement="bottom" overlay={tooltip_profilePage}>
-              <Button bsSize="large">Go to Profile</Button>
+              <Button bsStyle="primary" bsSize="large">Go to Profile</Button>
             </OverlayTrigger>
           </Modal.Body>
 
