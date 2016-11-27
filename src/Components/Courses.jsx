@@ -51,22 +51,25 @@ class Courses extends Component {
             commentEditing:'',
             ifEditComment:'',
             firstId:'',
-            showLoginModal: true,
+            showLoginModal: false,
             user_authenticated: false,
-            user_name:'',
             user_id:'',
             user_email:'',
             user_tokenExpire:'',
             user_accessToken:'',
             user_picture:'',
-            user_type:'Student'
+            jwt:'',
+            user_type:'Student',
+            allCoursesList:[],
+            coursesEnrolled:[],
+            thisCourse:'',
         }
     }
+
     componentWillMount(){
     }
     componentDidMount(){
-      this.getPosts()
-      this.getUsername()
+      this.getUserCourse()
     }
     loginCallback= (response)=>{
 
@@ -78,7 +81,7 @@ class Courses extends Component {
       else {
         this.setState({
           user_authenticated:true,
-          user_name:response.name,
+          userName:response.name,
           user_id:response.id,
           user_email:response.email,
           user_tokenExpire:response.expiresIn,
@@ -86,7 +89,7 @@ class Courses extends Component {
           user_picture:response.picture.data.url,
           showLoginModal:false,
         });
-        console.log(this.state.user_name);
+        console.log(this.state.userName);
         console.log(this.state.user_id);
         console.log(this.state.user_email);
         console.log(this.state.user_accessToken);
@@ -95,8 +98,11 @@ class Courses extends Component {
         var result = response;
         this.retreiveJWT(result);
 
+
+
       }
     }
+
     retreiveJWT(result){
       var body = {
       'userType': this.state.user_type,
@@ -113,14 +119,18 @@ class Courses extends Component {
       }
       formBody = formBody.join("&");
 
-      fetch('http://localhost:8080/api/users/register',{method:'POST',headers: {'Content-Type': 'application/x-www-form-urlencoded'},body:formBody})
+      fetch('http://localhost:8080/api/users/register',{method:'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},body:formBody})
       .then((response) => response.json())
       .then((responseData) => {
         this.setState({jwt:responseData.jwt});
         this.setState({user_type:responseData.userType});
         console.log(this.state.jwt);
         console.log(responseData);
+        this.setState({curUserId:responseData.userId});
       })
+
+
     }
     loginModalClose=()=>{
         this.setState({showLoginModal:false});
@@ -128,23 +138,47 @@ class Courses extends Component {
     loginModalOpen=()=>{
         this.setState({showLoginModal:true});
     }
-    getUsername(){
-      fetch("http://localhost:8080/api/users/5823aad92853c404061b8673")
+
+    getAllCourses=()=>{
+      fetch("http://localhost:8080/api/courses",{method:"GET",headers: {
+      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+      }})
       .then((response) => response.json())
       .then((responseData) => {
+          this.setState({allCoursesList:responseData.data})
           //console.log(responseData.data)
-          this.setState({userName:responseData.data.username})
-          this.setState({curUserId:responseData.data._id})
+          //console.log(responseData.data[0].instructor[0].name)
+          this.addCourse()
+      })
+
+    }
+
+    getUserCourse(){
+      fetch("http://localhost:8080/api/users/my/courseData",{method:"GET",headers: {
+      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+      }})
+      .then((response) => response.json())
+      .then((responseData) => {
+        console.log(responseData)
+        this.setState({coursesEnrolled:responseData})
       })
     }
 
-    getPosts(){
-      fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts")
+    getPosts(id){
+      this.setState({thisCourse:id})
+      fetch("http://localhost:8080/api/courses/"+id+"/posts",{method:"GET",headers: {
+      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+      }})
       .then((response) => response.json())
       .then((responseData) => {
+        console.log('asdhjfalsdflaskjdhf')
           console.log(responseData.data)
           this.setState({postSource:responseData.data})
-          this.setState({firstId:responseData.data[0]._id})
+          if(responseData.data.length>0){
+            this.setState({firstId:responseData.data[0]._id})
+          }
+          this.setFontWeight1()
+
       })
     }
     setUserName(event){
@@ -176,7 +210,7 @@ class Courses extends Component {
                        <div id="student_post_list">
                            <input id="searchbar" placeholder="Search.."></input>
 
-                           <FaSearchPlus style={{position:"absolute",width:25,height:25,top:23,left:145}}/>
+                           <FaSearchPlus style={{position:"absolute",width:25,height:25,top:23,left:145,color:'#17B3C1',zIndex:'1'}}/>
 
                            <button id="new_post"  type="button" onClick={this.updateList.bind(this)}>New Post</button>
 
@@ -315,7 +349,6 @@ postComment=()=>{
   else{
         var comment = {
             'content': this.state.commentContent,
-            'userId': '5823aad92853c404061b8673',
             }
 
         var formBody = []
@@ -325,9 +358,10 @@ postComment=()=>{
             formBody.push(encodedKey + "=" + encodedValue);
         }
         formBody = formBody.join("&");
-        fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts/"+this.state.postViewing+"/comments",{method:"POST",
+        fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments",{method:"POST",
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
         },
         body:formBody})
         .then((response) => response.json())
@@ -340,7 +374,9 @@ postComment=()=>{
     }
 
     getComment=()=>{
-        fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts/"+this.state.postViewing+"/comments",{method:"get"})
+        fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments",{method:"get",headers: {
+        'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+        }})
         .then((response) => response.json())
         .then((responseData) => {
            console.log(responseData.data)
@@ -356,7 +392,7 @@ postComment=()=>{
         var post = {
             'title': this.state.postTitle,
             'content': this.state.postContent,
-            'userId': '5823aad92853c404061b8673'
+            'userId': this.state.userId
             }
 
         var formBody = []
@@ -366,14 +402,19 @@ postComment=()=>{
             formBody.push(encodedKey + "=" + encodedValue);
         }
         formBody = formBody.join("&");
-        fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts",{method:"POST",
+        fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts",{method:"POST",
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+
         },
         body:formBody})
         .then((response) => response.json())
         .then((responseData) => {
-        fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts")
+        fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts",{method:"GET",
+        headers: {
+        'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+        }})
         .then((response) => response.json())
         .then((responseData) => {
             this.setState({postSource:responseData.data})
@@ -402,7 +443,10 @@ postComment=()=>{
     }
 
     getContent(id){
-       fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts/"+id,{method:"get"})
+       fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+id,{method:"get",
+       headers: {
+       'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+       }})
         .then((response) => response.json())
         .then((responseData) => {
            console.log(responseData.data)
@@ -425,7 +469,7 @@ postComment=()=>{
     deletePost=(id)=>{
       //alert("Are you sure you want to quit?");
       var body = {
-          'userId': "5823aad92853c404061b8673"
+          'userId': this.state.userId
           }
 
       var formBody = []
@@ -437,14 +481,19 @@ postComment=()=>{
       formBody = formBody.join("&");
     var r = confirm("Are you sure you want to delete this post?");
     if (r == true) {
-        fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts/"+id,{method:"DELETE",
+        fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+id,{method:"DELETE",
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+
         },
         body:formBody})
         .then((response) => response.json())
         .then((responseData) => {
-        fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts/")
+        fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/",{method:"GET",
+        headers: {
+        'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+        }})
         .then((response) => response.json())
         .then((responseData) => {
           this.setState({postSource:responseData.data})
@@ -460,7 +509,7 @@ postComment=()=>{
 
   upvote=(commentId)=>{
     var body = {
-        'userId': '5823aad92853c404061b8673',
+        'userId': this.state.userId,
         }
 
     var formBody = []
@@ -470,9 +519,11 @@ postComment=()=>{
         formBody.push(encodedKey + "=" + encodedValue);
     }
     formBody = formBody.join("&");
-    fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts/"+this.state.postViewing+"/comments/"+commentId+"/upvote",{method:"put",
+    fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments/"+commentId+"/upvote",{method:"put",
     headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+
     },
     body:formBody})
     .then((response) => response.json())
@@ -496,7 +547,7 @@ editPost=()=>{
 
 updatePost=()=>{
   var body = {
-      'userId': '5823aad92853c404061b8673',
+      'userId': this.state.userId,
       'title': this.state.postTitle,
       'content': this.state.postContent,
       }
@@ -508,27 +559,33 @@ updatePost=()=>{
       formBody.push(encodedKey + "=" + encodedValue);
   }
   formBody = formBody.join("&");
-  fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts/"+this.state.postViewing,{method:"PUT",
+  fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing,{method:"PUT",
   headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+
   },
   body:formBody})
   .then((response) => response.json())
   .then((responseData) => {
+    console.log(responseData.data)
     this.setState({postTitle:responseData.data.title})
-    this.setState({postContent:responseData.data.content})
-    fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts/")
+    this.setState({postContent:responseData.data.conent})
+    fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/",{method:"GET",
+    headers: {
+    'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+    }})
     .then((response) => response.json())
     .then((responseData) => {
+      console.log(responseData)
       this.setState({postSource:responseData.data})
-      this.setState({ifShowContent:this.state.ifShowContent})
-
       this.setFontWeight1()
-      })
+    })
   })
 
   this.setState({ifShowContent:true})
   this.setState({ifShowEditPost:false})
+
 }
 
 cancelUpdatePost=()=>{
@@ -544,7 +601,7 @@ editComment=(id)=>{
 
 updateNewComment=()=>{
   var body = {
-      'userId': '5823aad92853c404061b8673',
+      'userId': this.state.userId,
       'content': this.state.commentContent,
       }
 
@@ -555,9 +612,11 @@ updateNewComment=()=>{
       formBody.push(encodedKey + "=" + encodedValue);
   }
   formBody = formBody.join("&");
-  fetch("http://localhost:8080/api/courses/5823af0196ca1b048113562a/posts/"+this.state.postViewing+"/comments/"+this.state.commentEditing,{method:"PUT",
+  fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments/"+this.state.commentEditing,{method:"PUT",
   headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+
   },
   body:formBody})
   .then((response) => response.json())
@@ -575,6 +634,21 @@ cancelUpdateComment=()=>{
     this.setState({ifEditComment:false})
 }
 
+joinClass=(id)=>{
+  console.log(id)
+  var r = confirm("are you sure you want join this class?");
+  if(r==true){
+    fetch("http://localhost:8080/api/courses/addUser/"+id,{method:"put",
+    headers: {
+      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+    }})
+      .then((response) => response.json())
+      .then((responseData) => {
+        //console.log(responseData.data)
+      })
+    }
+}
+
 addCourse=()=>{
   this.setState({background:'none'})
   this.setState({ifshowtext:false})
@@ -585,6 +659,18 @@ addCourse=()=>{
     <div>
       <p style={{color:'white',fontSize:20,position:'relative',top:50}}>University of British Columbia</p>
 
+      <ul id="allCourses">
+        {this.state.allCoursesList.map(function(course,i){
+          return(
+            <li id="c">
+                 <dt>{course.courseName}</dt>
+                 <dd style={{fontSize:13, padding:6}}>instructor: {course.instructor[0].name}</dd>
+                 <button id="joinButton" onClick={()=>this.joinClass(course._id)}>join class</button>
+            </li>
+          )
+        },this)}
+
+     </ul>
     </div>
 
   })
@@ -779,6 +865,8 @@ renderList=()=>{
             )
         }
     }
+
+
     render() {
         return (
             <div className="App">
@@ -797,50 +885,60 @@ renderList=()=>{
 
                     <div style={{height:window.innerHeight,width:window.innerWidth/6,backgroundColor:'#17B3C1'}}>
 
-                        <a href="#" id="addCourse" onClick={()=>this.addCourse()}>+ add another course</a>
+                        <a href="#" id="addCourse" onClick={()=>this.getAllCourses()} >+ add another course</a>
 
 
                         <ul id="course_list">
-                            <ul id="course" type="button" data-toggle="collapse" data-target="#content"
-                                onClick={this.setBackground}
-                                style={{background:this.state.background}}>
-                                CPEN321
-                            </ul>
-                            <div id="content" className="collapse">
-                                <ul>
-                                    <button className="post" >
-                                        <span
-                                            onClick={this.setFontWeight1}
-                                            style={{fontWeight:this.state.fontWeight1}}>
-                                            Student Post
-                                        </span>
-                                    </button>
 
-                                    <button className="post" >
-                                        <span
-                                            onClick={this.setFontWeight2}
-                                            style={{fontWeight:this.state.fontWeight2}}>
-                                            Professor Post
-                                        </span>
-                                    </button>
+                                {this.state.coursesEnrolled.map(function(course,i){
+                                  return(
+                                    <div>
+                                    <ul id="course" data-toggle="collapse" data-target={"#"+i}
+                                        onClick={this.setBackground}
+                                        style={{background:this.state.background}}>
 
-                                    <button className="post" >
-                                        <span
-                                            onClick={this.setFontWeight3}
-                                            style={{fontWeight:this.state.fontWeight3}}>
-                                            Resource
-                                        </span>
-                                    </button>
+                                        <p>{course.courseName}</p>
+                                    </ul>
+                                    <div id={i} className="collapse">
+                                        <ul>
+                                            <button className="post" onClick={()=>this.getPosts(course._id)}>
+                                                <span
+                                                    onClick={this.setFontWeight1}
+                                                    style={{fontWeight:this.state.fontWeight1}}>
+                                                    Student Post
+                                                </span>
+                                            </button>
 
-                                    <button className="post" >
-                                        <span
-                                            onClick={this.setFontWeight4}
-                                            style={{fontWeight:this.state.fontWeight4}}>
-                                            Enrolled Students
-                                        </span>
-                                    </button>
-                                </ul>
-                            </div>
+                                            <button className="post" >
+                                                <span
+                                                    onClick={this.setFontWeight2}
+                                                    style={{fontWeight:this.state.fontWeight2}}>
+                                                    Professor Post
+                                                </span>
+                                            </button>
+
+                                            <button className="post" >
+                                                <span
+                                                    onClick={this.setFontWeight3}
+                                                    style={{fontWeight:this.state.fontWeight3}}>
+                                                    Resource
+                                                </span>
+                                            </button>
+
+                                            <button className="post" >
+                                                <span
+                                                    onClick={this.setFontWeight4}
+                                                    style={{fontWeight:this.state.fontWeight4}}>
+                                                    Enrolled Students
+                                                </span>
+                                            </button>
+                                        </ul>
+                                    </div>
+                                  </div>
+
+                                  )
+                                },this)}
+
 
                         </ul>
                     </div>
