@@ -10,7 +10,7 @@ import FaUser from 'react-icons/lib/fa/user';
 import FaSearchPlus from 'react-icons/lib/fa/search-plus';
 import FaPlusCircle from 'react-icons/lib/fa/plus-circle';
 import GoX from 'react-icons/lib/go/x';
-
+import FaEnvelopeO from 'react-icons/lib/fa/envelope-o';
 
 import face from '../../picture/face.jpg';
 
@@ -63,12 +63,15 @@ class Courses extends Component {
             allCoursesList:[],
             coursesEnrolled:[],
             thisCourse:'',
+            keywords:'',
+            studentList:[],
         }
     }
 
     componentWillMount(){
     }
     componentDidMount(){
+
       this.getUserCourse()
     }
     loginCallback= (response)=>{
@@ -97,9 +100,6 @@ class Courses extends Component {
         console.log(this.state.user_picture);
         var result = response;
         this.retreiveJWT(result);
-
-
-
       }
     }
 
@@ -164,14 +164,17 @@ class Courses extends Component {
       })
     }
 
-    getPosts(id){
+    getCourse(id){
       this.setState({thisCourse:id})
+      this.getAllUser(id)
+    }
+
+    getPosts(id){
       fetch("http://localhost:8080/api/courses/"+id+"/posts",{method:"GET",headers: {
       'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
       }})
       .then((response) => response.json())
       .then((responseData) => {
-        console.log('asdhjfalsdflaskjdhf')
           console.log(responseData.data)
           this.setState({postSource:responseData.data})
           if(responseData.data.length>0){
@@ -181,6 +184,18 @@ class Courses extends Component {
 
       })
     }
+    getAllUser(id){
+      fetch("http://localhost:8080/api/courses/users/"+id,{method:"GET",headers: {
+      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+      }})
+      .then((response) => response.json())
+      .then((responseData) => {
+        console.log(responseData)
+        this.setState({studentList:responseData})
+        //  this.setFontWeight4()
+      })
+    }
+
     setUserName(event){
         this.setState({userName:"event.target.value"})
         // console.log("asdf")
@@ -197,7 +212,9 @@ class Courses extends Component {
     updateComment(event){
         this.setState({commentContent:event.target.value})
     }
-
+    updateKeywords(event){
+      this.setState({keywords:event.target.value},()=>{this.filterPost()})
+    }
     setBackground=()=>{
         this.setState({background:'#60848C'})
     }
@@ -208,8 +225,7 @@ class Courses extends Component {
 
         this.setState({selection:
                        <div id="student_post_list">
-                           <input id="searchbar" placeholder="Search.."></input>
-
+                           <input id="searchbar" placeholder="Search.." onChange={this.updateKeywords.bind(this)}></input>
                            <FaSearchPlus style={{position:"absolute",width:25,height:25,top:23,left:145,color:'#17B3C1',zIndex:'1'}}/>
 
                            <button id="new_post"  type="button" onClick={this.updateList.bind(this)}>New Post</button>
@@ -308,9 +324,27 @@ class Courses extends Component {
         this.setState({ifShowEditPost:false})
     }
     setFontWeight4=()=>{
+      // this.getAllUser()
       this.setState({background:'#60848C'})
 
-        this.setState({selection:'students list'})
+        this.setState({selection:
+          <div>
+            <p style={{position:'relative',top:50, color:'white',fontSize:20}}>student list</p>
+            <ul id="studentList">
+            {this.state.studentList.map(function(student,i){
+              return(
+                <li id="d">
+                     <dt style={{position:'relative',left:70}}>{student.name}</dt>
+                     <dd style={{position:'relative',left:70}}> honour points: {student.honour}</dd>
+                     <FaEnvelopeO id="email"/>
+                     <img src={student.profileImg} id="studentPic"/>
+                  </li>
+              )
+            },this)}
+          </ul>
+
+          </div>
+        })
         this.setState({fontWeight1:'300'})
         this.setState({fontWeight2:'300'})
         this.setState({fontWeight3:'300'})
@@ -320,6 +354,7 @@ class Courses extends Component {
         this.setState({ifShowContent:false})
         this.setState({ifShowEditPost:false})
     }
+
     updateList=()=>{
         this.setState({ifshowtext:true})
         this.setState({ifShowQuestion:false})
@@ -676,6 +711,26 @@ addCourse=()=>{
   })
 }
 
+filterPost(){
+    var keywords = this.state.keywords
+    fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/search?keyword="+this.state.keywords+"&weeksAgo=9",{method:"GET",
+          headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+          }})
+    .then((response) => response.json())
+    .then((responseData) => {
+      console.warn(JSON.stringify(responseData))
+      this.setState({postSource:responseData.data})
+      this.setFontWeight1()
+    })
+    .catch((error)=>{
+      this.refs.errorModal.open()
+    })
+  }
+
+
+
 renderList=()=>{
       if(this.state.ifShowEditPost){
         return(
@@ -870,9 +925,7 @@ renderList=()=>{
     render() {
         return (
             <div className="App">
-
                 <div style={{display:'flex',flexDirection:'row'}}>
-
                     <div id="portfolio_bar">
                         <p id="name">{this.state.userName}</p>
                         <img src={this.state.user_picture} style={{position:"absolute",top:20,left:40,width:120,height:120}}/>
@@ -897,7 +950,7 @@ renderList=()=>{
                                         onClick={this.setBackground}
                                         style={{background:this.state.background}}>
 
-                                        <p>{course.courseName}</p>
+                                        <p onClick={()=>this.getCourse(course._id)}>{course.courseName}</p>
                                     </ul>
                                     <div id={i} className="collapse">
                                         <ul>

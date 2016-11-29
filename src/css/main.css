@@ -8,6 +8,7 @@
     border: 1px solid #ccc;
     border-radius: 1px;
     font-size: 15px;
+    color:black;
     background-color: transparent;
     padding: 5px 10px 5px 30px;
 }
@@ -181,7 +182,7 @@
     color:white;
 }
 
-#new_post:hover {
+#new_post:hover active {
     font-weight: bold;
     box-shadow:  0px 1px 1px 0px white;
 }
@@ -539,4 +540,45 @@ h2 { width:100%; border-bottom: 1px solid #000; line-height:0.1em; margin:10px 0
     font-weight: bold;
     box-shadow:  0px 1px 1px 0px white;
 
+}
+
+#studentList{
+  position: relative;
+  top:80px;
+  left:5px;
+  text-align: left;
+  color:white;
+  font-size: 15px;
+}
+
+#d{
+  left:35px;
+  width:420px;
+  margin-bottom: 5px;
+  //font: 200 16px/1.5 Helvetica, Verdana, sans-serif;
+  border-bottom: 1px solid #ccc;
+  text-align: left;
+  height:75px;
+  padding: 20px;
+}
+#c:last-child {
+  border: none;
+}
+
+#email{
+  position: relative;
+  font-size: 35px;
+  top:-40px;
+  left:350px;
+}
+#email:hover, :active{
+  color:#002859;
+}
+
+#studentPic{
+  position: relative;
+  width:50px;
+  height:50px;
+  top:-45px;
+  left:-40px;
 }
