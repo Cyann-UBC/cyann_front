@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import FacebookLogin from 'react-facebook-login';
-import { Link, browserHistory } from 'react-router';
+import { Link, browserHistory, Navigation } from 'react-router';
 import { Modal, Button, Tooltip, OverlayTrigger, Media, Image, Panel, Accordion, Tabs, Tab } from 'react-bootstrap';
 import '../css/Home.css';
 import logo from '../logo.svg';
@@ -45,9 +45,7 @@ class Home extends Component {
         user_picture:response.picture.data.url,
         showModal:true,
       });
-      console.log(this.state.user_name);
-      console.log(this.state.user_id);
-      console.log(this.state.user_email);
+      console.log(response)
       var result = response;
       this.retreiveJWT(result);
     }
@@ -57,7 +55,8 @@ class Home extends Component {
     'userType': this.state.user_type,
     'socialToken': result.accessToken,
     'email':result.email,
-    'profileImg':result.picture.data.url
+    'profileImg':result.picture.data.url,
+    // 'token_for_business':result.token_for_business
     }
 
     var formBody = []
@@ -71,10 +70,11 @@ class Home extends Component {
     fetch('http://localhost:8080/api/users/register',{method:'POST',headers: {'Content-Type': 'application/x-www-form-urlencoded'},body:formBody})
     .then((response) => response.json())
     .then((responseData) => {
-      this.setState({user_jwt:responseData.jwt});
-      this.setState({user_type:responseData.userType});
+      this.setState({user_jwt:responseData.data});
+      this.setState({user_type:responseData.data.userType});
       console.log(this.state.user_jwt);
       console.log(responseData);
+
       this.setState({user_authenticated:true});
     });
   }
@@ -120,7 +120,9 @@ class Home extends Component {
     this.setState({showModal:true});
   }
   linkToCourses() {
-    browserHistory.push('/courses');
+    // browserHistory.push('/courses/:jwt',params:({jwt:this.state.user_jwt}));
+
+    browserHistory.push('/courses'+'?jwt='+this.state.user_jwt.jwt+'&id='+this.state.user_jwt.userId+"&type="+this.state.user_jwt.userType);
   }
   linkToProfile() {
     browserHistory.push('/profile');
@@ -171,10 +173,10 @@ class Home extends Component {
 
     var page_link = (this.state.user_type === "Instructor") ? (
       <OverlayTrigger placement="bottom" overlay={tooltip_coursePage}>
-        <Button bsStyle="primary" bsSize="large" onClick={this.linkToProf}>Go to Prof's Courses</Button>
+        <Button bsStyle="primary" bsSize="large" onClick={this.linkToProf}>Go to Profs Courses</Button>
       </OverlayTrigger>) : (
       <OverlayTrigger placement="bottom" overlay={tooltip_coursePage}>
-        <Button bsStyle="primary" bsSize="large" onClick={this.linkToCourses}>Go to Courses</Button>
+        <Button bsStyle="primary" bsSize="large" onClick={this.linkToCourses.bind(this)}>Go to Courses</Button>
       </OverlayTrigger>);
 
     var render_panel;
@@ -189,11 +191,12 @@ class Home extends Component {
           </h1>
 
           <div><FacebookLogin
-            appId="959862910786642"
+            appId="187322851719291"
             autoLoad={false}
-            fields="name,email,picture"
+            fields="name,email,picture,token_for_business"
             callback={this.FbResponse}
             size="metro"
+            buttonStyle={{backgroundColor:'red'}}
             icon="fa-facebook"/>
           </div>
         </div>
@@ -202,20 +205,17 @@ class Home extends Component {
 
     return (
       <div id="overall">
-        <div id="logo_div">
-          <img src={cyann_logo} className="App-logo" alt="logo" />
-        </div>
 
         <section id="intro_message">
-          <h1 id="m" style={{fontSize:45}}>Cyann</h1>
-          <p id="m">Welcome to Cyann Web!<br/>
+          <h1 id="m" style={{fontSize:45,fontFamily:"Lato"}}>CYANN</h1>
+          <p id="m" style={{fontFamily:"Lato"}}>Welcome to Cyann Web!<br/>
                     Cyann is the learning forum for the new generation.<br/>
                     Make your learning and teaching more interactive.<br/>
                     Make your ideas heard.<br/></p>
         </section>
         <div id="au_link">
           <div style={{padding:5}}><FacebookLogin
-            appId="959862910786642"
+            appId="187322851719291"
             autoLoad={false}
             fields="name,email,picture"
             callback={this.FbResponseStudent}
@@ -225,12 +225,11 @@ class Home extends Component {
           /></div>
 
           <div style={{padding:5}}><FacebookLogin
-            appId="959862910786642"
+            appId="187322851719291"
             autoLoad={false}
-            fields="name,email,picture"
+            fields="name,email,picture,token_for_business"
             callback={this.FbResponseInstructor}
             size="metro"
-            style={{width:200}}
             icon="fa-facebook"
             textButton="Login as Instructor"
           /></div>
@@ -269,8 +268,8 @@ class Home extends Component {
           </Modal.Footer>
         </Modal>
 
-        <img src={iphone} id="iphone1" width={197} height={390}/>
-        <img src={iphone} id="iphone2" width={197} height={390}/>
+
+        <img src={cyann_logo} id="iphone1" width={200} alt="logo" />
       </div>
     );
   }
