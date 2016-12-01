@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import logo from '../logo.svg';
+import FacebookLogin from 'react-facebook-login';
 import { Link, browserHistory } from 'react-router';
 import { Modal, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import '../css/Home.css';
-
+import logo from '../logo.svg';
 import iphone from '../../picture/iphone.png';
-import FacebookLogin from 'react-facebook-login';
-
+import cyann_logo from '../../picture/cyann_logo.png';
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -20,19 +19,19 @@ class Home extends Component {
       user_tokenExpire:"",
       user_picture:"",
       showModal:false,
-      jwt:"0",
+      jwt:"",
     }
   }
   componentWillMount(){
   }
   componentDidMount(){
-    (function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=959862910786642";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
+    // (function(d, s, id) {
+    //   var js, fjs = d.getElementsByTagName(s)[0];
+    //   if (d.getElementById(id)) return;
+    //   js = d.createElement(s); js.id = id;
+    //   js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=959862910786642";
+    //   fjs.parentNode.insertBefore(js, fjs);
+    // }(document, 'script', 'facebook-jssdk'));
   }
   responseFacebook = (response) => {
     // console.log(response);
@@ -76,6 +75,9 @@ class Home extends Component {
   linkToCourses() {
     browserHistory.push('/courses');
   }
+  linkToProfile() {
+    browserHistory.push('/profile');
+  }
   retreiveJWT(result){
     var body = {
     'userType': this.state.user_type,
@@ -113,7 +115,7 @@ class Home extends Component {
     return (
       <div id="overall">
         <div id="logo_div">
-          <img src={logo} className="App-logo" alt="logo" />
+          <img src={cyann_logo} className="App-logo" alt="logo" />
         </div>
 
         <section id="intro_message">
@@ -162,7 +164,7 @@ class Home extends Component {
             </OverlayTrigger>
 
             <OverlayTrigger placement="bottom" overlay={tooltip_profilePage}>
-              <Button bsStyle="primary" bsSize="large">Go to Profile</Button>
+              <Button bsStyle="primary" bsSize="large" onClick={this.linkToProfile}>Go to Profile</Button>
             </OverlayTrigger>
           </Modal.Body>
 
