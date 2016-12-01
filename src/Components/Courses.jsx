@@ -71,6 +71,40 @@ class Courses extends Component {
     componentWillMount(){
     }
     componentDidMount(){
+         return(
+            <div>
+        {/* code for login */}
+                    <div style={{display:'none'}}><FacebookLogin
+                      appId="959862910786642"
+                      autoLoad={true}
+                      fields="name,email,picture"
+                      callback={this.loginCallback}
+                      size="small"
+                      icon="fa-facebook"
+                      textButton="Facebook Login"
+                    /></div>
+                 <Modal
+                      show={this.state.showLoginModal}
+                      onHide={this.loginModalClose}
+                      backdrop='static'
+                      bsSize="large">
+                      <Modal.Header>
+                        <Modal.Title style={{float:'left'}}>Please Login first.</Modal.Title>
+                      </Modal.Header>
+
+                      <Modal.Body>
+                        <div style={{padding:5}}><FacebookLogin
+                          appId="959862910786642"
+                          autoLoad={true}
+                          fields="name,email,picture"
+                          callback={this.loginCallback}
+                          size="metro"
+                          icon="fa-facebook"
+                          textButton="Login via Facebook"
+                        /></div>
+                      </Modal.Body>
+                    </Modal>
+        </div>)
 
       this.getUserCourse()
     }
@@ -127,6 +161,7 @@ class Courses extends Component {
         this.setState({user_type:responseData.userType});
         console.log(this.state.jwt);
         console.log(responseData);
+        this.getUserCourse()
         this.setState({curUserId:responseData.userId});
       })
 
@@ -141,7 +176,7 @@ class Courses extends Component {
 
     getAllCourses=()=>{
       fetch("http://localhost:8080/api/courses",{method:"GET",headers: {
-      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+      'Authorization': 'Bearer '+this.state.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -155,7 +190,7 @@ class Courses extends Component {
 
     getUserCourse(){
       fetch("http://localhost:8080/api/users/my/courseData",{method:"GET",headers: {
-      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+      'Authorization': 'Bearer '+this.state.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -171,7 +206,7 @@ class Courses extends Component {
 
     getPosts(id){
       fetch("http://localhost:8080/api/courses/"+id+"/posts",{method:"GET",headers: {
-      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+      'Authorization': 'Bearer '+this.state.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -186,7 +221,7 @@ class Courses extends Component {
     }
     getAllUser(id){
       fetch("http://localhost:8080/api/courses/users/"+id,{method:"GET",headers: {
-      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+      'Authorization': 'Bearer '+this.state.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -405,7 +440,7 @@ postComment=()=>{
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments",{method:"POST",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+            'Authorization': 'Bearer '+this.state.jwt
         },
         body:formBody})
         .then((response) => response.json())
@@ -419,7 +454,7 @@ postComment=()=>{
 
     getComment=()=>{
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments",{method:"get",headers: {
-        'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+        'Authorization': 'Bearer '+this.state.jwt
         }})
         .then((response) => response.json())
         .then((responseData) => {
@@ -449,7 +484,7 @@ postComment=()=>{
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts",{method:"POST",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+            'Authorization': 'Bearer '+this.state.jwt
 
         },
         body:formBody})
@@ -457,7 +492,7 @@ postComment=()=>{
         .then((responseData) => {
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts",{method:"GET",
         headers: {
-        'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+        'Authorization': 'Bearer '+this.state.jwt
         }})
         .then((response) => response.json())
         .then((responseData) => {
@@ -489,7 +524,7 @@ postComment=()=>{
     getContent(id){
        fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+id,{method:"get",
        headers: {
-       'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+       'Authorization': 'Bearer '+this.state.jwt
        }})
         .then((response) => response.json())
         .then((responseData) => {
@@ -528,7 +563,7 @@ postComment=()=>{
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+id,{method:"DELETE",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+            'Authorization': 'Bearer '+this.state.jwt
 
         },
         body:formBody})
@@ -536,7 +571,7 @@ postComment=()=>{
         .then((responseData) => {
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/",{method:"GET",
         headers: {
-        'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+        'Authorization': 'Bearer '+this.state.jwt
         }})
         .then((response) => response.json())
         .then((responseData) => {
@@ -568,7 +603,7 @@ postComment=()=>{
       fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments/"+ commentId,{method:"DELETE",
       headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+          'Authorization': 'Bearer '+this.state.jwt
 
       },
       body:formBody})
@@ -576,7 +611,7 @@ postComment=()=>{
       .then((responseData) => {
       fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments/"+ commentId,{method:"GET",
       headers: {
-      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+      'Authorization': 'Bearer '+this.state.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -607,7 +642,7 @@ postComment=()=>{
     fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments/"+commentId+"/upvote",{method:"put",
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+        'Authorization': 'Bearer '+this.state.jwt
 
     },
     body:formBody})
@@ -649,7 +684,7 @@ updatePost=()=>{
   fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing,{method:"PUT",
   headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+      'Authorization': 'Bearer '+this.state.jwt
 
   },
   body:formBody})
@@ -660,7 +695,7 @@ updatePost=()=>{
     this.setState({postContent:responseData.data.conent})
     fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/",{method:"GET",
     headers: {
-    'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+    'Authorization': 'Bearer '+this.state.jwt
     }})
     .then((response) => response.json())
     .then((responseData) => {
@@ -702,7 +737,7 @@ updateNewComment=()=>{
   fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments/"+this.state.commentEditing,{method:"PUT",
   headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+      'Authorization': 'Bearer '+this.state.jwt
 
   },
   body:formBody})
@@ -727,10 +762,11 @@ joinClass=(id)=>{
   if(r==true){
     fetch("http://localhost:8080/api/courses/addUser/"+id,{method:"put",
     headers: {
-      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+      'Authorization': 'Bearer '+this.state.jwt
     }})
       .then((response) => response.json())
       .then((responseData) => {
+        //this.getUserCourse()
         //console.log(responseData.data)
       })
     }
@@ -768,7 +804,7 @@ filterPost(){
     fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/search?keyword="+this.state.keywords+"&weeksAgo=9",{method:"GET",
           headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+          'Authorization': 'Bearer '+this.state.jwt
           }})
     .then((response) => response.json())
     .then((responseData) => {

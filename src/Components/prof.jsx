@@ -17,7 +17,7 @@ import face from '../../picture/face.jpg';
 import FacebookLogin from 'react-facebook-login';
 
 
-class Courses extends Component {
+class Prof extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -78,7 +78,42 @@ class Courses extends Component {
     componentWillMount(){
     }
     componentDidMount(){
+        return(
+            <div>
+        {/* code for login */}
+                    <div style={{display:'none'}}><FacebookLogin
+                      appId="959862910786642"
+                      autoLoad={true}
+                      fields="name,email,picture"
+                      callback={this.loginCallback}
+                      size="small"
+                      icon="fa-facebook"
+                      textButton="Facebook Login"
+                    /></div>
+                 <Modal
+                      show={this.state.showLoginModal}
+                      onHide={this.loginModalClose}
+                      backdrop='static'
+                      bsSize="large">
+                      <Modal.Header>
+                        <Modal.Title style={{float:'left'}}>Please Login first.</Modal.Title>
+                      </Modal.Header>
+
+                      <Modal.Body>
+                        <div style={{padding:5}}><FacebookLogin
+                          appId="959862910786642"
+                          autoLoad={true}
+                          fields="name,email,picture"
+                          callback={this.loginCallback}
+                          size="metro"
+                          icon="fa-facebook"
+                          textButton="Login via Facebook"
+                        /></div>
+                      </Modal.Body>
+                    </Modal>
+        </div>)
       this.getUserCourse()
+        console.log(this.state.coursesEnrolled)
     }
     loginCallback= (response)=>{
 
@@ -110,6 +145,7 @@ class Courses extends Component {
 
 
       }
+        //console.log(this.state.jwt)
     }
 
     retreiveJWT(result){
@@ -138,6 +174,7 @@ class Courses extends Component {
         console.log(responseData);
         this.setState({curUserId:responseData.userId});
           console.log(this.state.curUserId);
+          this.getUserCourse()
       })
 
 
@@ -152,7 +189,7 @@ class Courses extends Component {
     getAllCourses=()=>{
         console.log("saaaa")
       fetch("http://localhost:8080/api/courses",{method:"GET",headers: {
-      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDM3NTU5NX0.T4XK9BkKO_P-o1Bl_Tn6a3Al79NsBxqguAZiDMaW1nQ"
+      'Authorization': 'Bearer '+this.state.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -167,7 +204,7 @@ class Courses extends Component {
 
     getUserCourse(){
       fetch("http://localhost:8080/api/users/my/courseData",{method:"GET",headers: {
-      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDM3NTU5NX0.T4XK9BkKO_P-o1Bl_Tn6a3Al79NsBxqguAZiDMaW1nQ"
+      'Authorization': 'Bearer '+this.state.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -179,7 +216,7 @@ class Courses extends Component {
     getAssignment(id){
         this.setState({thisCourse:id})
         fetch("http://localhost:8080/api/"+id+"/files/assignments",{method:"GET",headers: {
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDIxMzU1MH0.gwm2kpNYs1FljTiDmBnoGxdgub2PMaloE43eyWB8wmo'
+          'Authorization': 'Bearer'+ this.state.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -192,7 +229,7 @@ class Courses extends Component {
 getReadings(id){
         this.setState({thisCourse:id})
         fetch("http://localhost:8080/api/"+id+"/files/readings",{method:"GET",headers: {
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDIxMzU1MH0.gwm2kpNYs1FljTiDmBnoGxdgub2PMaloE43eyWB8wmo'
+          'Authorization': 'Bearer'+ this.state.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -206,7 +243,7 @@ getReadings(id){
     getPosts(id){
       this.setState({thisCourse:id})
       fetch("http://localhost:8080/api/courses/"+id+"/posts",{method:"GET",headers: {
-      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDM3NTU5NX0.T4XK9BkKO_P-o1Bl_Tn6a3Al79NsBxqguAZiDMaW1nQ"
+      'Authorization': 'Bearer '+this.state.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -545,15 +582,16 @@ getReadings(id){
             formBody = formBody.join("&");
       fetch("http://localhost:8080/api/courses",{method:"POST",headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDM3NTU5NX0.T4XK9BkKO_P-o1Bl_Tn6a3Al79NsBxqguAZiDMaW1nQ"
+      'Authorization': 'Bearer '+this.state.jwt
       },
         body:formBody})
       .then((response) => response.json())
       .then((responseData) => {
         console.log(responseData)
+        this.joinClass(responseData.data._id)
           this.getUserCourse()
         console.log(this.state.coursesEnrolled)
-       this.joinClass(responseData.data._id)
+       
       })
      }
         
@@ -578,7 +616,7 @@ postComment=()=>{
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments",{method:"POST",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDM3NTU5NX0.T4XK9BkKO_P-o1Bl_Tn6a3Al79NsBxqguAZiDMaW1nQ"
+            'Authorization': 'Bearer '+this.state.jwt
         },
         body:formBody})
         .then((response) => response.json())
@@ -592,7 +630,7 @@ postComment=()=>{
 
     getComment=()=>{
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments",{method:"get",headers: {
-        'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDM3NTU5NX0.T4XK9BkKO_P-o1Bl_Tn6a3Al79NsBxqguAZiDMaW1nQ"
+        'Authorization': 'Bearer '+this.state.jwt
         }})
         .then((response) => response.json())
         .then((responseData) => {
@@ -631,7 +669,7 @@ postComment=()=>{
         
         fetch("http://localhost:8080/api/"+this.state.thisCourse+"/files/"+ type +"/download/"+filename,{method:"GET",
         headers: {
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDIxMzU1MH0.gwm2kpNYs1FljTiDmBnoGxdgub2PMaloE43eyWB8wmo'
+            'Authorization': 'Bearer'+this.state.jwt 
         }})
           .then((response)=> response.blob())
 //          .then((responseData) => {
@@ -661,7 +699,7 @@ postComment=()=>{
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts",{method:"POST",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDM3NTU5NX0.T4XK9BkKO_P-o1Bl_Tn6a3Al79NsBxqguAZiDMaW1nQ"
+            'Authorization': 'Bearer '+this.state.jwt
 
         },
         body:formBody})
@@ -669,7 +707,7 @@ postComment=()=>{
         .then((responseData) => {
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts",{method:"GET",
         headers: {
-        'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDM3NTU5NX0.T4XK9BkKO_P-o1Bl_Tn6a3Al79NsBxqguAZiDMaW1nQ"
+        'Authorization': 'Bearer '+this.state.jwt
         }})
         .then((response) => response.json())
         .then((responseData) => {
@@ -701,7 +739,7 @@ postComment=()=>{
     getContent(id){
        fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+id,{method:"get",
        headers: {
-       'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDM3NTU5NX0.T4XK9BkKO_P-o1Bl_Tn6a3Al79NsBxqguAZiDMaW1nQ"
+       'Authorization': 'Bearer '+this.state.jwt
        }})
         .then((response) => response.json())
         .then((responseData) => {
@@ -727,7 +765,7 @@ deleteFile=(type,assn)=>{
     if (r == true) {
         fetch("http://localhost:8080/api/"+this.state.thisCourse+"/files/"+type+"/"+assn,{method:"DELETE",
         headers: {
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDIxMzU1MH0.gwm2kpNYs1FljTiDmBnoGxdgub2PMaloE43eyWB8wmo'
+            'Authorization': 'Bearer'+this.state.jwt 
         }})
         .then((response) => response.json()
              .then((responseData) => {
@@ -754,7 +792,7 @@ deleteFile=(type,assn)=>{
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+id,{method:"DELETE",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDM3NTU5NX0.T4XK9BkKO_P-o1Bl_Tn6a3Al79NsBxqguAZiDMaW1nQ"
+            'Authorization': 'Bearer '+this.state.jwt
 
         },
         body:formBody})
@@ -762,7 +800,7 @@ deleteFile=(type,assn)=>{
         .then((responseData) => {
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/",{method:"GET",
         headers: {
-        'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDM3NTU5NX0.T4XK9BkKO_P-o1Bl_Tn6a3Al79NsBxqguAZiDMaW1nQ"
+        'Authorization': 'Bearer '+this.state.jwt
         }})
         .then((response) => response.json())
         .then((responseData) => {
@@ -791,7 +829,7 @@ deleteFile=(type,assn)=>{
     fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments/"+commentId+"/upvote",{method:"put",
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDM3NTU5NX0.T4XK9BkKO_P-o1Bl_Tn6a3Al79NsBxqguAZiDMaW1nQ"
+        'Authorization': 'Bearer '+this.state.jwt
 
     },
     body:formBody})
@@ -831,7 +869,7 @@ updatePost=()=>{
   fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing,{method:"PUT",
   headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDM3NTU5NX0.T4XK9BkKO_P-o1Bl_Tn6a3Al79NsBxqguAZiDMaW1nQ"
+      'Authorization': 'Bearer '+this.state.jwt
 
   },
   body:formBody})
@@ -842,7 +880,7 @@ updatePost=()=>{
     this.setState({postContent:responseData.data.conent})
     fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/",{method:"GET",
     headers: {
-    'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDM3NTU5NX0.T4XK9BkKO_P-o1Bl_Tn6a3Al79NsBxqguAZiDMaW1nQ"
+    'Authorization': 'Bearer '+this.state.jwt
     }})
     .then((response) => response.json())
     .then((responseData) => {
@@ -893,7 +931,7 @@ updateNewComment=()=>{
   fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments/"+this.state.commentEditing,{method:"PUT",
   headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDM3NTU5NX0.T4XK9BkKO_P-o1Bl_Tn6a3Al79NsBxqguAZiDMaW1nQ"
+      'Authorization': 'Bearer '+this.state.jwt
 
   },
   body:formBody})
@@ -918,7 +956,7 @@ joinClass=(id)=>{
   if(r==true){
     fetch("http://localhost:8080/api/courses/addUser/"+id,{method:"put",
     headers: {
-      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDM3NTU5NX0.T4XK9BkKO_P-o1Bl_Tn6a3Al79NsBxqguAZiDMaW1nQ"
+      'Authorization': 'Bearer '+this.state.jwt
     }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -1188,8 +1226,43 @@ renderList=()=>{
 
 
     render() {
+    //this.getUserCourse()
         return (
+            
             <div className="App">
+            {/* code for login */}
+                    <div style={{display:'none'}}><FacebookLogin
+                      appId="959862910786642"
+                      autoLoad={true}
+                      fields="name,email,picture"
+                      callback={this.loginCallback}
+                      size="small"
+                      icon="fa-facebook"
+                      textButton="Facebook Login"
+                    /></div>
+                 <Modal
+                      show={this.state.showLoginModal}
+                      onHide={this.loginModalClose}
+                      backdrop='static'
+                      bsSize="large">
+                      <Modal.Header>
+                        <Modal.Title style={{float:'left'}}>Please Login first.</Modal.Title>
+                      </Modal.Header>
+
+                      <Modal.Body>
+                        <div style={{padding:5}}><FacebookLogin
+                          appId="959862910786642"
+                          autoLoad={true}
+                          fields="name,email,picture"
+                          callback={this.loginCallback}
+                          size="metro"
+                          icon="fa-facebook"
+                          textButton="Login via Facebook"
+                        /></div>
+                      </Modal.Body>
+                    </Modal>
+            
+           
 
                 <div style={{display:'flex',flexDirection:'row'}}>
 
@@ -1284,38 +1357,9 @@ renderList=()=>{
                         </div>
                     </div>
 
-                    {/* code for login */}
-                    <div style={{display:'none'}}><FacebookLogin
-                      appId="959862910786642"
-                      autoLoad={true}
-                      fields="name,email,picture"
-                      callback={this.loginCallback}
-                      size="small"
-                      icon="fa-facebook"
-                      textButton="Facebook Login"
-                    /></div>
+                    
 
-                    <Modal
-                      show={this.state.showLoginModal}
-                      onHide={this.loginModalClose}
-                      backdrop='static'
-                      bsSize="large">
-                      <Modal.Header>
-                        <Modal.Title style={{float:'left'}}>Please Login first.</Modal.Title>
-                      </Modal.Header>
-
-                      <Modal.Body>
-                        <div style={{padding:5}}><FacebookLogin
-                          appId="959862910786642"
-                          autoLoad={true}
-                          fields="name,email,picture"
-                          callback={this.loginCallback}
-                          size="metro"
-                          icon="fa-facebook"
-                          textButton="Login via Facebook"
-                        /></div>
-                      </Modal.Body>
-                    </Modal>
+                    
                 </div>
             </div>
         );
@@ -1323,4 +1367,4 @@ renderList=()=>{
 }
 
 
-export default Courses;
+export default Prof;
