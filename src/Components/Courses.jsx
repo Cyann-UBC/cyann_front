@@ -236,6 +236,7 @@ class Courses extends Component {
                                <p id="post_h2">Post List</p>
                                <ul id="aaa">
                                    {this.state.postSource.map(function(post,i){
+                                     this.setState(this.thisCourse:post.course)
                                      if(post.author._id===this.state.curUserId){
                                        return(
                                         <li id="b" onClick={this.showContent.bind(this)}>
@@ -336,7 +337,7 @@ class Courses extends Component {
                 <li id="d">
                      <dt style={{position:'relative',left:70}}>{student.name}</dt>
                      <dd style={{position:'relative',left:70}}> honour points: {student.honour}</dd>
-                     <FaEnvelopeO id="email"/>
+                     <FaEnvelopeO id="email" onClick={()=>this.sendMail(student.email)}/>
                      <img src={student.profileImg} id="studentPic"/>
                   </li>
               )
@@ -353,6 +354,14 @@ class Courses extends Component {
         this.setState({ifShowQuestion:false})
         this.setState({ifShowContent:false})
         this.setState({ifShowEditPost:false})
+    }
+
+    sendMail(emailAddr) {
+      // window.open('mailto:luvian@hotmail.ca?subject=subject&body=Testing Email')
+      //location.href = "mailto:"+emailTo+'?cc='+emailCC+'&subject='+emailSub+'&body='+emailBody;
+      console.log(emailAddr)
+      location.href = 'mailto:'+emailAddr+'?subject=&body='
+
     }
 
     updateList=()=>{
@@ -542,6 +551,47 @@ postComment=()=>{
     }
   }
 
+  deleteComment=(commentId)=>{
+    var body = {
+        'userId': this.state.userId
+        }
+
+    var formBody = []
+    for (var property in body) {
+        var encodedKey = encodeURIComponent(property);
+        var encodedValue = encodeURIComponent(body[property]);
+        formBody.push(encodedKey + "=" + encodedValue);
+    }
+    formBody = formBody.join("&");
+    var r = confirm("Are you sure you want to delete this comment?");
+    if (r == true) {
+      fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments/"+ commentId,{method:"DELETE",
+      headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+
+      },
+      body:formBody})
+      .then((response) => response.json())
+      .then((responseData) => {
+      fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments/"+ commentId,{method:"GET",
+      headers: {
+      'Authorization': 'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiNjkxNzQyNzg3NjczNzQ0IiwidXNlcklkIjoiNTgzYTMzY2VkY2FjZTEwNGM5MTFmZTM1IiwidXNlclR5cGUiOiJzdHVkZW50IiwiaWF0IjoxNDgwMjEzMjIyfQ.WV1nOiQ0uu3Vrv7ROxLRLNK5TOS4rwpQkoL8ShpaZkQ"
+      }})
+      .then((response) => response.json())
+      .then((responseData) => {
+        this.setState({ifShowContent:true})
+
+        this.getComment()
+        })
+      })
+
+      this.setState({ifEditComment:false})
+
+    }
+
+  }
+
   upvote=(commentId)=>{
     var body = {
         'userId': this.state.userId,
@@ -563,7 +613,9 @@ postComment=()=>{
     body:formBody})
     .then((response) => response.json())
     .then((responseData) => {
-        console.log(responseData)
+      console.log("aaa")
+      console.log(responseData.message)
+      alert(responseData.message)
     })
   }
 
@@ -815,6 +867,7 @@ renderList=()=>{
                          <textarea id="updateCom" onChange={this.updateComment.bind(this)} >{comment.content}</textarea>
                         <h2></h2>
                         <button id="bu" onClick={()=>this.updateNewComment()}>submit</button><button id="bu" onClick={()=>this.cancelUpdateComment()}>cancel</button>
+                        <button id="bu" onClick={()=>this.deleteComment(comment._id)}>delete</button>
                         </li>
                         )
                       }
