@@ -24,6 +24,13 @@ class Profile extends Component {
     }
   }
   componentWillMount(){
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=959862910786642";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
   }
   myPosts(){
     console.log("------" + this.state.user_jwt);
@@ -106,10 +113,9 @@ class Profile extends Component {
             <img width={64} height={64} src={this.state.user_picture} alt="Image"/>
           </Media.Left>
           <Media.Body>
-            <Media.Heading style={{color:"white"}}>你好, {this.state.user_name} !</Media.Heading>
-            <p>{this.state.user_type}</p>
-            <p>{this.state.user_id}</p>
-            <p>{this.state.user_email}</p>
+            <Media.Heading style={{color:"white"}}>Hello, {this.state.user_name} !</Media.Heading>
+            <p style={{color:'white'}}>{this.state.user_type}</p>
+            <p style={{color:'white'}}>{this.state.user_email}</p>
           </Media.Body>
         </Media>
 
@@ -152,7 +158,7 @@ class Profile extends Component {
     else {
       render_panel = (
         <div id="profile_overall">
-          <h1>Please Login first to see your Proflie.
+          <h1 style={{color:'white'}}>Please Login first to see your Proflie.
           </h1>
 
           <div><FacebookLogin
@@ -175,8 +181,8 @@ class Profile extends Component {
         </div>
 
         <section id="intro_message">
-          <h1 id="m" style={{fontSize:45}}>Cyann</h1>
-          <p id="m">Welcome to Cyann Web!<br/>
+          <h1 id="m" style={{color:'white', fontSize:45}}>Cyann</h1>
+          <p id="m" style={{color:'white'}}>Welcome to Cyann Web!<br/>
                     Cyann is the learning forum for the new generation.<br/>
                     Make your learning and teaching more interactive.<br/>
                     Make your ideas heard.<br/></p>
