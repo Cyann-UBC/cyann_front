@@ -65,6 +65,7 @@ class Courses extends Component {
             thisCourse:'',
             keywords:'',
             studentList:[],
+            postTypeIsStudent:true,
         }
     }
 
@@ -180,7 +181,13 @@ class Courses extends Component {
           if(responseData.data.length>0){
             this.setState({firstId:responseData.data[0]._id})
           }
-          this.setFontWeight1()
+          if(this.state.postTypeIsStudent){
+            this.setFontWeight1()
+          }
+          else{
+            this.setFontWeight2()
+            console.log("lalalaa")
+          }
 
       })
     }
@@ -236,7 +243,9 @@ class Courses extends Component {
                                <p id="post_h2">Post List</p>
                                <ul id="aaa">
                                    {this.state.postSource.map(function(post,i){
-                                     this.setState(this.thisCourse:post.course)
+                                     this.setState({postTypeIsStudent:true})
+                                     this.setState({thisCourse:post.course})
+                                     if(post.author.userType=="student"){
                                      if(post.author._id===this.state.curUserId){
                                        return(
                                         <li id="b" onClick={this.showContent.bind(this)}>
@@ -262,6 +271,7 @@ class Courses extends Component {
                                         </li>
                                        )
                                      }
+                                   }
                                    },this)}
 
                                </ul>
@@ -277,9 +287,33 @@ class Courses extends Component {
 
         this.setState({selection:
                        <div id="prof_post_list">
-                           <input id="searchbar" placeholder="Search.."></input>
-                           <FaSearchPlus style={{position:"absolute",width:25,height:25,top:23,left:145}}/>
-                           <p id="post_h2">Post List</p>
+                         <input id="searchbar" placeholder="Search.." onChange={this.updateKeywords.bind(this)}></input>
+                         <FaSearchPlus style={{position:"absolute",width:25,height:25,top:23,left:145,color:'#17B3C1',zIndex:'1'}}/>
+
+                         <div>
+                             <p id="post_h2">Post List</p>
+                             <ul id="aaa">
+
+                                 {this.state.postSource.map(function(post,i){
+                                   this.setState({postTypeIsStudent:false})
+
+                                   this.setState({thisCourse:post.course} )
+                                   if(post.author.userType=="Instructor"){
+                                     return(
+                                      <li id="b" onClick={this.showContent.bind(this)}>
+                                        <span>
+                                          <a href="#" onClick={()=>this.getContent(post._id)}>
+                                            <dt id="post_title" style={{top:-5}}> {post.title}</dt>
+                                            <dd id="post_body" style={{top:-5}}>{post.content}</dd>
+                                          </a>
+                                      </span>
+                                      </li>
+                                     )
+                                 }
+                                 },this)}
+
+                             </ul>
+                         </div>
 
 
                       </div>})
@@ -583,10 +617,9 @@ postComment=()=>{
         this.setState({ifShowContent:true})
 
         this.getComment()
+        this.setState({ifEditComment:true})
         })
       })
-
-      this.setState({ifEditComment:false})
 
     }
 
@@ -774,11 +807,18 @@ filterPost(){
     .then((responseData) => {
       console.warn(JSON.stringify(responseData))
       this.setState({postSource:responseData.data})
-      this.setFontWeight1()
+
+
     })
     .catch((error)=>{
       this.refs.errorModal.open()
     })
+    if(this.state.postTypeIsStudent){
+      this.setFontWeight1()
+    }
+    else{
+      this.setFontWeight2()
+    }
   }
 
 
@@ -804,7 +844,7 @@ renderList=()=>{
                         <li id="commentContent">
                             <p style={{fontSize:"10px",color:"#002859"}}>followup discussions</p>
                            <h2></h2>
-                           <p>{comment.content}</p>
+                           <p style={{color:"#002859"}}>{comment.content}</p>
 
                           <h2></h2>
                           <p style={{fontSize:"10px", color:"#002859"}}>good question    {comment.upvotes}</p>
@@ -974,6 +1014,14 @@ renderList=()=>{
         }
     }
 
+    getProfPosts(id){
+      this.setState({postTypeIsStudent:false})
+      this.getPosts(id)
+    }
+    getStuPosts(id){
+      this.setState({postTypeIsStudent:true})
+      this.getPosts(id)
+    }
 
     render() {
         return (
@@ -1007,7 +1055,7 @@ renderList=()=>{
                                     </ul>
                                     <div id={i} className="collapse">
                                         <ul>
-                                            <button className="post" onClick={()=>this.getPosts(course._id)}>
+                                            <button className="post" onClick={()=>this.getStuPosts(course._id)}>
                                                 <span
                                                     onClick={this.setFontWeight1}
                                                     style={{fontWeight:this.state.fontWeight1}}>
@@ -1015,9 +1063,9 @@ renderList=()=>{
                                                 </span>
                                             </button>
 
-                                            <button className="post" >
+                                            <button className="post" onClick={()=>this.getProfPosts(course._id)}>
                                                 <span
-                                                    onClick={this.setFontWeight2}
+                                                    onClick={(this.setFontWeight2)}
                                                     style={{fontWeight:this.state.fontWeight2}}>
                                                     Professor Post
                                                 </span>
