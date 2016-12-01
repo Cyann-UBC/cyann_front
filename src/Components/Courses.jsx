@@ -66,6 +66,7 @@ class Courses extends Component {
             keywords:'',
             studentList:[],
             postTypeIsStudent:true,
+            errorMsg:'',
         }
     }
 
@@ -238,6 +239,7 @@ class Courses extends Component {
                            <button id="new_post"  type="button" onClick={this.updateList.bind(this)}>New Post</button>
 
                            <FaPlusCircle style={{position:"absolute",width:23,height:23,top:23,left:295,color:'cyann'}}/>
+                           <p style={{position:'relative',top:80,left:20,fontSize:20}}>{this.state.errorMsg}</p>
 
                            <div>
                                <p id="post_h2">Post List</p>
@@ -289,11 +291,11 @@ class Courses extends Component {
                        <div id="prof_post_list">
                          <input id="searchbar" placeholder="Search.." onChange={this.updateKeywords.bind(this)}></input>
                          <FaSearchPlus style={{position:"absolute",width:25,height:25,top:23,left:145,color:'#17B3C1',zIndex:'1'}}/>
+                         <p style={{position:'relative',top:80,left:20,fontSize:20}}>{this.state.errorMsg}</p>
 
                          <div>
                              <p id="post_h2">Post List</p>
                              <ul id="aaa">
-
                                  {this.state.postSource.map(function(post,i){
                                    this.setState({postTypeIsStudent:false})
 
@@ -807,6 +809,18 @@ filterPost(){
     .then((responseData) => {
       console.warn(JSON.stringify(responseData))
       this.setState({postSource:responseData.data})
+      if(responseData.data.length==0){
+         this.setState({errorMsg:"no post found"})
+      }
+      else{
+        this.setState({errorMsg:""})
+      }
+      if(this.state.postTypeIsStudent){
+        this.setFontWeight1()
+      }
+      else{
+        this.setFontWeight2()
+      }
 
 
     })
@@ -819,6 +833,7 @@ filterPost(){
     else{
       this.setFontWeight2()
     }
+
   }
 
 
