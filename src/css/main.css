@@ -30,9 +30,10 @@
 #course_list{
     position: relative;
     left: 20px;
-    top: 230px;
+    top: 280px;
     color:white;
-    height: 470px;
+    height: 423px;
+    width:200px;
     overflow: scroll;
 }
 #course {
@@ -40,7 +41,8 @@
     color: white;
     position:relative;
     background:none;
-    top:50px;
+    top:0px;
+    margin-top: 0px;
     padding: 10px;
     text-align: left;
     text-decoration: none;
@@ -61,7 +63,6 @@
 }
 #addCourse:hover{
     font-weight: bold;
-
 }
 
 #menu_bar{
@@ -138,8 +139,8 @@
   padding: 5px;
   width: 170px;
   position:relative;
-  top:50px;
-  left:-10px;
+  top:0px;
+  left:20px;
   transition: all 0.5s;
   cursor: pointer;
   margin: 5px;
@@ -183,7 +184,7 @@
     color:white;
 }
 
-#new_post:hover active {
+#new_post:hover{
     font-weight: bold;
     box-shadow:  0px 1px 1px 0px white;
 }
@@ -572,7 +573,7 @@ h2 { width:100%; border-bottom: 1px solid #000; line-height:0.1em; margin:10px 0
   top:-40px;
   left:350px;
 }
-#email:hover, :active{
+#email:hover{
   color:#002859;
 }
 
