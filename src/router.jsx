@@ -10,9 +10,7 @@ import prof from './Components/prof';
 
 const routes = (
   <Router history={browserHistory}>
-      <Route path='/' component={Home}>
-        {/* <Route path='/course/:value' component={Courses} /> */}
-      </Route>
+      <Route path='/' component={Home}/>
       <Route path='courses' component={Courses}/>
       <Route path='about' component={About}></Route>
       <Route path='team' component={Team}></Route>
