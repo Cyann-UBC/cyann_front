@@ -1007,10 +1007,16 @@ renderList=()=>{
         if(this.state.ifShowCourseForm){
             return(
                 <div>
-                    <input onChange={this.updateQuestionTitle.bind(this)} type="text" name="Course Name"  id="courseName"/>
-                    <input onChange={this.updateQuestionTitle.bind(this)} type="text" name="TAs"  id="TAs"/>
-                    <button id="newPost_submit" onClick={()=>this.createCourse(document.getElementById("courseName").value,document.getElementById("TAs").value)}>submit</button>
-                    <button id="newPost_cancel" onClick={()=>this.cancelPostQuestion()}>cancel</button>
+                    <p style={{position:"relative",fontSize:20,top:50}}>Add a new course</p>
+                    
+                    <p style={{position:"relative", textAlign:"centre",top:100}}>Name name:
+                    <input onChange={this.updateQuestionTitle.bind(this)} type="text"/></p>
+                    
+                    <p style={{position:"relative",top:130, textAlign:"centre"}}>TA's Name: <input onChange={this.updateQuestionTitle.bind(this)} type="text"/></p>
+                    
+                    <button id="newPost_submit" style={{position:"relative",top:160,left:-50}} onClick={()=>this.createCourse(document.getElementById("courseName").value,document.getElementById("TAs").value)}>submit</button>
+                    <button id="newPost_cancel" style={{position:"relative",top:160,left:50}} onClick={()=>this.cancelPostQuestion()}>cancel</button>
+                    
                 </div>
             )
             
