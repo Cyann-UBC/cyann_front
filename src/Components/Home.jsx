@@ -276,3 +276,4 @@ class Home extends Component {
   }
 }
 export default Home;
+module.export = Home;
