@@ -17,7 +17,7 @@ import face from '../../picture/face.jpg';
 import FacebookLogin from 'react-facebook-login';
 
 
-class Courses extends Component {
+class Prof extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -83,7 +83,9 @@ class Courses extends Component {
 
     componentDidMount(){
       this.getUserCourse()
+        console.log(this.state.coursesEnrolled)
     }
+
 
     getAllCourses=()=>{
         console.log("saaaa")
@@ -115,7 +117,7 @@ class Courses extends Component {
     getAssignment(id){
         this.setState({thisCourse:id})
         fetch("http://localhost:8080/api/"+id+"/files/assignments",{method:"GET",headers: {
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDIxMzU1MH0.gwm2kpNYs1FljTiDmBnoGxdgub2PMaloE43eyWB8wmo'
+          'Authorization': 'Bearer'+ this.state.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -128,7 +130,7 @@ class Courses extends Component {
 getReadings(id){
         this.setState({thisCourse:id})
         fetch("http://localhost:8080/api/"+id+"/files/readings",{method:"GET",headers: {
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDIxMzU1MH0.gwm2kpNYs1FljTiDmBnoGxdgub2PMaloE43eyWB8wmo'
+          'Authorization': 'Bearer'+ this.state.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -487,9 +489,10 @@ getReadings(id){
       .then((response) => response.json())
       .then((responseData) => {
         console.log(responseData)
+        this.joinClass(responseData.data._id)
           this.getUserCourse()
         console.log(this.state.coursesEnrolled)
-       this.joinClass(responseData.data._id)
+
       })
      }
 
@@ -567,7 +570,7 @@ postComment=()=>{
 
         fetch("http://localhost:8080/api/"+this.state.thisCourse+"/files/"+ type +"/download/"+filename,{method:"GET",
         headers: {
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDIxMzU1MH0.gwm2kpNYs1FljTiDmBnoGxdgub2PMaloE43eyWB8wmo'
+            'Authorization': 'Bearer'+this.state.jwt
         }})
           .then((response)=> response.blob())
 //          .then((responseData) => {
@@ -663,7 +666,7 @@ deleteFile=(type,assn)=>{
     if (r == true) {
         fetch("http://localhost:8080/api/"+this.state.thisCourse+"/files/"+type+"/"+assn,{method:"DELETE",
         headers: {
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDIxMzU1MH0.gwm2kpNYs1FljTiDmBnoGxdgub2PMaloE43eyWB8wmo'
+            'Authorization': 'Bearer'+this.state.jwt
         }})
         .then((response) => response.json()
              .then((responseData) => {
@@ -779,6 +782,7 @@ updatePost=()=>{
     fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/",{method:"GET",
     headers: {
     'Authorization': 'Bearer '+this.state.jwt.jwt
+
     }})
     .then((response) => response.json())
     .then((responseData) => {
@@ -1124,8 +1128,43 @@ renderList=()=>{
 
 
     render() {
+    //this.getUserCourse()
         return (
+
             <div className="App">
+            {/* code for login */}
+                    <div style={{display:'none'}}><FacebookLogin
+                      appId="959862910786642"
+                      autoLoad={true}
+                      fields="name,email,picture"
+                      callback={this.loginCallback}
+                      size="small"
+                      icon="fa-facebook"
+                      textButton="Facebook Login"
+                    /></div>
+                 <Modal
+                      show={this.state.showLoginModal}
+                      onHide={this.loginModalClose}
+                      backdrop='static'
+                      bsSize="large">
+                      <Modal.Header>
+                        <Modal.Title style={{float:'left'}}>Please Login first.</Modal.Title>
+                      </Modal.Header>
+
+                      <Modal.Body>
+                        <div style={{padding:5}}><FacebookLogin
+                          appId="959862910786642"
+                          autoLoad={true}
+                          fields="name,email,picture"
+                          callback={this.loginCallback}
+                          size="metro"
+                          icon="fa-facebook"
+                          textButton="Login via Facebook"
+                        /></div>
+                      </Modal.Body>
+                    </Modal>
+
+
 
                 <div style={{display:'flex',flexDirection:'row'}}>
 
@@ -1227,4 +1266,4 @@ renderList=()=>{
 }
 
 
-export default Courses;
+export default Prof;

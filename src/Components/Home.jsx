@@ -120,8 +120,6 @@ class Home extends Component {
     this.setState({showModal:true});
   }
   linkToCourses() {
-    // browserHistory.push('/courses/:jwt',params:({jwt:this.state.user_jwt}));
-
     browserHistory.push('/courses'+'?jwt='+this.state.user_jwt.jwt+'&id='+this.state.user_jwt.userId+"&type="+this.state.user_jwt.userType);
   }
   linkToProfile() {
@@ -275,3 +273,4 @@ class Home extends Component {
   }
 }
 export default Home;
+module.export = Home;

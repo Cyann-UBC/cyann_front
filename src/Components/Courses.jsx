@@ -73,7 +73,6 @@ class Courses extends Component {
 
     componentWillMount(){
     }
-
     componentDidMount(){
       this.setState({jwt:this.props.location.query},()=>this.getUserCourse())
       console.log(this.props.location.query)
@@ -627,7 +626,6 @@ updatePost=()=>{
   headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       'Authorization': 'Bearer '+this.state.jwt.jwt
-
   },
   body:formBody})
   .then((response) => response.json())
@@ -708,6 +706,7 @@ joinClass=(id)=>{
     }})
       .then((response) => response.json())
       .then((responseData) => {
+        //this.getUserCourse()
         //console.log(responseData.data)
         this.setState({selection:''})
         this.setState({ifShowCourseList:false})
