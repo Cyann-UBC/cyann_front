@@ -67,6 +67,7 @@ class Courses extends Component {
             studentList:[],
             postTypeIsStudent:true,
             errorMsg:'',
+            ifShowCourseList:false,
         }
     }
 
@@ -95,6 +96,7 @@ class Courses extends Component {
           this.setState({allCoursesList:responseData.data})
           console.log(responseData.data)
           //console.log(responseData.data[0].instructor[0].name)
+          this.setState({ifShowCourseList:true})
           this.addCourse()
       })
 
@@ -707,6 +709,8 @@ joinClass=(id)=>{
       .then((response) => response.json())
       .then((responseData) => {
         //console.log(responseData.data)
+        this.setState({selection:''})
+        this.setState({ifShowCourseList:false})
       })
     }
 }
@@ -717,24 +721,26 @@ addCourse=()=>{
   this.setState({ifShowQuestion:false})
   this.setState({ifShowContent:false})
   this.setState({ifShowEditPost:false})
-  this.setState({selection:
-    <div>
-      <p style={{color:'white',fontSize:20,position:'relative',top:50}}>University of British Columbia</p>
+  if(this.state.ifShowCourseList){
+    this.setState({selection:
+      <div>
+        <p style={{color:'white',fontSize:20,position:'relative',top:50}}>University of British Columbia</p>
 
-      <ul id="allCourses">
-        {this.state.allCoursesList.map(function(course,i){
-          return(
-            <li id="c">
-                 <dt>{course.courseName}</dt>
-                 <button id="joinButton" onClick={()=>this.joinClass(course._id)}>join class</button>
-            </li>
-          )
-        },this)}
+        <ul id="allCourses">
+          {this.state.allCoursesList.map(function(course,i){
+            return(
+              <li id="c">
+                   <dt>{course.courseName}</dt>
+                   <button id="joinButton" onClick={()=>this.joinClass(course._id)}>join class</button>
+              </li>
+            )
+          },this)}
 
-     </ul>
-    </div>
+       </ul>
+      </div>
+    })
+  }
 
-  })
 }
 
 filterPost(){
