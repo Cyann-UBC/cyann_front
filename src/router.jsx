@@ -7,7 +7,6 @@ import Courses from './Components/Courses';
 import About from './Components/About';
 import Team from './Components/Team';
 import prof from './Components/prof';
-import Profile from './Components/Profile';
 
 const routes = (
   <Router history={browserHistory}>
@@ -18,7 +17,6 @@ const routes = (
       <Route path='about' component={About}></Route>
       <Route path='team' component={Team}></Route>
       <Route path='prof' component={prof}></Route>
-      <Route path='profile' component={Profile}></Route>
   </Router>
 );
 
