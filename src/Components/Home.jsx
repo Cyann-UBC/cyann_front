@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import FacebookLogin from 'react-facebook-login';
 import { Link, browserHistory } from 'react-router';
-import { Modal, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { Modal, Button, Tooltip, OverlayTrigger, Media, Image, Panel, Accordion, Tabs, Tab } from 'react-bootstrap';
 import '../css/Home.css';
 import logo from '../logo.svg';
 import iphone from '../../picture/iphone.png';
@@ -11,7 +11,7 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      authenticated:false,
+      user_authenticated:false,
       user_type:"Student",
       user_name:"",
       user_id:"",
@@ -20,67 +20,37 @@ class Home extends Component {
       user_tokenExpire:"",
       user_picture:"",
       showModal:false,
-      jwt:"",
+      user_jwt:"",
+      user_posts:[],
+      post_render:true,
+      user_comments:[],
+      profile_open:false,
     }
   }
   componentWillMount(){
   }
   componentDidMount(){
-    // (function(d, s, id) {
-    //   var js, fjs = d.getElementsByTagName(s)[0];
-    //   if (d.getElementById(id)) return;
-    //   js = d.createElement(s); js.id = id;
-    //   js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=959862910786642";
-    //   fjs.parentNode.insertBefore(js, fjs);
-    // }(document, 'script', 'facebook-jssdk'));
   }
-  responseFacebook = (response) => {
-    // console.log(response);
+  FbResponse = (response) =>{
     if (response.status === "unknown")
-      this.setState({authenticated:false});
+      this.setState({
+        user_authenticated:false,
+      });
     else {
       this.setState({
-        authenticated:true,
+        user_authenticated:false,
         user_name:response.name,
         user_id:response.id,
         user_email:response.email,
-        user_tokenExpire:response.expiresIn,
-        user_accessToken:response.accessToken,
         user_picture:response.picture.data.url,
-        showModal:true});
+        showModal:true,
+      });
+      console.log(this.state.user_name);
+      console.log(this.state.user_id);
+      console.log(this.state.user_email);
       var result = response;
-      console.log(result);
-      // console.log(this.state.user_name);
-      // console.log(this.state.user_id);
-      // console.log(this.state.user_email);
-      // console.log(this.state.user_accessToken);
-      // console.log(this.state.user_expiresin);
-      // console.log(this.state.user_picture);
       this.retreiveJWT(result);
     }
-  }
-  FbResponseStudent = (response) => {
-    this.setState({user_type:"Student"});
-    this.responseFacebook(response);
-  }
-  FbResponseInstructor = (response) => {
-    this.setState({user_type:"Instructor"});
-    this.responseFacebook(response);
-  }
-  close=()=> {
-    this.setState({showModal:false});
-  }
-  open() {
-    this.setState({showModal:true});
-  }
-  linkToCourses() {
-    browserHistory.push('/courses');
-  }
-  linkToProfile() {
-    browserHistory.push('/profile');
-  }
-  linkToProf() {
-    browserHistory.push('/prof');
   }
   retreiveJWT(result){
     var body = {
@@ -101,12 +71,95 @@ class Home extends Component {
     fetch('http://localhost:8080/api/users/register',{method:'POST',headers: {'Content-Type': 'application/x-www-form-urlencoded'},body:formBody})
     .then((response) => response.json())
     .then((responseData) => {
-      this.setState({jwt:responseData.jwt});
+      this.setState({user_jwt:responseData.jwt});
       this.setState({user_type:responseData.userType});
-      console.log(this.state.jwt);
-      console.log(this.state.user_type);
+      console.log(this.state.user_jwt);
       console.log(responseData);
+      this.setState({user_authenticated:true});
+    });
+  }
+  FbResponseStudent = (response) => {
+    this.setState({user_type:"Student"});
+    this.FbResponse(response);
+  }
+  FbResponseInstructor = (response) => {
+    this.setState({user_type:"Instructor"});
+    this.FbResponse(response);
+  }
+  getMyPosts(){
+    console.log("------" + this.state.user_jwt);
+    fetch('http://localhost:8080/api/users/my/posts',{method:'GET',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Bearer ' + this.state.user_jwt
+    }})
+    .then((response) => response.json())
+    .then((responseData) => {
+      console.log(this.state.user_jwt);
+      console.log(responseData);
+      this.setState({user_posts:responseData});
     })
+
+    fetch('http://localhost:8080/api/users/my/comments',{method:'GET',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Bearer ' + this.state.user_jwt
+    }})
+    .then((response) => response.json())
+    .then((responseData) => {
+      console.log(this.state.user_jwt);
+      console.log(responseData);
+      this.setState({post_render:false});
+      this.setState({user_comments:responseData});
+    })
+  }
+  close=()=> {
+    this.setState({showModal:false});
+  }
+  open() {
+    this.setState({showModal:true});
+  }
+  linkToCourses() {
+    browserHistory.push('/courses');
+  }
+  linkToProfile() {
+    browserHistory.push('/profile');
+  }
+  linkToProf() {
+    browserHistory.push('/prof');
+  }
+  profile_panel(){
+    return (
+      <div style-={{margin:10}}>
+        <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
+          <Tab eventKey={1} title="Posts History">
+            <Accordion id="profile_list">
+              {this.state.user_posts.map(function(post,i){
+                var temp_header = post.course.name + ": " + post.title;
+                return(
+                  <Panel header={temp_header} bsStyle="primary" eventKey={i} id="history_unit">
+                    {post.content}
+                  </Panel>
+                )
+              },this)}
+            </Accordion>
+          </Tab>
+
+          <Tab eventKey={2} title="Comments History">
+            <Accordion id="profile_list">
+              {this.state.user_comments.map(function(post,i){
+                var temp_header = post.course.name + ": " + post.title;
+                return(
+                  <Panel header={temp_header} bsStyle="primary" eventKey={i} id="history_unit">
+                    {post.content}
+                  </Panel>
+                )
+              },this)}
+            </Accordion>
+          </Tab>
+        </Tabs>
+      </div>
+    );
   }
   render(){
     const tooltip_coursePage = (
@@ -118,11 +171,34 @@ class Home extends Component {
 
     var page_link = (this.state.user_type === "Instructor") ? (
       <OverlayTrigger placement="bottom" overlay={tooltip_coursePage}>
-        <Button bsStyle="primary" bsSize="large" onClick={this.linkToProf}>Go to Prof's page</Button>
+        <Button bsStyle="primary" bsSize="large" onClick={this.linkToProf}>Go to Prof's Courses</Button>
       </OverlayTrigger>) : (
       <OverlayTrigger placement="bottom" overlay={tooltip_coursePage}>
         <Button bsStyle="primary" bsSize="large" onClick={this.linkToCourses}>Go to Courses</Button>
       </OverlayTrigger>);
+
+    var render_panel;
+    if (this.state.user_authenticated){
+      if (this.state.post_render) this.getMyPosts();
+      render_panel = this.profile_panel();
+    }
+    else {
+      render_panel = (
+        <div>
+          <h1 style={{color:'white'}}>Please Login first to see your Proflie.
+          </h1>
+
+          <div><FacebookLogin
+            appId="959862910786642"
+            autoLoad={false}
+            fields="name,email,picture"
+            callback={this.FbResponse}
+            size="metro"
+            icon="fa-facebook"/>
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div id="overall">
@@ -168,14 +244,24 @@ class Home extends Component {
           <Modal.Header closeButton>
             <img src={this.state.user_picture} style={{float:'left', padding:5, width:30, height:30}}/>
             <Modal.Title style={{float:'left'}}>Hello, {this.state.user_name} !</Modal.Title>
+            <p style={{float:'right', margin:5}}>
+            <i>  {this.state.user_type},   {this.state.user_email}</i></p>
           </Modal.Header>
 
           <Modal.Body>
-            {page_link}
 
             <OverlayTrigger placement="bottom" overlay={tooltip_profilePage}>
-              <Button bsStyle="primary" bsSize="large" onClick={this.linkToProfile}>Go to Profile</Button>
+              <Button bsStyle="primary" bsSize="large"
+                onClick={ ()=> this.setState({ profile_open: !this.state.profile_open })}>
+                Check out Profile
+              </Button>
             </OverlayTrigger>
+
+            <Panel collapsible expanded={this.state.profile_open}>
+              {render_panel}
+            </Panel>
+
+            {page_link}
           </Modal.Body>
 
           <Modal.Footer>
