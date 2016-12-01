@@ -6,6 +6,7 @@ import '../css/Home.css';
 import logo from '../logo.svg';
 import iphone from '../../picture/iphone.png';
 import cyann_logo from '../../picture/cyann_logo.png';
+
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -78,6 +79,9 @@ class Home extends Component {
   linkToProfile() {
     browserHistory.push('/profile');
   }
+  linkToProf() {
+    browserHistory.push('/prof');
+  }
   retreiveJWT(result){
     var body = {
     'userType': this.state.user_type,
@@ -111,6 +115,14 @@ class Home extends Component {
     const tooltip_profilePage = (
       <Tooltip id="tooltip"><strong>Check your history</strong>, and <strong>register new courses</strong> on this page.</Tooltip>
     );
+
+    var page_link = (this.state.user_type === "Instructor") ? (
+      <OverlayTrigger placement="bottom" overlay={tooltip_coursePage}>
+        <Button bsStyle="primary" bsSize="large" onClick={this.linkToProf}>Go to Prof's page</Button>
+      </OverlayTrigger>) : (
+      <OverlayTrigger placement="bottom" overlay={tooltip_coursePage}>
+        <Button bsStyle="primary" bsSize="large" onClick={this.linkToCourses}>Go to Courses</Button>
+      </OverlayTrigger>);
 
     return (
       <div id="overall">
@@ -159,9 +171,7 @@ class Home extends Component {
           </Modal.Header>
 
           <Modal.Body>
-            <OverlayTrigger placement="bottom" overlay={tooltip_coursePage}>
-              <Button bsStyle="primary" bsSize="large" onClick={this.linkToCourses}>Go to Courses</Button>
-            </OverlayTrigger>
+            {page_link}
 
             <OverlayTrigger placement="bottom" overlay={tooltip_profilePage}>
               <Button bsStyle="primary" bsSize="large" onClick={this.linkToProfile}>Go to Profile</Button>
