@@ -13,7 +13,7 @@
 }
 body {
   color: #576366;
-  background: #17b3c1;
+  background: #294a62;
   margin: 0;
   font-family: 'Roboto', sans-serif;
 }
@@ -205,7 +205,7 @@ header {
    }
 }
 @media (min-width: 769px) {
-  
+
   .home a {
     border-color: #3b80d1;
   }

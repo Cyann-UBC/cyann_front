@@ -76,120 +76,21 @@ class Prof extends Component {
     }
 
     componentWillMount(){
+      this.setState({jwt:this.props.location.query},()=>this.getUserCourse())
+      console.log(this.props.location.query)
+      console.log(this.state.jwt.userId)
     }
-    componentDidMount(){
-        return(
-            <div>
-        {/* code for login */}
-                    <div style={{display:'none'}}><FacebookLogin
-                      appId="959862910786642"
-                      autoLoad={true}
-                      fields="name,email,picture"
-                      callback={this.loginCallback}
-                      size="small"
-                      icon="fa-facebook"
-                      textButton="Facebook Login"
-                    /></div>
-                 <Modal
-                      show={this.state.showLoginModal}
-                      onHide={this.loginModalClose}
-                      backdrop='static'
-                      bsSize="large">
-                      <Modal.Header>
-                        <Modal.Title style={{float:'left'}}>Please Login first.</Modal.Title>
-                      </Modal.Header>
 
-                      <Modal.Body>
-                        <div style={{padding:5}}><FacebookLogin
-                          appId="959862910786642"
-                          autoLoad={true}
-                          fields="name,email,picture"
-                          callback={this.loginCallback}
-                          size="metro"
-                          icon="fa-facebook"
-                          textButton="Login via Facebook"
-                        /></div>
-                      </Modal.Body>
-                    </Modal>
-        </div>)
+    componentDidMount(){
       this.getUserCourse()
         console.log(this.state.coursesEnrolled)
     }
-    loginCallback= (response)=>{
 
-      if (response.status === "unknown")
-        this.setState({
-          user_authenticated:false,
-          showLoginModal:true
-        });
-      else {
-        this.setState({
-          user_authenticated:true,
-          userName:response.name,
-          user_id:response.id,
-          user_email:response.email,
-          user_tokenExpire:response.expiresIn,
-          user_accessToken:response.accessToken,
-          user_picture:response.picture.data.url,
-          showLoginModal:false,
-        });
-        console.log(this.state.userName);
-        console.log(this.state.user_id);
-        console.log(this.state.user_email);
-        console.log(this.state.user_accessToken);
-        console.log(this.state.user_expiresin);
-        console.log(this.state.user_picture);
-        var result = response;
-        this.retreiveJWT(result);
-
-
-
-      }
-        //console.log(this.state.jwt)
-    }
-
-    retreiveJWT(result){
-      var body = {
-      'userType': this.state.user_type,
-      'socialToken': result.accessToken,
-      'email':result.email,
-      'profileImg':result.picture.data.url
-      }
-
-      var formBody = []
-      for (var property in body) {
-        var encodedKey = encodeURIComponent(property);
-        var encodedValue = encodeURIComponent(body[property]);
-        formBody.push(encodedKey + "=" + encodedValue);
-      }
-      formBody = formBody.join("&");
-
-      fetch('http://localhost:8080/api/users/register',{method:'POST',
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},body:formBody})
-      .then((response) => response.json())
-      .then((responseData) => {
-        this.setState({jwt:responseData.jwt});
-        this.setState({user_type:responseData.userType});
-        console.log(this.state.jwt);
-        console.log(responseData);
-        this.setState({curUserId:responseData.userId});
-          console.log(this.state.curUserId);
-          this.getUserCourse()
-      })
-
-
-    }
-    loginModalClose=()=>{
-        this.setState({showLoginModal:false});
-    }
-    loginModalOpen=()=>{
-        this.setState({showLoginModal:true});
-    }
 
     getAllCourses=()=>{
         console.log("saaaa")
       fetch("http://localhost:8080/api/courses",{method:"GET",headers: {
-      'Authorization': 'Bearer '+this.state.jwt
+      'Authorization': 'Bearer '+this.state.jwt.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -200,11 +101,11 @@ class Prof extends Component {
       })
 
     }
-   
+
 
     getUserCourse(){
       fetch("http://localhost:8080/api/users/my/courseData",{method:"GET",headers: {
-      'Authorization': 'Bearer '+this.state.jwt
+      'Authorization': 'Bearer '+this.state.jwt.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -243,7 +144,7 @@ getReadings(id){
     getPosts(id){
       this.setState({thisCourse:id})
       fetch("http://localhost:8080/api/courses/"+id+"/posts",{method:"GET",headers: {
-      'Authorization': 'Bearer '+this.state.jwt
+      'Authorization': 'Bearer '+this.state.jwt.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -296,7 +197,7 @@ getReadings(id){
                                <p id="post_h2">Post List</p>
                                <ul id="aaa">
                                    {this.state.postSource.map(function(post,i){
-                                   
+
                                        return(
                                         <li id="b" onClick={this.showContent.bind(this)}>
                                           <span>
@@ -354,7 +255,7 @@ getReadings(id){
  this.setState({selection:
                         <div id="student_post_list">
                            <input id="searchbar" placeholder="Search.."></input>
-                           
+
                            <FaSearchPlus style={{position:"absolute",width:25,height:25,top:23,left:145}}/>
 
                            <button id="new_post"  type="button" onClick={this.uploadAssignment.bind(this)}>New File</button>
@@ -367,7 +268,7 @@ getReadings(id){
                                    {this.state.assignmentList.map(function(assn,i){
                                     //console.log(assn)
                                        return(
-                                    
+
                                     <li id="b" onClick={this.showAssignment.bind(this)}>
                                           <span>
                                             <a href="#" onClick={()=>this.downloadFile('assignments',assn)}>
@@ -382,7 +283,7 @@ getReadings(id){
                                </ul>
                            </div>
                        </div>})
-                               
+
         this.setState({fontWeight1:'300'})
         this.setState({fontWeight2:'300'})
         this.setState({fontWeight3:'900'})
@@ -406,7 +307,7 @@ getReadings(id){
  this.setState({selection:
                         <div id="student_post_list">
                            <input id="searchbar" placeholder="Search.."></input>
-                           
+
                            <FaSearchPlus style={{position:"absolute",width:25,height:25,top:23,left:145}}/>
 
                            <button id="new_post"  type="button" onClick={this.uploadReadings.bind(this)}>New File</button>
@@ -419,7 +320,7 @@ getReadings(id){
                                    {this.state.ReadingsList.map(function(read,i){
                                     //console.log(assn)
                                        return(
-                                    
+
                                     <li id="b" onClick={this.showReadings.bind(this)}>
                                           <span>
                                             <a href="#" onClick={()=>this.downloadFile('readings',read)}>
@@ -434,7 +335,7 @@ getReadings(id){
                                </ul>
                            </div>
                        </div>})
-                               
+
         this.setState({fontWeight1:'300'})
         this.setState({fontWeight2:'300'})
         this.setState({fontWeight3:'300'})
@@ -550,7 +451,7 @@ getReadings(id){
         this.setState({ifShowReadUploadForm:false})
         this.setState({ifShowCourseForm:false})
     }
-    
+
     showCourseCreateForm=()=>{
         this.setState({ifshowtext:false})
         this.setState({ifShowQuestion:true})
@@ -562,9 +463,9 @@ getReadings(id){
         this.setState({ifShowReadUploadForm:false})
         this.setState({ifShowCourseForm:true})
     }
-     
+
     createCourse=(courseName,TA)=>{
-        
+
         if(courseName.length===0){
             alert("Course Name cannot be empty")
         }else{
@@ -582,7 +483,7 @@ getReadings(id){
             formBody = formBody.join("&");
       fetch("http://localhost:8080/api/courses",{method:"POST",headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer '+this.state.jwt
+      'Authorization': 'Bearer '+this.state.jwt.jwt
       },
         body:formBody})
       .then((response) => response.json())
@@ -591,10 +492,10 @@ getReadings(id){
         this.joinClass(responseData.data._id)
           this.getUserCourse()
         console.log(this.state.coursesEnrolled)
-       
+
       })
      }
-        
+
     }
 
 postComment=()=>{
@@ -616,7 +517,7 @@ postComment=()=>{
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments",{method:"POST",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Bearer '+this.state.jwt
+            'Authorization': 'Bearer '+this.state.jwt.jwt
         },
         body:formBody})
         .then((response) => response.json())
@@ -630,7 +531,7 @@ postComment=()=>{
 
     getComment=()=>{
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments",{method:"get",headers: {
-        'Authorization': 'Bearer '+this.state.jwt
+        'Authorization': 'Bearer '+this.state.jwt.jwt
         }})
         .then((response) => response.json())
         .then((responseData) => {
@@ -638,7 +539,7 @@ postComment=()=>{
          this.setState({commentsViewing:responseData.data})
         })
     }
-    
+
     uploadFile=(type)=>{
    //check if the file exist
         var data = new FormData()
@@ -659,23 +560,23 @@ postComment=()=>{
             }
           console.log(this.state.assignmentList+"   supoose to be the same as above")
           //this.setFontWeight3()
-        }) 
-        
-} 
-   
-   
+        })
+
+}
+
+
     downloadFile=(type,filename)=>{
-       
-        
+
+
         fetch("http://localhost:8080/api/"+this.state.thisCourse+"/files/"+ type +"/download/"+filename,{method:"GET",
         headers: {
-            'Authorization': 'Bearer'+this.state.jwt 
+            'Authorization': 'Bearer'+this.state.jwt
         }})
           .then((response)=> response.blob())
 //          .then((responseData) => {
 //         console.log("1")
-//         
-//        }) 
+//
+//        })
     }
 
     postQuestion=()=>{
@@ -699,7 +600,7 @@ postComment=()=>{
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts",{method:"POST",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Bearer '+this.state.jwt
+            'Authorization': 'Bearer '+this.state.jwt.jwt
 
         },
         body:formBody})
@@ -707,7 +608,7 @@ postComment=()=>{
         .then((responseData) => {
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts",{method:"GET",
         headers: {
-        'Authorization': 'Bearer '+this.state.jwt
+        'Authorization': 'Bearer '+this.state.jwt.jwt
         }})
         .then((response) => response.json())
         .then((responseData) => {
@@ -739,7 +640,7 @@ postComment=()=>{
     getContent(id){
        fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+id,{method:"get",
        headers: {
-       'Authorization': 'Bearer '+this.state.jwt
+       'Authorization': 'Bearer '+this.state.jwt.jwt
        }})
         .then((response) => response.json())
         .then((responseData) => {
@@ -765,7 +666,7 @@ deleteFile=(type,assn)=>{
     if (r == true) {
         fetch("http://localhost:8080/api/"+this.state.thisCourse+"/files/"+type+"/"+assn,{method:"DELETE",
         headers: {
-            'Authorization': 'Bearer'+this.state.jwt 
+            'Authorization': 'Bearer'+this.state.jwt
         }})
         .then((response) => response.json()
              .then((responseData) => {
@@ -792,7 +693,7 @@ deleteFile=(type,assn)=>{
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+id,{method:"DELETE",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Bearer '+this.state.jwt
+            'Authorization': 'Bearer '+this.state.jwt.jwt
 
         },
         body:formBody})
@@ -800,7 +701,7 @@ deleteFile=(type,assn)=>{
         .then((responseData) => {
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/",{method:"GET",
         headers: {
-        'Authorization': 'Bearer '+this.state.jwt
+        'Authorization': 'Bearer '+this.state.jwt.jwt
         }})
         .then((response) => response.json())
         .then((responseData) => {
@@ -829,7 +730,7 @@ deleteFile=(type,assn)=>{
     fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments/"+commentId+"/upvote",{method:"put",
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer '+this.state.jwt
+        'Authorization': 'Bearer '+this.state.jwt.jwt
 
     },
     body:formBody})
@@ -869,7 +770,7 @@ updatePost=()=>{
   fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing,{method:"PUT",
   headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer '+this.state.jwt
+      'Authorization': 'Bearer '+this.state.jwt.jwt
 
   },
   body:formBody})
@@ -880,7 +781,8 @@ updatePost=()=>{
     this.setState({postContent:responseData.data.conent})
     fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/",{method:"GET",
     headers: {
-    'Authorization': 'Bearer '+this.state.jwt
+    'Authorization': 'Bearer '+this.state.jwt.jwt
+
     }})
     .then((response) => response.json())
     .then((responseData) => {
@@ -931,7 +833,7 @@ updateNewComment=()=>{
   fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments/"+this.state.commentEditing,{method:"PUT",
   headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer '+this.state.jwt
+      'Authorization': 'Bearer '+this.state.jwt.jwt
 
   },
   body:formBody})
@@ -956,7 +858,7 @@ joinClass=(id)=>{
   if(r==true){
     fetch("http://localhost:8080/api/courses/addUser/"+id,{method:"put",
     headers: {
-      'Authorization': 'Bearer '+this.state.jwt
+      'Authorization': 'Bearer '+this.state.jwt.jwt
     }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -1047,18 +949,18 @@ renderList=()=>{
             return(
                 <div>
                     <p style={{position:"relative",fontSize:20,top:50}}>Add a new course</p>
-                    
+
                     <p style={{position:"relative", textAlign:"centre",top:100}}>Course name:
                     <input id="courseName" onChange={this.updateQuestionTitle.bind(this)} type="text"/></p>
-                    
+
                     <p style={{position:"relative",top:130, textAlign:"centre"}}>TA's Name: <input id="TAs" onChange={this.updateQuestionTitle.bind(this)} type="text"/></p>
-                    
+
                     <button id="newPost_submit" style={{position:"relative",top:160,left:-50}} onClick={()=>this.createCourse(document.getElementById("courseName").value,document.getElementById("TAs").value)}>submit</button>
                     <button id="newPost_cancel" style={{position:"relative",top:160,left:50}} onClick={()=>this.cancelPostQuestion()}>cancel</button>
-                    
+
                 </div>
             )
-            
+
         }
         if(this.state.ifShowReadUploadForm){
             return(
@@ -1070,7 +972,7 @@ renderList=()=>{
         }
         if(this.state.ifShowAssignment){
     return(
-                
+
             <p> The file has been downloaded </p>
                 //<embed src='filepath' width="800px" height="2100px" />
 
@@ -1228,7 +1130,7 @@ renderList=()=>{
     render() {
     //this.getUserCourse()
         return (
-            
+
             <div className="App">
             {/* code for login */}
                     <div style={{display:'none'}}><FacebookLogin
@@ -1261,8 +1163,8 @@ renderList=()=>{
                         /></div>
                       </Modal.Body>
                     </Modal>
-            
-           
+
+
 
                 <div style={{display:'flex',flexDirection:'row'}}>
 
@@ -1317,7 +1219,7 @@ renderList=()=>{
                                                     Assignments
                                                 </span>
                                             </button>
-                                                    
+
                                             <button className="post" onClick={()=>this.getReadings(course._id)}>
                                                 <span
                                                     onClick={this.setFontWeight5}
@@ -1357,9 +1259,6 @@ renderList=()=>{
                         </div>
                     </div>
 
-                    
-
-                    
                 </div>
             </div>
         );

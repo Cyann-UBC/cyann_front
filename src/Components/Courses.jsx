@@ -67,108 +67,18 @@ class Courses extends Component {
             studentList:[],
             postTypeIsStudent:true,
             errorMsg:'',
+            ifShowCourseList:false,
         }
     }
 
     componentWillMount(){
     }
     componentDidMount(){
-         return(
-            <div>
-        {/* code for login */}
-                    <div style={{display:'none'}}><FacebookLogin
-                      appId="959862910786642"
-                      autoLoad={true}
-                      fields="name,email,picture"
-                      callback={this.loginCallback}
-                      size="small"
-                      icon="fa-facebook"
-                      textButton="Facebook Login"
-                    /></div>
-                 <Modal
-                      show={this.state.showLoginModal}
-                      onHide={this.loginModalClose}
-                      backdrop='static'
-                      bsSize="large">
-                      <Modal.Header>
-                        <Modal.Title style={{float:'left'}}>Please Login first.</Modal.Title>
-                      </Modal.Header>
-
-                      <Modal.Body>
-                        <div style={{padding:5}}><FacebookLogin
-                          appId="959862910786642"
-                          autoLoad={true}
-                          fields="name,email,picture"
-                          callback={this.loginCallback}
-                          size="metro"
-                          icon="fa-facebook"
-                          textButton="Login via Facebook"
-                        /></div>
-                      </Modal.Body>
-                    </Modal>
-        </div>)
-
-      this.getUserCourse()
-    }
-    loginCallback= (response)=>{
-
-      if (response.status === "unknown")
-        this.setState({
-          user_authenticated:false,
-          showLoginModal:true
-        });
-      else {
-        this.setState({
-          user_authenticated:true,
-          userName:response.name,
-          user_id:response.id,
-          user_email:response.email,
-          user_tokenExpire:response.expiresIn,
-          user_accessToken:response.accessToken,
-          user_picture:response.picture.data.url,
-          showLoginModal:false,
-        });
-        console.log(this.state.userName);
-        console.log(this.state.user_id);
-        console.log(this.state.user_email);
-        console.log(this.state.user_accessToken);
-        console.log(this.state.user_expiresin);
-        console.log(this.state.user_picture);
-        var result = response;
-        this.retreiveJWT(result);
-      }
+      this.setState({jwt:this.props.location.query},()=>this.getUserCourse())
+      console.log(this.props.location.query)
+      console.log(this.state.jwt.userId)
     }
 
-    retreiveJWT(result){
-      var body = {
-      'userType': this.state.user_type,
-      'socialToken': result.accessToken,
-      'email':result.email,
-      'profileImg':result.picture.data.url
-      }
-
-      var formBody = []
-      for (var property in body) {
-        var encodedKey = encodeURIComponent(property);
-        var encodedValue = encodeURIComponent(body[property]);
-        formBody.push(encodedKey + "=" + encodedValue);
-      }
-      formBody = formBody.join("&");
-
-      fetch('http://localhost:8080/api/users/register',{method:'POST',
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},body:formBody})
-      .then((response) => response.json())
-      .then((responseData) => {
-        this.setState({jwt:responseData.jwt});
-        this.setState({user_type:responseData.userType});
-        console.log(this.state.jwt);
-        console.log(responseData);
-        this.getUserCourse()
-        this.setState({curUserId:responseData.userId});
-      })
-
-
-    }
     loginModalClose=()=>{
         this.setState({showLoginModal:false});
     }
@@ -178,13 +88,14 @@ class Courses extends Component {
 
     getAllCourses=()=>{
       fetch("http://localhost:8080/api/courses",{method:"GET",headers: {
-      'Authorization': 'Bearer '+this.state.jwt
+      'Authorization': 'Bearer '+this.state.jwt.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
           this.setState({allCoursesList:responseData.data})
-          //console.log(responseData.data)
+          console.log(responseData.data)
           //console.log(responseData.data[0].instructor[0].name)
+          this.setState({ifShowCourseList:true})
           this.addCourse()
       })
 
@@ -192,7 +103,7 @@ class Courses extends Component {
 
     getUserCourse(){
       fetch("http://localhost:8080/api/users/my/courseData",{method:"GET",headers: {
-      'Authorization': 'Bearer '+this.state.jwt
+      'Authorization': 'Bearer '+this.state.jwt.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -208,7 +119,7 @@ class Courses extends Component {
 
     getPosts(id){
       fetch("http://localhost:8080/api/courses/"+id+"/posts",{method:"GET",headers: {
-      'Authorization': 'Bearer '+this.state.jwt
+      'Authorization': 'Bearer '+this.state.jwt.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -229,7 +140,7 @@ class Courses extends Component {
     }
     getAllUser(id){
       fetch("http://localhost:8080/api/courses/users/"+id,{method:"GET",headers: {
-      'Authorization': 'Bearer '+this.state.jwt
+      'Authorization': 'Bearer '+this.state.jwt.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -262,7 +173,6 @@ class Courses extends Component {
         this.setState({background:'#60848C'})
     }
 
-
     setFontWeight1=()=>{
       this.setState({background:'#60848C'})
 
@@ -283,7 +193,7 @@ class Courses extends Component {
                                      this.setState({postTypeIsStudent:true})
                                      this.setState({thisCourse:post.course})
                                      if(post.author.userType=="student"){
-                                     if(post.author._id===this.state.curUserId){
+                                     if(post.author._id===this.state.jwt.id){
                                        return(
                                         <li id="b" onClick={this.showContent.bind(this)}>
                                           <span>
@@ -476,7 +386,7 @@ postComment=()=>{
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments",{method:"POST",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Bearer '+this.state.jwt
+            'Authorization': 'Bearer '+this.state.jwt.jwt
         },
         body:formBody})
         .then((response) => response.json())
@@ -490,7 +400,7 @@ postComment=()=>{
 
     getComment=()=>{
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments",{method:"get",headers: {
-        'Authorization': 'Bearer '+this.state.jwt
+        'Authorization': 'Bearer '+this.state.jwt.jwt
         }})
         .then((response) => response.json())
         .then((responseData) => {
@@ -507,7 +417,6 @@ postComment=()=>{
         var post = {
             'title': this.state.postTitle,
             'content': this.state.postContent,
-            'userId': this.state.userId
             }
 
         var formBody = []
@@ -520,7 +429,7 @@ postComment=()=>{
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts",{method:"POST",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Bearer '+this.state.jwt
+            'Authorization': 'Bearer '+this.state.jwt.jwt
 
         },
         body:formBody})
@@ -528,7 +437,7 @@ postComment=()=>{
         .then((responseData) => {
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts",{method:"GET",
         headers: {
-        'Authorization': 'Bearer '+this.state.jwt
+        'Authorization': 'Bearer '+this.state.jwt.jwt
         }})
         .then((response) => response.json())
         .then((responseData) => {
@@ -560,7 +469,7 @@ postComment=()=>{
     getContent(id){
        fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+id,{method:"get",
        headers: {
-       'Authorization': 'Bearer '+this.state.jwt
+       'Authorization': 'Bearer '+this.state.jwt.jwt
        }})
         .then((response) => response.json())
         .then((responseData) => {
@@ -576,9 +485,6 @@ postComment=()=>{
     }
 
     userPortfilio(){
-
-
-
     }
 
     deletePost=(id)=>{
@@ -599,7 +505,7 @@ postComment=()=>{
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+id,{method:"DELETE",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Bearer '+this.state.jwt
+            'Authorization': 'Bearer '+this.state.jwt.jwt
 
         },
         body:formBody})
@@ -607,7 +513,7 @@ postComment=()=>{
         .then((responseData) => {
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/",{method:"GET",
         headers: {
-        'Authorization': 'Bearer '+this.state.jwt
+        'Authorization': 'Bearer '+this.state.jwt.jwt
         }})
         .then((response) => response.json())
         .then((responseData) => {
@@ -639,7 +545,7 @@ postComment=()=>{
       fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments/"+ commentId,{method:"DELETE",
       headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Bearer '+this.state.jwt
+          'Authorization': 'Bearer '+this.state.jwt.jwt
 
       },
       body:formBody})
@@ -647,7 +553,7 @@ postComment=()=>{
       .then((responseData) => {
       fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments/"+ commentId,{method:"GET",
       headers: {
-      'Authorization': 'Bearer '+this.state.jwt
+      'Authorization': 'Bearer '+this.state.jwt.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -677,7 +583,7 @@ postComment=()=>{
     fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments/"+commentId+"/upvote",{method:"put",
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer '+this.state.jwt
+        'Authorization': 'Bearer '+this.state.jwt.jwt
 
     },
     body:formBody})
@@ -719,8 +625,7 @@ updatePost=()=>{
   fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing,{method:"PUT",
   headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer '+this.state.jwt
-
+      'Authorization': 'Bearer '+this.state.jwt.jwt
   },
   body:formBody})
   .then((response) => response.json())
@@ -730,7 +635,7 @@ updatePost=()=>{
     this.setState({postContent:responseData.data.conent})
     fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/",{method:"GET",
     headers: {
-    'Authorization': 'Bearer '+this.state.jwt
+    'Authorization': 'Bearer '+this.state.jwt.jwt
     }})
     .then((response) => response.json())
     .then((responseData) => {
@@ -772,7 +677,7 @@ updateNewComment=()=>{
   fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments/"+this.state.commentEditing,{method:"PUT",
   headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer '+this.state.jwt
+      'Authorization': 'Bearer '+this.state.jwt.jwt
 
   },
   body:formBody})
@@ -797,12 +702,14 @@ joinClass=(id)=>{
   if(r==true){
     fetch("http://localhost:8080/api/courses/addUser/"+id,{method:"put",
     headers: {
-      'Authorization': 'Bearer '+this.state.jwt
+      'Authorization': 'Bearer '+this.state.jwt.jwt
     }})
       .then((response) => response.json())
       .then((responseData) => {
         //this.getUserCourse()
         //console.log(responseData.data)
+        this.setState({selection:''})
+        this.setState({ifShowCourseList:false})
       })
     }
 }
@@ -813,25 +720,26 @@ addCourse=()=>{
   this.setState({ifShowQuestion:false})
   this.setState({ifShowContent:false})
   this.setState({ifShowEditPost:false})
-  this.setState({selection:
-    <div>
-      <p style={{color:'white',fontSize:20,position:'relative',top:50}}>University of British Columbia</p>
+  if(this.state.ifShowCourseList){
+    this.setState({selection:
+      <div>
+        <p style={{color:'white',fontSize:20,position:'relative',top:50}}>University of British Columbia</p>
 
-      <ul id="allCourses">
-        {this.state.allCoursesList.map(function(course,i){
-          return(
-            <li id="c">
-                 <dt>{course.courseName}</dt>
-                 <dd style={{fontSize:13, padding:6}}>instructor: {course.instructor[0].name}</dd>
-                 <button id="joinButton" onClick={()=>this.joinClass(course._id)}>join class</button>
-            </li>
-          )
-        },this)}
+        <ul id="allCourses">
+          {this.state.allCoursesList.map(function(course,i){
+            return(
+              <li id="c">
+                   <dt>{course.courseName}</dt>
+                   <button id="joinButton" onClick={()=>this.joinClass(course._id)}>join class</button>
+              </li>
+            )
+          },this)}
 
-     </ul>
-    </div>
+       </ul>
+      </div>
+    })
+  }
 
-  })
 }
 
 filterPost(){
@@ -839,7 +747,7 @@ filterPost(){
     fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/search?keyword="+this.state.keywords+"&weeksAgo=9",{method:"GET",
           headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Bearer '+this.state.jwt
+          'Authorization': 'Bearer '+this.state.jwt.jwt
           }})
     .then((response) => response.json())
     .then((responseData) => {
@@ -871,8 +779,6 @@ filterPost(){
     }
 
   }
-
-
 
 renderList=()=>{
       if(this.state.ifShowEditPost){
@@ -1092,7 +998,6 @@ renderList=()=>{
 
                         <a href="#" id="addCourse" onClick={()=>this.getAllCourses()} >+ add another course</a>
 
-
                         <ul id="course_list">
 
                                 {this.state.coursesEnrolled.map(function(course,i){
@@ -1161,16 +1066,6 @@ renderList=()=>{
                         </div>
                     </div>
 
-                    {/* code for login */}
-                    <div style={{display:'none'}}><FacebookLogin
-                      appId="959862910786642"
-                      autoLoad={true}
-                      fields="name,email,picture"
-                      callback={this.loginCallback}
-                      size="small"
-                      icon="fa-facebook"
-                      textButton="Facebook Login"
-                    /></div>
 
                     <Modal
                       show={this.state.showLoginModal}
@@ -1181,17 +1076,6 @@ renderList=()=>{
                         <Modal.Title style={{float:'left'}}>Please Login first.</Modal.Title>
                       </Modal.Header>
 
-                      <Modal.Body>
-                        <div style={{padding:5}}><FacebookLogin
-                          appId="959862910786642"
-                          autoLoad={true}
-                          fields="name,email,picture"
-                          callback={this.loginCallback}
-                          size="metro"
-                          icon="fa-facebook"
-                          textButton="Login via Facebook"
-                        /></div>
-                      </Modal.Body>
                     </Modal>
                 </div>
             </div>
