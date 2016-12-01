@@ -1,4 +1,6 @@
-
+::-webkit-scrollbar {
+    display: none;
+}
 #searchbar{
     position: absolute;
     width: 130px;
@@ -31,10 +33,11 @@
     position: relative;
     left: 20px;
     top: 280px;
-    color:white;
     height: 423px;
     width:200px;
-    overflow: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
 }
 #course {
     display: absolute;
@@ -346,8 +349,9 @@ td {
     position: absolute;
     top:10px;
     left:670px;
-    overflow: scroll;
-    height:650px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height:680px;
     width: 600px;
 }
 #postTop{
