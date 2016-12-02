@@ -126,8 +126,9 @@ class Home extends Component {
     browserHistory.push('/profile');
   }
   linkToProf() {
-    browserHistory.push('/prof');
+    browserHistory.push('/prof'+'?jwt='+this.state.user_jwt.jwt+'&id='+this.state.user_jwt.userId+"&type="+this.state.user_jwt.userType);
   }
+
   profile_panel(){
     return (
       <div style-={{margin:10}}>
@@ -171,7 +172,7 @@ class Home extends Component {
 
     var page_link = (this.state.user_type === "Instructor") ? (
       <OverlayTrigger placement="bottom" overlay={tooltip_coursePage}>
-        <Button bsStyle="primary" bsSize="large" onClick={this.linkToProf}>Go to Profs Courses</Button>
+        <Button bsStyle="primary" bsSize="large" onClick={this.linkToProf.bind(this)}>Go to Profs Courses</Button>
       </OverlayTrigger>) : (
       <OverlayTrigger placement="bottom" overlay={tooltip_coursePage}>
         <Button bsStyle="primary" bsSize="large" onClick={this.linkToCourses.bind(this)}>Go to Courses</Button>
