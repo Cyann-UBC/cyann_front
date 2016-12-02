@@ -77,6 +77,9 @@ class Courses extends Component {
       this.setState({jwt:this.props.location.query},()=>this.getUserCourse())
       console.log(this.props.location.query)
       console.log(this.state.jwt.userId)
+      this.setState({jwt:this.props.location.query},()=>this.getCurUser())
+
+
     }
 
     loginModalClose=()=>{
@@ -150,13 +153,27 @@ class Courses extends Component {
       })
     }
 
-    setUserName(event){
-        this.setState({userName:"event.target.value"})
+    getCurUser=()=>{
+        //this.setState({userName:"event.target.value"})
         // console.log("asdf")
+
+        fetch("http://localhost:8080/api/users/my",{method:"GET",headers: {
+        'Authorization': 'Bearer '+this.state.jwt.jwt
+        }})
+        .then((response) => response.json())
+        .then((responseData) => {
+          console.log(responseData)
+          this.setState({userName:responseData.userInfo.name})
+          this.setState({user_picture:responseData.userInfo.profileImg})
+
+
+        })
+
     }
-    setPassword(event){
-        this.setState({password:event.target.value})
-    }
+
+    // setPassword(event){
+    //     this.setState({password:event.target.value})
+    // }
     updateQuestionTitle(event){
         this.setState({postTitle:event.target.value})
     }
@@ -175,7 +192,6 @@ class Courses extends Component {
 
     setFontWeight1=()=>{
       this.setState({background:'#60848C'})
-
         this.setState({selection:
                        <div id="student_post_list">
                            <input id="searchbar" placeholder="Search.." onChange={this.updateKeywords.bind(this)}></input>
@@ -346,6 +362,7 @@ class Courses extends Component {
     }
 
     updateList=()=>{
+      console.log(this.state.thisCourse)
         this.setState({ifshowtext:true})
         this.setState({ifShowQuestion:false})
         this.setState({ifShowContent:false})
@@ -976,6 +993,7 @@ renderList=()=>{
       this.getPosts(id)
     }
     getStuPosts(id){
+      this.setState({thisCourse:id})
       this.setState({postTypeIsStudent:true})
       this.getPosts(id)
     }
@@ -1006,14 +1024,13 @@ renderList=()=>{
                                     <ul id="course" data-toggle="collapse" data-target={"#"+i}
                                         onClick={this.setBackground}
                                         style={{background:this.state.background}}>
-
                                         <p onClick={()=>this.getCourse(course._id)}>{course.courseName}</p>
                                     </ul>
                                     <div id={i} className="collapse">
                                         <ul>
                                             <button className="post" onClick={()=>this.getStuPosts(course._id)}>
                                                 <span
-                                                    onClick={this.setFontWeight1}
+                                                    onClick={()=>this.setFontWeight1()}
                                                     style={{fontWeight:this.state.fontWeight1}}>
                                                     Student Post
                                                 </span>
