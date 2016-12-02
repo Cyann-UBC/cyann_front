@@ -83,7 +83,7 @@ class Home extends Component {
     this.FbResponse(response);
   }
   FbResponseInstructor = (response) => {
-    this.setState({user_type:"Instructor"});
+    this.setState({user_type:"instructor"});
     this.FbResponse(response);
   }
   getMyPosts(){
@@ -170,7 +170,7 @@ class Home extends Component {
       <Tooltip id="tooltip"><strong>Check your history</strong>, and <strong>register new courses</strong> on this page.</Tooltip>
     );
 
-    var page_link = (this.state.user_type === "Instructor") ? (
+    var page_link = (this.state.user_type === "instructor") ? (
       <OverlayTrigger placement="bottom" overlay={tooltip_coursePage}>
         <Button bsStyle="primary" bsSize="large" onClick={this.linkToProf.bind(this)}>Go to Profs Courses</Button>
       </OverlayTrigger>) : (
