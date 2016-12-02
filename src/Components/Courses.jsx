@@ -12,6 +12,7 @@ import GoX from 'react-icons/lib/go/x';
 import FaEnvelopeO from 'react-icons/lib/fa/envelope-o';
 
 import face from '../../picture/face.jpg';
+import cyann_logo from '../../picture/cyann_logo.png';
 
 import FacebookLogin from 'react-facebook-login';
 
@@ -117,6 +118,7 @@ class Courses extends Component {
     getCourse(id){
       this.setState({thisCourse:id})
       this.getAllUser(id)
+
     }
 
     getPosts(id){
@@ -190,6 +192,8 @@ class Courses extends Component {
     }
 
     setFontWeight1=()=>{
+      this.setState({ifShowContent:true})
+
       this.setState({background:'#60848C'})
         this.setState({selection:
                        <div id="student_post_list">
@@ -239,6 +243,7 @@ class Courses extends Component {
                                </ul>
                            </div>
                        </div>})
+        this.getContent(this.state.firstId)
         this.setState({fontWeight1:'900'})
         this.setState({fontWeight2:'300'})
         this.setState({fontWeight3:'300'})
@@ -981,8 +986,11 @@ renderList=()=>{
         if(this.state.ifShowQuestion){
             return(
                 <div>
-                    <p>welcome to Cyann</p>
+                    {/* <p style={{fontSize:30,position:'absolute',top:50,left:850,color:"blue"}}>welcome to Cyann</p> */}
+                    <p style={{fontSize:30,position:'absolute',top:50,left:310,color:"white"}}>welcome to Cyann</p>
+                    <img src={cyann_logo} id="logo" width={200} alt="logo" style={{position:"absolute",top:150,left:310}}/>
                 </div>
+
             )
         }
     }
@@ -1083,16 +1091,6 @@ renderList=()=>{
                     </div>
 
 
-                    <Modal
-                      show={this.state.showLoginModal}
-                      onHide={this.loginModalClose}
-                      backdrop='static'
-                      bsSize="large">
-                      <Modal.Header>
-                        <Modal.Title style={{float:'left'}}>Please Login first.</Modal.Title>
-                      </Modal.Header>
-
-                    </Modal>
                 </div>
             </div>
         );
