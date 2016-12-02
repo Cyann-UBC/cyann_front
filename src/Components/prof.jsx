@@ -117,7 +117,7 @@ class Prof extends Component {
     getAssignment(id){
         this.setState({thisCourse:id})
         fetch("http://localhost:8080/api/"+id+"/files/assignments",{method:"GET",headers: {
-          'Authorization': 'Bearer'+ this.state.jwt
+          'Authorization': 'Bearer '+ this.state.jwt.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -465,13 +465,12 @@ getReadings(id){
     }
 
     createCourse=(courseName,TA)=>{
-
         if(courseName.length===0){
             alert("Course Name cannot be empty")
         }else{
         var body ={
             'courseName': courseName,
-            'instructor': this.state.curUserId,
+            'instructor': this.state.jwt.id,
             'TAs': '583a3e35be8ded122680ed36',
         }
         var formBody = []
@@ -489,6 +488,8 @@ getReadings(id){
       .then((response) => response.json())
       .then((responseData) => {
         console.log(responseData)
+        
+        console.log(this.state.jwt.jwt)
         this.joinClass(responseData.data._id)
           this.getUserCourse()
         console.log(this.state.coursesEnrolled)
@@ -547,7 +548,7 @@ postComment=()=>{
        // data.append('user', 'hubot')
         fetch("http://localhost:8080/api/"+this.state.thisCourse+"/files/"+ type +"/upload",{method:"POST",
         headers: {
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmYWNlYm9va0lkIjoiMTg5NDgyMzYxNDA4NTE5MyIsInVzZXJJZCI6IjU4M2EzZTM1YmU4ZGVkMTIyNjgwZWQzNiIsInVzZXJUeXBlIjoic3R1ZGVudCIsImlhdCI6MTQ4MDIxMzU1MH0.gwm2kpNYs1FljTiDmBnoGxdgub2PMaloE43eyWB8wmo'
+            'Authorization': 'Bearer '+this.state.jwt.jwt
         },
         body:data})
         .then((response) => response.json())
@@ -666,7 +667,7 @@ deleteFile=(type,assn)=>{
     if (r == true) {
         fetch("http://localhost:8080/api/"+this.state.thisCourse+"/files/"+type+"/"+assn,{method:"DELETE",
         headers: {
-            'Authorization': 'Bearer'+this.state.jwt
+            'Authorization': 'Bearer '+this.state.jwt.jwt
         }})
         .then((response) => response.json()
              .then((responseData) => {
