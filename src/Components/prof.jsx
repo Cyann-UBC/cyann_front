@@ -601,6 +601,7 @@ postComment=()=>{
 //        })
     }
 
+
     postQuestion=()=>{
       if(this.state.postTitle.length === 0 || this.state.postContent.length === 0){
         alert("title or content Empty!")
