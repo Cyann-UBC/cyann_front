@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Modal, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
-//import logo from '../logo.svg';
 import '../css/App.css';
 import '../css/main.css';
 import FaThumbsOUp from 'react-icons/lib/fa/thumbs-o-up';
