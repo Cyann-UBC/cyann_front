@@ -11,7 +11,7 @@ class About extends Component {
       password:"",
     }
   }
-
+  
   setUserName(event){
     this.setState({userName:"event.target.value"})
   }
