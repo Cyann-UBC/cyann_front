@@ -10,7 +10,7 @@ import FaUser from 'react-icons/lib/fa/user';
 import FaSearchPlus from 'react-icons/lib/fa/search-plus';
 import FaPlusCircle from 'react-icons/lib/fa/plus-circle';
 import GoX from 'react-icons/lib/go/x';
-
+var fileDownload = require('react-file-download');
 
 import face from '../../picture/face.jpg';
 
@@ -488,7 +488,7 @@ getReadings(id){
       .then((response) => response.json())
       .then((responseData) => {
         console.log(responseData)
-        
+
         console.log(this.state.jwt.jwt)
         this.joinClass(responseData.data._id)
           this.getUserCourse()
@@ -564,16 +564,37 @@ postComment=()=>{
         })
 
 }
-
+  saveLocally(blob,type){
+    var blob = new Blob([blob], {type: type});
+    if (typeof window.navigator.msSaveBlob !== 'undefined') {
+        // IE workaround for "HTML7007: One or more blob URLs were
+        // revoked by closing the blob for which they were created.
+        // These URLs will no longer resolve as the data backing
+        // the URL has been freed."
+        window.navigator.msSaveBlob(blob, "file");
+    }
+    else {
+        var csvURL = window.URL.createObjectURL(blob);
+        var tempLink = document.createElement('a');
+        tempLink.href = csvURL;
+        tempLink.setAttribute('download', "file");
+        tempLink.setAttribute('target', '_blank');
+        document.body.appendChild(tempLink);
+        tempLink.click();
+        document.body.removeChild(tempLink);
+    }
+  }
 
     downloadFile=(type,filename)=>{
-
-
-        fetch("http://localhost:8080/api/"+this.state.thisCourse+"/files/"+ type +"/download/"+filename,{method:"GET",
+      var href=''
+      var filename = encodeURIComponent(filename);
+        fetch("http://localhost:8080/api/"+this.state.thisCourse+"/files/"+ type +"/download?fileName="+filename,{method:"GET",
         headers: {
-            'Authorization': 'Bearer'+this.state.jwt
+            accept: 'application/pdf',
+            'Authorization': 'Bearer '+this.state.jwt.jwt
         }})
           .then((response)=> response.blob())
+          .then((blob)=>this.saveLocally(blob,blob.type))
 //          .then((responseData) => {
 //         console.log("1")
 //
@@ -805,7 +826,7 @@ _handleImageChange(e) {
              file: file,
              imagePreviewUrl: reader.result
            });
-    console.log(file)
+    // console.log(file)
 }
 cancelUpdatePost=()=>{
     this.setState({ifShowContent:true})
