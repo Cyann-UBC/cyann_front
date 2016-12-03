@@ -85,6 +85,7 @@ class Prof extends Component {
       this.setState({jwt:this.props.location.query},()=>this.getUserCourse())
       console.log(this.props.location.query)
       console.log(this.state.jwt.userId)
+      //this.setState(curUserId:this.state.jwt.userId)
     }
 
     componentDidMount(){
@@ -136,7 +137,7 @@ class Prof extends Component {
 getReadings(id){
         this.setState({thisCourse:id})
         fetch("http://localhost:8080/api/"+id+"/files/readings",{method:"GET",headers: {
-          'Authorization': 'Bearer'+ this.state.jwt
+          'Authorization': 'Bearer '+ this.state.jwt.jwt
       }})
       .then((response) => response.json())
       .then((responseData) => {
@@ -147,7 +148,7 @@ getReadings(id){
       })
     }
 
-    getPosts(id){
+    getPosts(id,type){
       this.setState({thisCourse:id})
       fetch("http://localhost:8080/api/courses/"+id+"/posts",{method:"GET",headers: {
       'Authorization': 'Bearer '+this.state.jwt.jwt
@@ -160,7 +161,12 @@ getReadings(id){
           if(responseData.data.length>0){
             this.setState({firstId:responseData.data[0]._id})
           }
-          this.setFontWeight1()
+          if(type=='instructorPost'){
+          this.setFontWeight2()
+          }
+          else{
+              this.setFontWeight1()
+          }
 
       })
     }
@@ -210,7 +216,7 @@ updateKeywords(event){
                                         <li id="b" onClick={this.showContent.bind(this)}>
                                           <span>
                                             <a href="#" onClick={()=>this.getContent(post._id)}>
-                                              <GoX id="delete_post" onClick={()=>this.deletePost(post._id)}/>
+                                              <GoX id="delete_post" onClick={()=>this.deletePost(post._id,'studentPost')}/>
                                               <dt id="post_title" style={{top:-32}}> {post.title}</dt>
                                               <dd id="post_body" style={{top:-32}}>{post.content}</dd>
                                             </a>
@@ -253,6 +259,7 @@ updateKeywords(event){
                                       <li id="b" onClick={this.showContent.bind(this)}>
                                         <span>
                                           <a href="#" onClick={()=>this.getContent(post._id)}>
+                                              <GoX id="delete_post" onClick={()=>this.deletePost(post._id,'instructorPost')}/>
                                             <dt id="post_title" style={{top:-5}}> {post.title}</dt>
                                             <dd id="post_body" style={{top:-5}}>{post.content}</dd>
                                           </a>
@@ -500,13 +507,36 @@ updateKeywords(event){
     }
 
     createCourse=(courseName,TA)=>{
+        //get TAs userId by its namearray
+//        var ta
+//        var taId
+//        fetch("http://localhost:8080/api/users/my",{method:"GET",headers: {
+//      'Content-Type': 'application/x-www-form-urlencoded',
+//      'Authorization': 'Bearer '+this.state.jwt.jwt
+//      }})
+//      .then((response) => response.json())
+//         .then((responseData) => {
+//           ta=responseData.userInfo.name
+//           console.log(ta)
+//        //
+//        
+//      fetch("http://localhost:8080/api/users/getIds?names="+ta,{method:"GET",headers: {
+//      'Content-Type': 'application/x-www-form-urlencoded',
+//      'Authorization': 'Bearer '+this.state.jwt.jwt
+//      }})
+//      .then((response) => response.json())
+//      .then((responseData) => {
+//          taId = responseData
+//          console.log("1111111"+taId)
+//      })
+//      })
         if(courseName.length===0){
             alert("Course Name cannot be empty")
         }else{
         var body ={
             'courseName': courseName,
             'instructor': this.state.jwt.id,
-            'TAs': '583a3e35be8ded122680ed36',
+            'TAs': "583f90d36c86ec0271b40bfa",
         }
         var formBody = []
         for (var property in body) {
@@ -674,7 +704,7 @@ postComment=()=>{
             this.getContent(responseData.data[0]._id)
             this.setState({ifShowContent:!this.state.ifShowContent})
 
-            this.setFontWeight1()
+            this.setFontWeight2()
             document.getElementById("updatePostTitle").value = "";
             document.getElementById("updatePostContent").value = "";
 
@@ -733,7 +763,7 @@ deleteFile=(type,assn)=>{
     }
     }
 
-    deletePost=(id)=>{
+    deletePost=(id,type)=>{
       //alert("Are you sure you want to quit?");
       var body = {
           'userId': this.state.userId
@@ -766,7 +796,11 @@ deleteFile=(type,assn)=>{
           this.setState({postSource:responseData.data})
           this.getContent(responseData.data[0]._id)
           this.setState({ifShowContent:this.state.ifShowContent})
+          if(type=='studentPost'){
           this.setFontWeight1()
+          }else{
+              this.setFontWeight2()
+          }
           })
         })
 
@@ -851,7 +885,7 @@ updatePost=()=>{
     .then((responseData) => {
       console.log(responseData)
       this.setState({postSource:responseData.data})
-      this.setFontWeight1()
+      this.setFontWeight2()
     })
   })
 
@@ -1042,8 +1076,8 @@ renderList=()=>{
         )
         }
         if(this.state.ifShowContent){
-            console.log(this.state.curUserId)
-          if(this.state.curUserId===this.state.authorId){
+            console.log(this.state.jwt.userId)
+          if(this.state.jwt.userId===this.state.authorId){
             return(
               <div id="postPage">
                 <div id="postTop">
@@ -1059,7 +1093,7 @@ renderList=()=>{
 
                   <ul id="commentList">
                     {this.state.commentsViewing.map(function(comment,i){
-                      if(!(this.state.curUserId===comment.author._id)){
+                      if(!(this.state.jwt.userId===comment.author._id)){
                         return(
                           <li id="commentContent">
                             <p style={{fontSize:"10px",color:"#002859"}}>followup discussions</p>
@@ -1259,7 +1293,7 @@ renderList=()=>{
                                     </ul>
                                     <div id={i} className="collapse">
                                         <ul>
-                                            <button className="post" onClick={()=>this.getPosts(course._id)}>
+                                            <button className="post" onClick={()=>this.getPosts(course._id,'studentPost')}>
                                                 <span
                                                     onClick={this.setFontWeight1}
                                                     style={{fontWeight:this.state.fontWeight1}}>
@@ -1267,7 +1301,7 @@ renderList=()=>{
                                                 </span>
                                             </button>
 
-                                            <button className="post" >
+                                            <button className="post" onClick={()=>this.getPosts(course._id,'instructorPost')}>
                                                 <span
                                                     onClick={this.setFontWeight2}
                                                     style={{fontWeight:this.state.fontWeight2}}>
