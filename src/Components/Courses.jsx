@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { browserHistory} from 'react-router';
 import { Modal, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import '../css/App.css';
 import '../css/main.css';
@@ -67,18 +68,21 @@ class Courses extends Component {
             postTypeIsStudent:true,
             errorMsg:'',
             ifShowCourseList:false,
+            showModal:false
         }
     }
 
     componentWillMount(){
+      var r = this.props.location.query.jwt;
+      if (r === undefined){
+        browserHistory.push('/');
+      }
     }
     componentDidMount(){
       this.setState({jwt:this.props.location.query},()=>this.getUserCourse())
       console.log(this.props.location.query)
       console.log(this.state.jwt.userId)
       this.setState({jwt:this.props.location.query},()=>this.getCurUser())
-
-
     }
 
     loginModalClose=()=>{
@@ -612,9 +616,14 @@ postComment=()=>{
   }
 
 logout=()=>{
-  var r = confirm("Are you sure you want to logout?");
-  if (r == true) {
-  }
+  this.setState({showModal:true});
+}
+closeModal=()=>{
+  this.setState({showModal:false});
+}
+exit=()=>{
+  this.setState({showModal:false,jwt:''});
+  browserHistory.push('/');
 }
 
 editPost=()=>{
@@ -998,6 +1007,10 @@ renderList=()=>{
     }
 
     render() {
+      // if(this.props.location.query || this.state.logout){
+      //   console.log("loging out and pushing back to homepage");
+      //   browserHistory.push('/');
+      // }
         return (
             <div className="App">
                 <div style={{display:'flex',flexDirection:'row'}}>
@@ -1083,15 +1096,15 @@ renderList=()=>{
                     </div>
 
 
-                    <Modal
-                      show={this.state.showLoginModal}
-                      onHide={this.loginModalClose}
-                      backdrop='static'
-                      bsSize="large">
-                      <Modal.Header>
-                        <Modal.Title style={{float:'left'}}>Please Login first.</Modal.Title>
-                      </Modal.Header>
 
+                    <Modal show={this.state.showModal} onHide={()=>this.closeModal()} bsSize='small'>
+                      <Modal.Header closeButton>
+                        <Modal.Title>Are you sure you want to logout?</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Footer>
+                        <Button onClick={this.exit}>Yes</Button>
+                        <Button onClick={this.closeModal}>No</Button>
+                      </Modal.Footer>
                     </Modal>
                 </div>
             </div>

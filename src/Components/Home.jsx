@@ -12,7 +12,7 @@ class Home extends Component {
     super(props);
     this.state = {
       user_authenticated:false,
-      user_type:"Student",
+      user_type:"student",
       user_name:"",
       user_id:"",
       user_email:"",
@@ -25,6 +25,8 @@ class Home extends Component {
       post_render:true,
       user_comments:[],
       profile_open:false,
+      button_clicked:"student",
+      showMessage:false,
     }
   }
   componentWillMount(){
@@ -43,7 +45,6 @@ class Home extends Component {
         user_id:response.id,
         user_email:response.email,
         user_picture:response.picture.data.url,
-        showModal:true,
       });
       console.log(response)
       var result = response;
@@ -75,15 +76,19 @@ class Home extends Component {
       console.log(this.state.user_jwt);
       console.log(responseData);
 
-      this.setState({user_authenticated:true});
+      if(!(this.state.user_type === this.state.button_clicked) && (this.state.button_clicked === "instructor")){
+        this.setState({showMessage:true});
+      }else {
+        this.setState({user_authenticated:true,showModal:true});
+      }
     });
   }
   FbResponseStudent = (response) => {
-    this.setState({user_type:"Student"});
+    this.setState({button_clicked:"student"});
     this.FbResponse(response);
   }
   FbResponseInstructor = (response) => {
-    this.setState({user_type:"instructor"});
+    this.setState({button_clicked:"instructor"});
     this.FbResponse(response);
   }
   getMyPosts(){
@@ -91,7 +96,7 @@ class Home extends Component {
     fetch('http://localhost:8080/api/users/my/posts',{method:'GET',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ' + this.state.user_jwt
+      'Authorization': 'Bearer ' + this.state.user_jwt.jwt
     }})
     .then((response) => response.json())
     .then((responseData) => {
@@ -103,7 +108,7 @@ class Home extends Component {
     fetch('http://localhost:8080/api/users/my/comments',{method:'GET',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ' + this.state.user_jwt
+      'Authorization': 'Bearer ' + this.state.user_jwt.jwt
     }})
     .then((response) => response.json())
     .then((responseData) => {
@@ -116,19 +121,15 @@ class Home extends Component {
   close=()=> {
     this.setState({showModal:false});
   }
-  open() {
-    this.setState({showModal:true});
+  closeMessage=()=> {
+    this.setState({showMessage:false,button_clicked:"student",showModal:true,user_authenticated:true});
   }
   linkToCourses() {
     browserHistory.push('/courses'+'?jwt='+this.state.user_jwt.jwt+'&id='+this.state.user_jwt.userId+"&type="+this.state.user_jwt.userType);
   }
-  linkToProfile() {
-    browserHistory.push('/profile');
-  }
   linkToProf() {
     browserHistory.push('/prof'+'?jwt='+this.state.user_jwt.jwt+'&id='+this.state.user_jwt.userId+"&type="+this.state.user_jwt.userType);
   }
-
   profile_panel(){
     return (
       <div style-={{margin:10}}>
@@ -149,7 +150,7 @@ class Home extends Component {
           <Tab eventKey={2} title="Comments History">
             <Accordion id="profile_list">
               {this.state.user_comments.map(function(post,i){
-                var temp_header = post.course.name + ": " + post.title;
+                var temp_header = post.course.name;
                 return(
                   <Panel header={temp_header} bsStyle="primary" eventKey={i} id="history_unit">
                     {post.content}
@@ -166,16 +167,13 @@ class Home extends Component {
     const tooltip_coursePage = (
       <Tooltip id="tooltip">A page with a list of courses you registered.</Tooltip>
     );
-    const tooltip_profilePage = (
-      <Tooltip id="tooltip"><strong>Check your history</strong>, and <strong>register new courses</strong> on this page.</Tooltip>
-    );
 
     var page_link = (this.state.user_type === "instructor") ? (
       <OverlayTrigger placement="bottom" overlay={tooltip_coursePage}>
-        <Button bsStyle="primary" bsSize="large" onClick={this.linkToProf.bind(this)}>Go to Profs Courses</Button>
+        <Button bsStyle="primary" bsSize="large" onClick={this.linkToProf.bind(this)}>Go to Profs' Courses</Button>
       </OverlayTrigger>) : (
       <OverlayTrigger placement="bottom" overlay={tooltip_coursePage}>
-        <Button bsStyle="primary" bsSize="large" onClick={this.linkToCourses.bind(this)}>Go to Courses</Button>
+        <Button bsStyle="primary" bsSize="large" onClick={this.linkToCourses.bind(this)}>Go to My Courses</Button>
       </OverlayTrigger>);
 
     var render_panel;
@@ -235,8 +233,26 @@ class Home extends Component {
         </div>
 
         <Modal
+          show={this.state.showMessage}
+          onHide={()=>this.closeMessage()}
+          backdrop='static'
+          bsSize="large">
+          <Modal.Header closeButton>
+            <Modal.Title>We need verification for Instructors.</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>It turns out that you are on file as a student.<br/>
+            Please send us an Email to verify as an Instructor.<br/>
+            In the meanwhile, you can continue as a student.</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={()=>this.closeMessage()}>Continue as Student.</Button>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal
           show={this.state.showModal}
-          onHide={this.close}
+          onHide={()=>this.close()}
           backdrop='static'
           bsSize="large">
           <Modal.Header closeButton>
@@ -248,12 +264,10 @@ class Home extends Component {
 
           <Modal.Body>
 
-            <OverlayTrigger placement="bottom" overlay={tooltip_profilePage}>
               <Button bsStyle="primary" bsSize="large"
                 onClick={ ()=> this.setState({ profile_open: !this.state.profile_open })}>
-                Check out Profile
+                Check out user history
               </Button>
-            </OverlayTrigger>
 
             <Panel collapsible expanded={this.state.profile_open}>
               {render_panel}

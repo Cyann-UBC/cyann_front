@@ -37,3 +37,11 @@ and now type the following url in your browser's address bar:
 ```
 localhost:3000
 ```
+
+
+
+You may run into some issues, when you try to test the web ui on your local host.
+Your local database may not have any course or posts created.
+It is because we limit the functionality of creating a course to instructor type of users.
+And we need email verification to change someone's user_type to instructor.
+One thing you can do is to use Robomongo, a database managing app, to change the content manually.
