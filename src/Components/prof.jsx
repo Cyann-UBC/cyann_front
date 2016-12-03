@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { browserHistory } from 'react-router';
 //import logo from '../logo.svg';
 import '../css/App.css';
 import '../css/main.css';
@@ -10,7 +11,7 @@ import FaUser from 'react-icons/lib/fa/user';
 import FaSearchPlus from 'react-icons/lib/fa/search-plus';
 import FaPlusCircle from 'react-icons/lib/fa/plus-circle';
 import GoX from 'react-icons/lib/go/x';
-var fileDownload = require('react-file-download');
+
 
 import face from '../../picture/face.jpg';
 
@@ -71,11 +72,16 @@ class Prof extends Component {
             thisCourse:'',
             assignmentList:[],
             ReadingsList:[],
-            file: ''
+            file: '',
+            showModal:false,
         }
     }
 
     componentWillMount(){
+      var r = this.props.location.query.jwt;
+      if (r === undefined){
+        browserHistory.push('/');
+      }
       this.setState({jwt:this.props.location.query},()=>this.getUserCourse())
       console.log(this.props.location.query)
       console.log(this.state.jwt.userId)
@@ -792,11 +798,16 @@ deleteFile=(type,assn)=>{
     })
   }
 
-logout=()=>{
-  var r = confirm("Are you sure you want to logout?");
-  if (r == true) {
+  logout=()=>{
+    this.setState({showModal:true});
   }
-}
+  closeModal=()=>{
+    this.setState({showModal:false});
+  }
+  exit=()=>{
+    this.setState({showModal:false,jwt:''});
+    browserHistory.push('/');
+  }
 
 editPost=()=>{
     this.setState({ifshowtext:false})
@@ -1310,6 +1321,16 @@ renderList=()=>{
                             {this.renderList()}
                         </div>
                     </div>
+
+                    <Modal show={this.state.showModal} onHide={()=>this.closeModal()} bsSize='lg'>
+                       <Modal.Header closeButton>
+                         <Modal.Title>Are you sure you want to logout?</Modal.Title>
+                       </Modal.Header>
+                       <Modal.Footer>
+                         <Button onClick={this.exit}>Yes</Button>
+                         <Button onClick={this.closeModal}>No</Button>
+                       </Modal.Footer>
+                      </Modal>
 
                 </div>
             </div>

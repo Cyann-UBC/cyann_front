@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { browserHistory } from 'react-router';
 import '../css/App.css';
 import '../css/main.css';
 import FaThumbsOUp from 'react-icons/lib/fa/thumbs-o-up';
@@ -15,7 +16,7 @@ import face from '../../picture/face.jpg';
 import cyann_logo from '../../picture/cyann_logo.png';
 
 import FacebookLogin from 'react-facebook-login';
-var fileDownload = require('react-file-download');
+
 
 class Courses extends Component {
     constructor(props) {
@@ -74,21 +75,22 @@ class Courses extends Component {
             ifShowCourseList:false,
             assignmentList:[],
             ReadingsList:[],
-            file: ''
+            file: '',
+            showModal:false,
         }
     }
-
     componentWillMount(){
+      var r = this.props.location.query.jwt;
+      if (r === undefined){
+        browserHistory.push('/');
+      }
     }
     componentDidMount(){
       this.setState({jwt:this.props.location.query},()=>this.getUserCourse())
       console.log(this.props.location.query)
       console.log(this.state.jwt.userId)
       this.setState({jwt:this.props.location.query},()=>this.getCurUser())
-
-
     }
-
     loginModalClose=()=>{
         this.setState({showLoginModal:false});
     }
@@ -283,7 +285,7 @@ getReadings(id){
         this.setState({fontWeight2:'300'})
         this.setState({fontWeight3:'300'})
         this.setState({fontWeight4:'300'})
-        
+
     }
     setFontWeight2=()=>{
       this.setState({background:'#60848C'})
@@ -356,7 +358,7 @@ getReadings(id){
                                     <li id="b" onClick={this.showAssignment.bind(this)}>
                                           <span>
                                             <a href="#" onClick={()=>this.downloadFile('assignments',assn)}>
-                                                
+
                                               <dt id="post_title"> {assn} </dt>
                                             </a>
                                         </span>
@@ -393,7 +395,7 @@ getReadings(id){
                            <input id="searchbar" placeholder="Search.."></input>
 
                            <FaSearchPlus style={{position:"absolute",width:25,height:25,top:23,left:145}}/>
-               
+
                            <FaPlusCircle style={{position:"absolute",width:23,height:23,top:23,left:295,color:'cyann'}}/>
 
                            <div>
@@ -801,9 +803,14 @@ downloadFile=(type,filename)=>{
   }
 
 logout=()=>{
-  var r = confirm("Are you sure you want to logout?");
-  if (r == true) {
-  }
+  this.setState({showModal:true});
+}
+closeModal=()=>{
+  this.setState({showModal:false});
+}
+exit=()=>{
+  this.setState({showModal:false,jwt:''});
+  browserHistory.push('/');
 }
 
 editPost=()=>{
@@ -1250,7 +1257,7 @@ renderList=()=>{
                                                     Assignments
                                                 </span>
                                             </button>
-                                                    
+
                                             <button className="post" onClick={()=>this.getReadings(course._id)}>
                                                 <span
                                                     onClick={this.setFontWeight5}
@@ -1290,6 +1297,15 @@ renderList=()=>{
                         </div>
                     </div>
 
+                    <Modal show={this.state.showModal} onHide={()=>this.closeModal()} bsSize='lg'>
+                       <Modal.Header closeButton>
+                         <Modal.Title>Are you sure you want to logout?</Modal.Title>
+                       </Modal.Header>
+                       <Modal.Footer>
+                         <Button onClick={this.exit}>Yes</Button>
+                         <Button onClick={this.closeModal}>No</Button>
+                       </Modal.Footer>
+                      </Modal>
 
                 </div>
             </div>
