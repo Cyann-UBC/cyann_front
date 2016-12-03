@@ -15,7 +15,7 @@ import face from '../../picture/face.jpg';
 import cyann_logo from '../../picture/cyann_logo.png';
 
 import FacebookLogin from 'react-facebook-login';
-
+var fileDownload = require('react-file-download');
 
 class Courses extends Component {
     constructor(props) {
@@ -36,6 +36,10 @@ class Courses extends Component {
             ifshowtext: false,
             ifShowQuestion:true,
             ifShowContent:false,
+            ifShowUploadForm:false,
+            ifShowReadUploadForm:false,
+            ifShowAssignment:false,
+            ifShowReadings:false,
             background2:'none',
             postSource:[],
             postTitle:'',
@@ -68,6 +72,9 @@ class Courses extends Component {
             postTypeIsStudent:true,
             errorMsg:'',
             ifShowCourseList:false,
+            assignmentList:[],
+            ReadingsList:[],
+            file: ''
         }
     }
 
@@ -112,6 +119,34 @@ class Courses extends Component {
       .then((responseData) => {
         console.log(responseData)
         this.setState({coursesEnrolled:responseData})
+      })
+    }
+
+ getAssignment(id){
+        this.setState({thisCourse:id})
+        fetch("http://localhost:8080/api/"+id+"/files/assignments",{method:"GET",headers: {
+          'Authorization': 'Bearer '+ this.state.jwt.jwt
+      }})
+      .then((response) => response.json())
+      .then((responseData) => {
+          this.setState({assignmentList:responseData.files})
+          console.log(responseData.files)
+          //console.log(this.state.assignmentList+"supoose to be the same as above")
+          this.setFontWeight3()
+      })
+    }
+
+getReadings(id){
+        this.setState({thisCourse:id})
+        fetch("http://localhost:8080/api/"+id+"/files/readings",{method:"GET",headers: {
+          'Authorization': 'Bearer'+ this.state.jwt
+      }})
+      .then((response) => response.json())
+      .then((responseData) => {
+          this.setState({ReadingsList:responseData.files})
+          console.log(responseData.files)
+          //console.log(this.state.assignmentList+"supoose to be the same as above")
+          this.setFontWeight5()
       })
     }
 
@@ -248,6 +283,7 @@ class Courses extends Component {
         this.setState({fontWeight2:'300'})
         this.setState({fontWeight3:'300'})
         this.setState({fontWeight4:'300'})
+        
     }
     setFontWeight2=()=>{
       this.setState({background:'#60848C'})
@@ -293,37 +329,110 @@ class Courses extends Component {
         this.setState({ifShowQuestion:false})
         this.setState({ifShowContent:false})
         this.setState({ifShowEditPost:false})
+        this.setState({ifShowUploadForm:false})
+        this.setState({ifShowAssignment:false})
+        this.setState({ifShowReadings:false})
+        this.setState({ifShowReadUploadForm:false})
+        this.setState({ifShowCourseForm:false})
     }
 
     setFontWeight3=()=>{
-      this.setState({background:'#60848C'})
+       this.setState({background:'#60848C'})
+ this.setState({selection:
+                        <div id="student_post_list">
+                           <input id="searchbar" placeholder="Search.."></input>
 
-        this.setState({selection:
-                      <div>
-                       <table id="homework_list">
-                           <caption style={{fontSize:20,color:"white"}}>Homework List</caption>
-                           <tr>
-                               <td>Homework</td>
-                               <td>due date</td>
-                           </tr>
-                         <tr>
-                             <th><a href="../../downloadfile/1intro.pdf" download target="_blank"><p id="homework">1intro</p></a></th>
-                             <th>Oct 30, 2016</th>
-                         </tr>
-                         <th><a href="../../downloadfile/2lifecycle.pdf" download target="_blank"><p id="homework">2lifecycle</p></a></th>
-                           <th>Nov 1, 2016</th>
-                        </table>
+                           <FaSearchPlus style={{position:"absolute",width:25,height:25,top:23,left:145}}/>
 
+                           <FaPlusCircle style={{position:"absolute",width:23,height:23,top:23,left:295,color:'cyann'}}/>
+
+                           <div>
+                               <p id="post_h2">Assignments</p>
+                               <ul id="aaa">
+                                   {this.state.assignmentList.map(function(assn,i){
+                                    //console.log(assn)
+                                       return(
+
+                                    <li id="b" onClick={this.showAssignment.bind(this)}>
+                                          <span>
+                                            <a href="#" onClick={()=>this.downloadFile('assignments',assn)}>
+                                                
+                                              <dt id="post_title"> {assn} </dt>
+                                            </a>
+                                        </span>
+                                    </li>
+                                       )
+                                   },this)}
+
+                               </ul>
+                           </div>
                        </div>})
+
         this.setState({fontWeight1:'300'})
         this.setState({fontWeight2:'300'})
         this.setState({fontWeight3:'900'})
         this.setState({fontWeight4:'300'})
+        this.setState({fontWeight5:'300'})
 
         this.setState({ifshowtext:false})
         this.setState({ifShowQuestion:false})
         this.setState({ifShowContent:false})
         this.setState({ifShowEditPost:false})
+        this.setState({ifShowUploadForm:false})
+        this.setState({ifShowAssignment:false})
+        this.setState({ifShowReadings:false})
+        this.setState({ifShowReadUploadForm:false})
+        this.setState({ifShowCourseForm:false})
+    }
+   setFontWeight5=()=>{
+          //this.getAssignment()
+        //console.log(this.state.assignmentList)
+      this.setState({background:'#60848C'})
+ this.setState({selection:
+                        <div id="student_post_list">
+                           <input id="searchbar" placeholder="Search.."></input>
+
+                           <FaSearchPlus style={{position:"absolute",width:25,height:25,top:23,left:145}}/>
+               
+                           <FaPlusCircle style={{position:"absolute",width:23,height:23,top:23,left:295,color:'cyann'}}/>
+
+                           <div>
+                               <p id="post_h2">Readings</p>
+                               <ul id="aaa">
+                                   {this.state.ReadingsList.map(function(read,i){
+                                    //console.log(assn)
+                                       return(
+
+                                    <li id="b" onClick={this.showReadings.bind(this)}>
+                                          <span>
+                                            <a href="#" onClick={()=>this.downloadFile('readings',read)}>
+                                                <GoX id="delete_post" onClick={()=>this.deleteFile('readings',read)}/>
+                                              <dt id="post_title"> {read} </dt>
+                                            </a>
+                                        </span>
+                                    </li>
+                                       )
+                                   },this)}
+
+                               </ul>
+                           </div>
+                       </div>})
+
+        this.setState({fontWeight1:'300'})
+        this.setState({fontWeight2:'300'})
+        this.setState({fontWeight3:'300'})
+        this.setState({fontWeight4:'300'})
+        this.setState({fontWeight5:'900'})
+
+        this.setState({ifshowtext:false})
+        this.setState({ifShowQuestion:false})
+        this.setState({ifShowContent:false})
+        this.setState({ifShowEditPost:false})
+        this.setState({ifShowUploadForm:false})
+        this.setState({ifShowAssignment:false})
+        this.setState({ifShowReadings:false})
+        this.setState({ifShowReadUploadForm:false})
+        this.setState({ifShowCourseForm:false})
     }
     setFontWeight4=()=>{
       // this.getAllUser()
@@ -355,6 +464,11 @@ class Courses extends Component {
         this.setState({ifShowQuestion:false})
         this.setState({ifShowContent:false})
         this.setState({ifShowEditPost:false})
+        this.setState({ifShowUploadForm:false})
+        this.setState({ifShowAssignment:false})
+        this.setState({ifShowReadings:false})
+        this.setState({ifShowReadUploadForm:false})
+        this.setState({ifShowCourseForm:false})
     }
 
     sendMail(emailAddr) {
@@ -371,21 +485,57 @@ class Courses extends Component {
         this.setState({ifShowQuestion:false})
         this.setState({ifShowContent:false})
         this.setState({ifShowEditPost:false})
+        this.setState({ifShowUploadForm:false})
+        this.setState({ifShowAssignment:false})
+        this.setState({ifShowReadings:false})
+        this.setState({ifShowReadUploadForm:false})
+        this.setState({ifShowCourseForm:false})
         this.setState({postTitle:''})
         this.setState({postContent:''})
+    }
+    showAssignment=()=>{
+        this.setState({ifShowContent:false})
+        this.setState({ifshowtext:false})
+        this.setState({ifShowQuestion:false})
+        this.setState({ifShowEditPost:false})
+        this.setState({ifShowUploadForm:false})
+        this.setState({ifShowAssignment:true})
+        this.setState({ifShowReadings:false})
+        this.setState({ifShowReadUploadForm:false})
+        this.setState({ifShowCourseForm:false})
+    }
+    showReadings=()=>{
+        this.setState({ifShowContent:false})
+        this.setState({ifshowtext:false})
+        this.setState({ifShowQuestion:false})
+        this.setState({ifShowEditPost:false})
+        this.setState({ifShowUploadForm:false})
+        this.setState({ifShowAssignment:false})
+        this.setState({ifShowReadings:true})
+        this.setState({ifShowReadUploadForm:false})
+        this.setState({ifShowCourseForm:false})
     }
     showContent=()=>{
         this.setState({ifShowContent:true})
         this.setState({ifshowtext:false})
         this.setState({ifShowQuestion:false})
         this.setState({ifShowEditPost:false})
-
+        this.setState({ifShowUploadForm:false})
+        this.setState({ifShowAssignment:false})
+        this.setState({ifShowReadings:false})
+        this.setState({ifShowReadUploadForm:false})
+        this.setState({ifShowCourseForm:false})
     }
     showQuestion=()=>{
         this.setState({ifshowtext:false})
         this.setState({ifShowQuestion:true})
         this.setState({ifShowContent:false})
         this.setState({ifShowEditPost:false})
+        this.setState({ifShowUploadForm:false})
+        this.setState({ifShowAssignment:false})
+        this.setState({ifShowReadings:false})
+        this.setState({ifShowReadUploadForm:false})
+        this.setState({ifShowCourseForm:false})
     }
 
 postComment=()=>{
@@ -418,7 +568,41 @@ postComment=()=>{
         document.getElementById("newComment").value = "";
       }
     }
-
+ saveLocally(blob,type){
+    var blob = new Blob([blob], {type: type});
+    if (typeof window.navigator.msSaveBlob !== 'undefined') {
+        // IE workaround for "HTML7007: One or more blob URLs were
+        // revoked by closing the blob for which they were created.
+        // These URLs will no longer resolve as the data backing
+        // the URL has been freed."
+        window.navigator.msSaveBlob(blob, "file");
+    }
+    else {
+        var csvURL = window.URL.createObjectURL(blob);
+        var tempLink = document.createElement('a');
+        tempLink.href = csvURL;
+        tempLink.setAttribute('download', "file");
+        tempLink.setAttribute('target', '_blank');
+        document.body.appendChild(tempLink);
+        tempLink.click();
+        document.body.removeChild(tempLink);
+    }
+  }
+downloadFile=(type,filename)=>{
+      var href=''
+      var filename = encodeURIComponent(filename);
+        fetch("http://localhost:8080/api/"+this.state.thisCourse+"/files/"+ type +"/download?fileName="+filename,{method:"GET",
+        headers: {
+            accept: 'application/pdf',
+            'Authorization': 'Bearer '+this.state.jwt.jwt
+        }})
+          .then((response)=> response.blob())
+          .then((blob)=>this.saveLocally(blob,blob.type))
+//          .then((responseData) => {
+//         console.log("1")
+//
+//        })
+    }
     getComment=()=>{
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments",{method:"get",headers: {
         'Authorization': 'Bearer '+this.state.jwt.jwt
@@ -844,6 +1028,14 @@ renderList=()=>{
             </div>
         )
     }
+    if(this.state.ifShowAssignment){
+    return(
+
+            <p> The file has been downloaded </p>
+                //<embed src='filepath' width="800px" height="2100px" />
+
+        )
+        }
         if(this.state.ifShowContent){
           if(this.state.curUserId===this.state.authorId){
             return(
@@ -1051,11 +1243,19 @@ renderList=()=>{
                                                 </span>
                                             </button>
 
-                                            <button className="post" >
+                                            <button className="post" onClick={()=>this.getAssignment(course._id)}>
                                                 <span
                                                     onClick={this.setFontWeight3}
                                                     style={{fontWeight:this.state.fontWeight3}}>
-                                                    Resource
+                                                    Assignments
+                                                </span>
+                                            </button>
+                                                    
+                                            <button className="post" onClick={()=>this.getReadings(course._id)}>
+                                                <span
+                                                    onClick={this.setFontWeight5}
+                                                    style={{fontWeight:this.state.fontWeight5}}>
+                                                    Readings
                                                 </span>
                                             </button>
 

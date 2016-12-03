@@ -174,6 +174,9 @@ getReadings(id){
     updateComment(event){
         this.setState({commentContent:event.target.value})
     }
+updateKeywords(event){
+      this.setState({keywords:event.target.value},()=>{this.filterPost()})
+    }
 
     setBackground=()=>{
         this.setState({background:'#60848C'})
@@ -189,7 +192,6 @@ getReadings(id){
 
                            <FaSearchPlus style={{position:"absolute",width:25,height:25,top:23,left:145,color:'#17B3C1',zIndex:'1'}}/>
 
-                           <button id="new_post"  type="button" onClick={this.updateList.bind(this)}>New Post</button>
 
                            <FaPlusCircle style={{position:"absolute",width:23,height:23,top:23,left:295,color:'cyann'}}/>
 
@@ -197,7 +199,7 @@ getReadings(id){
                                <p id="post_h2">Post List</p>
                                <ul id="aaa">
                                    {this.state.postSource.map(function(post,i){
-
+                                      if(post.author.userType=="student"){
                                        return(
                                         <li id="b" onClick={this.showContent.bind(this)}>
                                           <span>
@@ -209,6 +211,7 @@ getReadings(id){
                                         </span>
                                         </li>
                                        )
+                                     }
                                    },this)}
 
                                </ul>
@@ -225,9 +228,36 @@ getReadings(id){
 
         this.setState({selection:
                        <div id="prof_post_list">
-                           <input id="searchbar" placeholder="Search.."></input>
-                           <FaSearchPlus style={{position:"absolute",width:25,height:25,top:23,left:145}}/>
-                           <p id="post_h2">Post List</p>
+                         <input id="searchbar" placeholder="Search.." onChange={this.updateKeywords.bind(this)}></input>
+                         <FaSearchPlus style={{position:"absolute",width:25,height:25,top:23,left:145,color:'#17B3C1',zIndex:'1'}}/>
+                      <button id="new_post"  type="button" onClick={this.updateList.bind(this)}>New Post</button>
+                              <FaPlusCircle style={{position:"absolute",width:23,height:23,top:23,left:295,color:'cyann'}}/>
+
+                         <p style={{position:'relative',top:80,left:20,fontSize:20}}>{this.state.errorMsg}</p>
+
+                         <div>
+                             <p id="post_h2">Post List</p>
+                             <ul id="aaa">
+                                 {this.state.postSource.map(function(post,i){
+                                   this.setState({postTypeIsStudent:false})
+
+                                   this.setState({thisCourse:post.course} )
+                                   if(post.author.userType=="instructor"){
+                                     return(
+                                      <li id="b" onClick={this.showContent.bind(this)}>
+                                        <span>
+                                          <a href="#" onClick={()=>this.getContent(post._id)}>
+                                            <dt id="post_title" style={{top:-5}}> {post.title}</dt>
+                                            <dd id="post_body" style={{top:-5}}>{post.content}</dd>
+                                          </a>
+                                      </span>
+                                      </li>
+                                     )
+                                 }
+                                 },this)}
+
+                             </ul>
+                         </div>
 
 
                       </div>})
@@ -235,7 +265,6 @@ getReadings(id){
         this.setState({fontWeight2:'900'})
         this.setState({fontWeight3:'300'})
         this.setState({fontWeight4:'300'})
-        this.setState({fontWeight5:'300'})
 
         this.setState({ifshowtext:false})
         this.setState({ifShowQuestion:false})
@@ -738,7 +767,7 @@ deleteFile=(type,assn)=>{
     }
   }
 
-  upvote=(commentId)=>{
+  chooseAsAnswer=(commentId)=>{
     var body = {
         'userId': this.state.userId,
         }
@@ -750,7 +779,7 @@ deleteFile=(type,assn)=>{
         formBody.push(encodedKey + "=" + encodedValue);
     }
     formBody = formBody.join("&");
-    fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments/"+commentId+"/upvote",{method:"put",
+    fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments/"+commentId+"/setAsAnswer",{method:"put",
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': 'Bearer '+this.state.jwt.jwt
@@ -942,7 +971,7 @@ renderList=()=>{
 
                           <h2></h2>
                           <p style={{fontSize:"10px", color:"#002859"}}>good question    {comment.upvotes}</p>
-                          <button id ="thumb" onClick={()=>this.upvote(comment._id)}><FaThumbsOUp /></button>
+                          <button id ="thumb" onClick={()=>this.chooseAsAnswer(comment._id)}><FaThumbsOUp /></button>
 
                           <p id="commentUser">Updated by {comment.author.name} at {comment.createdAt}</p>
                         </li>
@@ -1028,7 +1057,7 @@ renderList=()=>{
 
                             <h2></h2>
                             <p style={{fontSize:"10px", color:"#002859"}}>good question    {comment.upvotes}</p>
-                            <button id ="thumb" onClick={()=>this.upvote(comment._id)}><FaThumbsOUp /></button>
+                            <button id ="thumb" onClick={()=>this.chooseAsAnswer(comment._id)}><FaThumbsOUp /></button>
 
                             <p id="commentUser">Updated by {comment.author.name} at {comment.createdAt}</p>
                           </li>
@@ -1055,7 +1084,7 @@ renderList=()=>{
 
                               <h2></h2>
                               <p style={{fontSize:"10px", color:"#002859"}}>good question    {comment.upvotes}</p>
-                              <button id ="thumb" onClick={()=>this.upvote(comment._id)}><FaThumbsOUp /></button>
+                              <button id ="thumb" onClick={()=>this.chooseAsAnswer(comment._id)}><FaThumbsOUp /></button>
 
                               <p id="commentUser">Updated by {comment.author.name} at {comment.createdAt}</p>
                             </li>
@@ -1110,7 +1139,7 @@ renderList=()=>{
 
                               <h2></h2>
                               <p style={{fontSize:"10px", color:"#002859"}}>good question    {comment.upvotes}</p>
-                              <button id ="thumb" onClick={()=>this.upvote(comment._id)}><FaThumbsOUp /></button>
+                              <button id ="thumb" onClick={()=>this.chooseAsAnswer(comment._id)}><FaThumbsOUp /></button>
 
                               <p id="commentUser">Updated by {comment.author.name} at {comment.createdAt}</p>
                             </li>
