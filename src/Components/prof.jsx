@@ -74,6 +74,7 @@ class Prof extends Component {
             ReadingsList:[],
             file: '',
             showModal:false,
+            ifDeleteFile:false,
         }
     }
 
@@ -629,8 +630,9 @@ postComment=()=>{
         })
 
 }
-  saveLocally(blob,type){
+  saveLocally(blob,type,status){
     var blob = new Blob([blob], {type: type});
+      if(status!="404"){
     if (typeof window.navigator.msSaveBlob !== 'undefined') {
         // IE workaround for "HTML7007: One or more blob URLs were
         // revoked by closing the blob for which they were created.
@@ -648,22 +650,29 @@ postComment=()=>{
         tempLink.click();
         document.body.removeChild(tempLink);
     }
+      }
   }
 
     downloadFile=(type,filename)=>{
       var href=''
       var filename = encodeURIComponent(filename);
+        var status='';
+        console.log(this.state.ifDeleteFile)
+        if(this.state.ifDeleteFile==false){
         fetch("http://localhost:8080/api/"+this.state.thisCourse+"/files/"+ type +"/download?fileName="+filename,{method:"GET",
         headers: {
             accept: 'application/pdf',
             'Authorization': 'Bearer '+this.state.jwt.jwt
         }})
           .then((response)=> response.blob())
-          .then((blob)=>this.saveLocally(blob,blob.type))
+          .the((response)=> 
+               status=response.status)
+          .then((blob)=>this.saveLocally(blob,blob.type,status))
 //          .then((responseData) => {
 //         console.log("1")
 //
 //        })
+    }
     }
 
 
@@ -750,17 +759,23 @@ postComment=()=>{
     }
 
 deleteFile=(type,assn)=>{
+    this.setState({ifDeleteFile:true})
        var r = confirm("Are you sure you want to delete this Assignment?");
     if (r == true) {
-        fetch("http://localhost:8080/api/"+this.state.thisCourse+"/files/"+type+"/"+assn,{method:"DELETE",
+        fetch("http://localhost:8080/api/"+this.state.thisCourse+"/files/"+type+"?fileName="+assn,{method:"DELETE",
         headers: {
             'Authorization': 'Bearer '+this.state.jwt.jwt
         }})
         .then((response) => response.json()
              .then((responseData) => {
              this.getAssignment(this.state.thisCourse)
+             console.log(this.state.assignmentList)
+             console.log("1s")
+             
           }))
     }
+          this.setState({ifDeleteFile:false})
+
     }
 
     deletePost=(id,type)=>{
