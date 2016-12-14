@@ -354,7 +354,7 @@ updateKeywords(event){
                                           <span>
                                             <a href="#" onClick={()=>this.downloadFile('assignments',assn)}>
                                                 <GoX id="delete_post" onClick={()=>this.deleteFile('assignments',assn)}/>
-                                              <dt id="post_title"> {assn} </dt>
+                                              <dt id="post_title" style={{top:-20}}> {assn} </dt>
                                             </a>
                                         </span>
                                     </li>
@@ -441,6 +441,8 @@ updateKeywords(event){
             <ul id="studentList">
             {this.state.studentList.map(function(student,i){
               console.log("students")
+              console.log(this.state.studentList)
+              if(student.userType==="student"){
               return(
                 <li id="d">
                      <dt style={{position:'relative',left:70}}>{student.name}</dt>
@@ -449,6 +451,7 @@ updateKeywords(event){
                      <img src={student.profileImg} id="studentPic"/>
                   </li>
               )
+            }
             },this)}
           </ul>
 

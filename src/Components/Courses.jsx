@@ -283,6 +283,8 @@ getReadings(id){
 
     }
     setFontWeight2=()=>{
+      this.setState({ifShowContent:true})
+
       this.setState({background:'#60848C'})
 
         this.setState({selection:
@@ -430,6 +432,7 @@ getReadings(id){
             <p style={{position:'relative',top:50, color:'white',fontSize:20}}>student list</p>
             <ul id="studentList">
             {this.state.studentList.map(function(student,i){
+              if(student.userType==="student"){
               return(
                 <li id="d">
                      <dt style={{position:'relative',left:70}}>{student.name}</dt>
@@ -438,6 +441,7 @@ getReadings(id){
                      <img src={student.profileImg} id="studentPic"/>
                   </li>
               )
+            }
             },this)}
           </ul>
 
@@ -481,12 +485,7 @@ getReadings(id){
         this.setState({postContent:''})
     }
     showAssignment=()=>{
-      // this.setState({selection:
-      //     <div>
-      //       <object width="700" height="700" style={{position:"absolute",left:50,top:5}} data={assn}>
-      //       </object>
-      //     </div>
-      // })
+
         this.setState({ifShowContent:false})
         this.setState({ifshowtext:false})
         this.setState({ifShowQuestion:false})
@@ -561,7 +560,7 @@ postComment=()=>{
         document.getElementById("newComment").value = "";
       }
     }
- saveLocally(blob,type){
+ saveLocally(blob,type,status){
     var blob = new Blob([blob], {type: type});
     if (typeof window.navigator.msSaveBlob !== 'undefined') {
         // IE workaround for "HTML7007: One or more blob URLs were
@@ -598,6 +597,13 @@ downloadFile=(type,filename)=>{
                this.saveLocally(blob,blob.type,status)
         })
           })
+
+          // this.setState({selection:
+          //     <div>
+          //       <object width="700" height="700" style={{position:"absolute",left:50,top:5}} data={response.blob()}>
+          //       </object>
+          //     </div>
+          // })
     }
     getComment=()=>{
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments",{method:"get",headers: {
@@ -1206,7 +1212,7 @@ renderList=()=>{
             return(
                 <div>
                     {/* <p style={{fontSize:30,position:'absolute',top:50,left:850,color:"blue"}}>welcome to Cyann</p> */}
-                    <p style={{fontSize:30,position:'absolute',top:50,left:310,color:"white"}}>welcome to Cyann</p>
+                    <p style={{fontSize:30,position:'absolute',top:50,left:280,width:300,color:"white"}}>welcome to Cyann</p>
                     <img src={cyann_logo} id="logo" width={200} alt="logo" style={{position:"absolute",top:150,left:310}}/>
                 </div>
 
@@ -1227,7 +1233,7 @@ renderList=()=>{
     render() {
         return (
             <div className="App">
-                <div style={{display:'flex',flexDirection:'row'}}>
+                <div style={{display:'flex'}}>
                     <div id="portfolio_bar">
                         <p id="name">{this.state.userName}</p>
                         <img src={this.state.user_picture} style={{position:"absolute",top:20,left:40,width:120,height:120}}/>
@@ -1238,7 +1244,7 @@ renderList=()=>{
 
 
 
-                    <div style={{height:window.innerHeight,width:window.innerWidth/6,backgroundColor:'#17B3C1'}}>
+                    <div style={{height:725,width:215,backgroundColor:'#17B3C1'}}>
 
                         <a href="#" id="addCourse" onClick={()=>this.getAllCourses()} >+ add another course</a>
 
@@ -1304,15 +1310,15 @@ renderList=()=>{
                         </ul>
                     </div>
 
-                    <div style={{height:window.innerHeight,width:window.innerWidth/3,backgroundColor:'#60848C'}}>
+                    <div style={{position:'absolute',left:215,height:725,width:430,backgroundColor:'#60848C'}}>
 
                         <div>
                             {this.state.selection}
                         </div>
                     </div>
 
-                    <div style={{height:window.innerHeight,width:window.innerWidth/2,backgroundColor:'white'}}>
-                        <div>
+                    <div style={{position:'absolute',left:645,height:725,width:645,backgroundColor:'white'}}>
+                        <div style={{position:'absolute',left:-645}}>
                             {this.renderList()}
                         </div>
                     </div>
