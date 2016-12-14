@@ -298,7 +298,7 @@ getReadings(id){
                                    this.setState({postTypeIsStudent:false})
 
                                    this.setState({thisCourse:post.course} )
-                                   if(post.author.userType=="Instructor"){
+                                   if(post.author.userType=="instructor"){
                                      return(
                                       <li id="b" onClick={this.showContent.bind(this)}>
                                         <span>
@@ -335,13 +335,8 @@ getReadings(id){
 
     setFontWeight3=()=>{
        this.setState({background:'#60848C'})
- this.setState({selection:
+       this.setState({selection:
                         <div id="student_post_list">
-                           <input id="searchbar" placeholder="Search.."></input>
-
-                           <FaSearchPlus style={{position:"absolute",width:25,height:25,top:23,left:145}}/>
-
-                           <FaPlusCircle style={{position:"absolute",width:23,height:23,top:23,left:295,color:'cyann'}}/>
 
                            <div>
                                <p id="post_h2">Assignments</p>
@@ -354,7 +349,7 @@ getReadings(id){
                                           <span>
                                             <a href="#" onClick={()=>this.downloadFile('assignments',assn)}>
 
-                                              <dt id="post_title"> {assn} </dt>
+                                              <dt id="post_title" style={{top:5}}> {assn} </dt>
                                             </a>
                                         </span>
                                     </li>
@@ -387,11 +382,6 @@ getReadings(id){
       this.setState({background:'#60848C'})
  this.setState({selection:
                         <div id="student_post_list">
-                           <input id="searchbar" placeholder="Search.."></input>
-
-                           <FaSearchPlus style={{position:"absolute",width:25,height:25,top:23,left:145}}/>
-
-                           <FaPlusCircle style={{position:"absolute",width:23,height:23,top:23,left:295,color:'cyann'}}/>
 
                            <div>
                                <p id="post_h2">Readings</p>
@@ -404,7 +394,7 @@ getReadings(id){
                                           <span>
                                             <a href="#" onClick={()=>this.downloadFile('readings',read)}>
                                                 <GoX id="delete_post" onClick={()=>this.deleteFile('readings',read)}/>
-                                              <dt id="post_title"> {read} </dt>
+                                              <dt id="post_title" style={{top:5}}> {read} </dt>
                                             </a>
                                         </span>
                                     </li>
@@ -443,7 +433,7 @@ getReadings(id){
               return(
                 <li id="d">
                      <dt style={{position:'relative',left:70}}>{student.name}</dt>
-                     <dd style={{position:'relative',left:70}}> honour points: {student.honour}</dd>
+                     <dd style={{position:'relative',left:70}}> honour points: {student.honor}</dd>
                      <FaEnvelopeO id="email" onClick={()=>this.sendMail(student.email)}/>
                      <img src={student.profileImg} id="studentPic"/>
                   </li>
@@ -491,6 +481,12 @@ getReadings(id){
         this.setState({postContent:''})
     }
     showAssignment=()=>{
+      // this.setState({selection:
+      //     <div>
+      //       <object width="700" height="700" style={{position:"absolute",left:50,top:5}} data={assn}>
+      //       </object>
+      //     </div>
+      // })
         this.setState({ifShowContent:false})
         this.setState({ifshowtext:false})
         this.setState({ifShowQuestion:false})
