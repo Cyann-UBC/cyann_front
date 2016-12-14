@@ -281,8 +281,8 @@ updateKeywords(event){
                                         <span>
                                           <a href="#" onClick={()=>this.getContent(post._id)}>
                                               <GoX id="delete_post" onClick={()=>this.deletePost(post._id,'instructorPost')}/>
-                                            <dt id="post_title" style={{top:-5}}> {post.title}</dt>
-                                            <dd id="post_body" style={{top:-5}}>{post.content}</dd>
+                                            <dt id="post_title" style={{top:-35}}> {post.title}</dt>
+                                            <dd id="post_body" style={{top:-35}}>{post.content}</dd>
                                           </a>
                                       </span>
                                       </li>
@@ -317,9 +317,7 @@ updateKeywords(event){
       this.setState({background:'#60848C'})
  this.setState({selection:
                         <div id="student_post_list">
-                           <input id="searchbar" placeholder="Search.."></input>
 
-                           <FaSearchPlus style={{position:"absolute",width:25,height:25,top:23,left:145}}/>
 
                            <button id="new_post"  type="button" onClick={this.uploadAssignment.bind(this)}>New File</button>
 
@@ -369,9 +367,7 @@ updateKeywords(event){
       this.setState({background:'#60848C'})
  this.setState({selection:
                         <div id="student_post_list">
-                           <input id="searchbar" placeholder="Search.."></input>
 
-                           <FaSearchPlus style={{position:"absolute",width:25,height:25,top:23,left:145}}/>
 
                            <button id="new_post"  type="button" onClick={this.uploadReadings.bind(this)}>New File</button>
 
@@ -678,21 +674,25 @@ postComment=()=>{
       var filename = encodeURIComponent(filename);
         var status='';
         console.log(this.state.ifDeleteFile)
-        if(this.state.ifDeleteFile==false){
+        
         fetch("http://localhost:8080/api/"+this.state.thisCourse+"/files/"+ type +"/download?fileName="+filename,{method:"GET",
         headers: {
             accept: 'application/pdf',
             'Authorization': 'Bearer '+this.state.jwt.jwt
         }})
-          .then((response)=> response.blob())
-          .the((response)=> 
-               status=response.status)
-          .then((blob)=>this.saveLocally(blob,blob.type,status))
+          .then((response)=> {
+            status=response.status;
+            response.blob()})
+          .then((blob)=> {
+               this.saveLocally(blob,blob.type,status)
+        })
+          
+        
 //          .then((responseData) => {
 //         console.log("1")
 //
 //        })
-    }
+    
     }
 
 
@@ -1235,7 +1235,7 @@ renderList=()=>{
                       <h2></h2>
                       <textarea onChange={this.updateComment.bind(this)}  id="newComment" ></textarea>
                       <button id="newComment_submit" onClick={()=>this.postComment()}>submit</button>
-                      <button id="newComment_cancel" >cancel</button>
+                      <button id="newComment_cancel">cancel</button>
                     </div>
                   </ul>
 
