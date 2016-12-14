@@ -723,11 +723,13 @@ postComment=()=>{
             'Authorization': 'Bearer '+this.state.jwt.jwt
         }})
           .then((response)=> {
-            status=response.status;
-            response.blob()})
-          .then((blob)=> {
+            status=response.status
+            response.blob()
+        .then((blob)=> {
+            console.log(status)
                this.saveLocally(blob,blob.type,status)
         })
+          })
 
 
 //          .then((responseData) => {
@@ -830,7 +832,7 @@ deleteFile=(type,assn)=>{
         }})
         .then((response) => response.json()
              .then((responseData) => {
-            if(type=="assnignments"){
+            if(type=="assignments"){
              this.getAssignment(this.state.thisCourse)
             }else{
                 this.getReadings(this.state.thisCourse)
