@@ -583,18 +583,21 @@ postComment=()=>{
   }
 downloadFile=(type,filename)=>{
       var href=''
+      var status=''
       var filename = encodeURIComponent(filename);
         fetch("http://localhost:8080/api/"+this.state.thisCourse+"/files/"+ type +"/download?fileName="+filename,{method:"GET",
         headers: {
             accept: 'application/pdf',
             'Authorization': 'Bearer '+this.state.jwt.jwt
         }})
-          .then((response)=> response.blob())
-          .then((blob)=>this.saveLocally(blob,blob.type))
-//          .then((responseData) => {
-//         console.log("1")
-//
-//        })
+          .then((response)=> {
+            status=response.status
+            response.blob()
+        .then((blob)=> {
+            console.log(status)
+               this.saveLocally(blob,blob.type,status)
+        })
+          })
     }
     getComment=()=>{
         fetch("http://localhost:8080/api/courses/"+this.state.thisCourse+"/posts/"+this.state.postViewing+"/comments",{method:"get",headers: {
