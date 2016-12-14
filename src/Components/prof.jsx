@@ -92,6 +92,27 @@ class Prof extends Component {
     componentDidMount(){
       this.getUserCourse()
         console.log(this.state.coursesEnrolled)
+        this.setState({jwt:this.props.location.query},()=>this.getUserCourse())
+      console.log(this.props.location.query)
+      console.log(this.state.jwt.userId)
+      this.setState({jwt:this.props.location.query},()=>this.getCurUser())
+    }
+        getCurUser=()=>{
+        //this.setState({userName:"event.target.value"})
+        // console.log("asdf")
+
+        fetch("http://localhost:8080/api/users/my",{method:"GET",headers: {
+        'Authorization': 'Bearer '+this.state.jwt.jwt
+        }})
+        .then((response) => response.json())
+        .then((responseData) => {
+          console.log(responseData)
+          this.setState({userName:responseData.userInfo.name})
+          this.setState({user_picture:responseData.userInfo.profileImg})
+
+
+        })
+
     }
 
 
@@ -206,7 +227,6 @@ updateKeywords(event){
                            <FaSearchPlus style={{position:"absolute",width:25,height:25,top:23,left:145,color:'#17B3C1',zIndex:'1'}}/>
 
 
-                           <FaPlusCircle style={{position:"absolute",width:23,height:23,top:23,left:295,color:'cyann'}}/>
 
                            <div>
                                <p id="post_h2">Post List</p>
@@ -768,7 +788,11 @@ deleteFile=(type,assn)=>{
         }})
         .then((response) => response.json()
              .then((responseData) => {
+            if(type=="assnignments"){
              this.getAssignment(this.state.thisCourse)
+            }else{
+                this.getReadings(this.state.thisCourse)
+            }
              console.log(this.state.assignmentList)
              console.log("1s")
              
