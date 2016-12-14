@@ -915,8 +915,10 @@ joinClass=(id)=>{
       .then((responseData) => {
         //this.getUserCourse()
         //console.log(responseData.data)
-        this.setState({selection:''})
-        this.setState({ifShowCourseList:false})
+        this.setState({selection:
+          <p style={{position:"relative",top:100,left:10,fontSize:50,color:"white"}}>course joined!</p>
+        })
+        //this.setState({ifShowCourseList:false})
       })
     }
 }
@@ -1034,13 +1036,11 @@ renderList=()=>{
     return(
 
             <p> The file has been downloaded </p>
-                //<embed src='filepath' width="800px" height="2100px" />
-
         )
     }
 
         if(this.state.ifShowContent){
-          if(this.state.curUserId===this.authorId){
+          if(this.state.curUserId===this.state.authorId){
             return(
               <div id="postPage">
                 <div id="postTop">
@@ -1056,7 +1056,7 @@ renderList=()=>{
 
                   <ul id="commentList">
                     {this.state.commentsViewing.map(function(comment,i){
-                      if(!(this.state.curUserId===comment.author._id)){
+                      if(this.state.curUserId!=comment.author._id){
                         console.log("this")
                         console.log(this.state.curUserId)
                         console.log(comment.author._id)
@@ -1087,7 +1087,7 @@ renderList=()=>{
                         </li>
                         )
                       }
-                      else if(this.curUserId===comment.author._id){
+                      else if(this.state.curUserId===comment.author._id){
                         console.log("hahaha")
 
                           return(
@@ -1132,7 +1132,26 @@ renderList=()=>{
 
                   <ul id="commentList">
                     {this.state.commentsViewing.map(function(comment,i){
-                      if(this.state.ifEditComment&&comment._id===this.state.commentEditing){
+                      if(this.state.curUserId!=comment.author._id){
+                        console.log("this")
+                        console.log(this.state.curUserId)
+                        console.log(comment.author._id)
+                        return(
+                          <li id="commentContent">
+                            <p style={{fontSize:"10px",color:"#002859"}}>followup discussions</p>
+                            <h2></h2>
+                            <p>{comment.content}</p>
+
+                            <h2></h2>
+                            <p style={{fontSize:"10px", color:"#002859"}}>good question    {comment.upvotes}</p>
+                            <button id ="thumb" onClick={()=>this.upvote(comment._id)}><FaThumbsOUp /></button>
+
+                            <p id="commentUser">Updated by {comment.author.name} at {comment.createdAt}</p>
+                          </li>
+                        )
+
+                      }
+                      else if(this.state.ifEditComment&&comment._id===this.state.commentEditing){
                         return(
                           <li id="commentContent">
                         <p style={{fontSize:"10px",color:"#002859"}}>followup discussions    <button id="bu" onClick={()=>this.editComment(comment._id)}>edit</button></p>
@@ -1140,10 +1159,13 @@ renderList=()=>{
                          <textarea id="updateCom" onChange={this.updateComment.bind(this)} >{comment.content}</textarea>
                         <h2></h2>
                         <button id="bu" onClick={()=>this.updateNewComment()}>submit</button><button id="bu" onClick={()=>this.cancelUpdateComment()}>cancel</button>
+                        <button id="bu" onClick={()=>this.deleteComment(comment._id)}>delete</button>
                         </li>
                         )
                       }
-                      else{
+                      else if(this.state.curUserId===comment.author._id){
+                        console.log("hahaha")
+
                           return(
                             <li id="commentContent">
                               <p style={{fontSize:"10px",color:"#002859"}}>followup discussions    <button id="bu" onClick={()=>this.editComment(comment._id)}>edit</button></p>
@@ -1153,7 +1175,6 @@ renderList=()=>{
                               <h2></h2>
                               <p style={{fontSize:"10px", color:"#002859"}}>good question    {comment.upvotes}</p>
                               <button id ="thumb" onClick={()=>this.upvote(comment._id)}><FaThumbsOUp /></button>
-
                               <p id="commentUser">Updated by {comment.author.name} at {comment.createdAt}</p>
                             </li>
                         )
