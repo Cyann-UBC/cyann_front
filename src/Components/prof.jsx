@@ -11,6 +11,7 @@ import FaUser from 'react-icons/lib/fa/user';
 import FaSearchPlus from 'react-icons/lib/fa/search-plus';
 import FaPlusCircle from 'react-icons/lib/fa/plus-circle';
 import GoX from 'react-icons/lib/go/x';
+import FaEnvelopeO from 'react-icons/lib/fa/envelope-o';
 
 
 import face from '../../picture/face.jpg';
@@ -75,6 +76,7 @@ class Prof extends Component {
             file: '',
             showModal:false,
             ifDeleteFile:false,
+            studentList:[],
         }
     }
 
@@ -114,7 +116,25 @@ class Prof extends Component {
         })
 
     }
+    getCourse(id){
+      //this.setState({thisCourse:id})
+      this.getAllUser(id)
 
+    }
+
+    getAllUser(id){
+      fetch("http://localhost:8080/api/courses/users/"+id,{method:"GET",headers: {
+      'Authorization': 'Bearer '+this.state.jwt.jwt
+      }})
+      .then((response) => response.json())
+      .then((responseData) => {
+        console.log("get")
+
+        console.log(responseData)
+        this.setState({studentList:responseData})
+        //  this.setFontWeight4()
+      })
+    }
 
     getAllCourses=()=>{
         console.log("saaaa")
@@ -415,7 +435,28 @@ updateKeywords(event){
     setFontWeight4=()=>{
       this.setState({background:'#60848C'})
 
-        this.setState({selection:'students list'})
+        this.setState({selection:
+          <div>
+            <p style={{position:'relative',top:50, color:'white',fontSize:20}}>student list</p>
+            <ul id="studentList">
+            {this.state.studentList.map(function(student,i){
+              console.log("students")
+              return(
+                <li id="d">
+                     <dt style={{position:'relative',left:70}}>{student.name}</dt>
+                     <dd style={{position:'relative',left:70}}> honour points: {student.honor}</dd>
+                     <FaEnvelopeO id="email" onClick={()=>this.sendMail(student.email)}/>
+                     <img src={student.profileImg} id="studentPic"/>
+                  </li>
+              )
+            },this)}
+          </ul>
+
+          </div>
+
+
+
+      })
         this.setState({fontWeight1:'300'})
         this.setState({fontWeight2:'300'})
         this.setState({fontWeight3:'300'})
@@ -431,6 +472,7 @@ updateKeywords(event){
         this.setState({ifShowReadUploadForm:false})
         this.setState({ifShowCourseForm:false})
     }
+
     updateList=()=>{
         this.setState({ifshowtext:true})
         this.setState({ifShowQuestion:false})
@@ -536,7 +578,7 @@ updateKeywords(event){
 //           ta=responseData.userInfo.name
 //           console.log(ta)
 //        //
-//        
+//
 //      fetch("http://localhost:8080/api/users/getIds?names="+ta,{method:"GET",headers: {
 //      'Content-Type': 'application/x-www-form-urlencoded',
 //      'Authorization': 'Bearer '+this.state.jwt.jwt
@@ -674,7 +716,7 @@ postComment=()=>{
       var filename = encodeURIComponent(filename);
         var status='';
         console.log(this.state.ifDeleteFile)
-        
+
         fetch("http://localhost:8080/api/"+this.state.thisCourse+"/files/"+ type +"/download?fileName="+filename,{method:"GET",
         headers: {
             accept: 'application/pdf',
@@ -686,13 +728,13 @@ postComment=()=>{
           .then((blob)=> {
                this.saveLocally(blob,blob.type,status)
         })
-          
-        
+
+
 //          .then((responseData) => {
 //         console.log("1")
 //
 //        })
-    
+
     }
 
 
@@ -795,7 +837,7 @@ deleteFile=(type,assn)=>{
             }
              console.log(this.state.assignmentList)
              console.log("1s")
-             
+
           }))
     }
           this.setState({ifDeleteFile:false})
@@ -1269,7 +1311,7 @@ renderList=()=>{
 
             <div className="App">
             {/* code for login */}
-                    <div style={{display:'none'}}><FacebookLogin
+                    {/* <div style={{display:'none'}}><FacebookLogin
                       appId="959862910786642"
                       autoLoad={true}
                       fields="name,email,picture"
@@ -1298,7 +1340,7 @@ renderList=()=>{
                           textButton="Login via Facebook"
                         /></div>
                       </Modal.Body>
-                    </Modal>
+                    </Modal> */}
 
 
 
@@ -1328,7 +1370,7 @@ renderList=()=>{
                                         onClick={this.setBackground}
                                         style={{background:this.state.background}}>
 
-                                        <p>{course.courseName}</p>
+                                        <p onClick={()=>this.getCourse(course._id)}>{course.courseName}</p>
                                     </ul>
                                     <div id={i} className="collapse">
                                         <ul>
