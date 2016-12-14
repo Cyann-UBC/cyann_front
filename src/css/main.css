@@ -550,7 +550,7 @@ h2 { width:100%; border-bottom: 1px solid #000; line-height:0.1em; margin:10px 0
 
 #joinButton{
   position: relative;
-  top:-50px;
+  top:-25px;
   left:300px;
 }
 
