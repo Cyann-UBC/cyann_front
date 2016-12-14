@@ -22,11 +22,8 @@ class Courses extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            instruction: "Howdy dere",
             userName:"",
             curUserId:'',
-            password:"",
-            message:'asd',
             fontWeight1:'300',
             fontWeight2:'300',
             fontWeight3:'300',
@@ -88,7 +85,6 @@ class Courses extends Component {
     componentDidMount(){
       this.setState({jwt:this.props.location.query},()=>this.getUserCourse())
       console.log(this.props.location.query)
-      console.log(this.state.jwt.userId)
       this.setState({jwt:this.props.location.query},()=>this.getCurUser())
     }
     loginModalClose=()=>{
@@ -192,21 +188,20 @@ getReadings(id){
     }
 
     getCurUser=()=>{
-        //this.setState({userName:"event.target.value"})
-        // console.log("asdf")
-
         fetch("http://localhost:8080/api/users/my",{method:"GET",headers: {
         'Authorization': 'Bearer '+this.state.jwt.jwt
         }})
         .then((response) => response.json())
         .then((responseData) => {
+          console.log("here")
           console.log(responseData)
           this.setState({userName:responseData.userInfo.name})
           this.setState({user_picture:responseData.userInfo.profileImg})
 
-
+          this.setState({curUserId:responseData.userInfo._id})
+          console.log(responseData.userInfo._id)
+          console.log(this.state.curUserId)
         })
-
     }
 
     // setPassword(event){
@@ -1042,9 +1037,10 @@ renderList=()=>{
                 //<embed src='filepath' width="800px" height="2100px" />
 
         )
-        }
+    }
+
         if(this.state.ifShowContent){
-          if(this.state.curUserId===this.state.authorId){
+          if(this.state.curUserId===this.authorId){
             return(
               <div id="postPage">
                 <div id="postTop">
@@ -1061,6 +1057,9 @@ renderList=()=>{
                   <ul id="commentList">
                     {this.state.commentsViewing.map(function(comment,i){
                       if(!(this.state.curUserId===comment.author._id)){
+                        console.log("this")
+                        console.log(this.state.curUserId)
+                        console.log(comment.author._id)
                         return(
                           <li id="commentContent">
                             <p style={{fontSize:"10px",color:"#002859"}}>followup discussions</p>
@@ -1073,7 +1072,7 @@ renderList=()=>{
 
                             <p id="commentUser">Updated by {comment.author.name} at {comment.createdAt}</p>
                           </li>
-                    )
+                        )
 
                       }
                       else if(this.state.ifEditComment&&comment._id===this.state.commentEditing){
@@ -1088,7 +1087,9 @@ renderList=()=>{
                         </li>
                         )
                       }
-                      else{
+                      else if(this.curUserId===comment.author._id){
+                        console.log("hahaha")
+
                           return(
                             <li id="commentContent">
                               <p style={{fontSize:"10px",color:"#002859"}}>followup discussions    <button id="bu" onClick={()=>this.editComment(comment._id)}>edit</button></p>
@@ -1098,7 +1099,6 @@ renderList=()=>{
                               <h2></h2>
                               <p style={{fontSize:"10px", color:"#002859"}}>good question    {comment.upvotes}</p>
                               <button id ="thumb" onClick={()=>this.upvote(comment._id)}><FaThumbsOUp /></button>
-
                               <p id="commentUser">Updated by {comment.author.name} at {comment.createdAt}</p>
                             </li>
                         )
