@@ -1,11 +1,11 @@
-#Cyann:
+# Cyann:
 
-##Intro
+## Intro
 This is this repository for Cyann's mobile app power by [Cyann's backend](https://github.com/Cyann-UBC/Cyann)
 
 Please follow the step in the backend to build and run the server on your localhost:8080
 
-##How to build?
+## How to build?
 
 ### INSTALL NPM DEPENDENCIES
 clone the reposiroty
